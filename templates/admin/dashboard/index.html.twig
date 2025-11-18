@@ -46,6 +46,11 @@
                                         </small>
                                     </div>
                                     <div class="btn-group">
+                                        {% if ardoise.isActive %}
+                                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#shareModal">
+                                                <i class="bi bi-share"></i> Partager
+                                            </button>
+                                        {% endif %}
                                         <a href="{{ path('app_admin_ardoise_edit', {id: ardoise.id}) }}" class="btn btn-sm btn-primary">
                                             <i class="bi bi-pencil"></i> Éditer
                                         </a>
@@ -78,7 +83,7 @@
                     <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informations</h5>
                 </div>
                 <div class="card-body">
-                    <p><strong>Votre URL publique :</strong> <code>/ardoise/{{ app.user.slug }}</code></p>
+                    <p><strong>Votre URL publique :</strong> <code>{{ url('app_public_web', {slug: app.user.slug}) }}</code></p>
                     <p class="mb-0">
                         <small class="text-muted">
                             Cette URL est générée automatiquement à partir du nom de votre restaurant.
@@ -90,4 +95,102 @@
         </div>
     </div>
 </div>
+
+{# Modal de Partage #}
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="shareModalLabel">
+                    <i class="bi bi-share"></i> Partager l'ardoise active
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Utilisez ces outils pour diffuser votre ardoise sur différents canaux.</p>
+
+                {# Lien Public #}
+                <div class="mb-4">
+                    <label class="form-label fw-bold">
+                        <i class="bi bi-link-45deg"></i> Lien Public
+                    </label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="publicUrl"
+                               value="{{ url('app_public_web', {slug: app.user.slug}) }}" readonly>
+                        <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('publicUrl')">
+                            <i class="bi bi-clipboard"></i> Copier
+                        </button>
+                    </div>
+                    <small class="text-muted">Partagez ce lien par email, SMS ou sur votre site web.</small>
+                </div>
+
+                <hr>
+
+                {# Partage Rapide #}
+                <h6 class="mb-3"><i class="bi bi-rocket"></i> Partage Rapide</h6>
+
+                <div class="d-grid gap-2">
+                    {# Facebook #}
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url('app_public_web', {slug: app.user.slug})|url_encode }}"
+                       target="_blank"
+                       class="btn btn-primary">
+                        <i class="bi bi-facebook"></i> Partager sur Facebook
+                    </a>
+
+                    {# Télécharger l'image pour Instagram #}
+                    <a href="{{ path('app_public_image', {slug: app.user.slug}) }}"
+                       download="ardoise-{{ 'now'|date('Y-m-d') }}.jpg"
+                       class="btn btn-warning text-dark">
+                        <i class="bi bi-instagram"></i> Télécharger pour Instagram (.jpg)
+                    </a>
+
+                    {# PDF #}
+                    <a href="{{ path('app_public_pdf', {slug: app.user.slug}) }}"
+                       target="_blank"
+                       class="btn btn-danger">
+                        <i class="bi bi-file-pdf"></i> Télécharger en PDF
+                    </a>
+
+                    {# Voir l'ardoise #}
+                    <a href="{{ path('app_public_web', {slug: app.user.slug}) }}"
+                       target="_blank"
+                       class="btn btn-success">
+                        <i class="bi bi-eye"></i> Voir l'ardoise publique
+                    </a>
+                </div>
+
+                <div class="alert alert-info mt-3 mb-0">
+                    <small>
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Astuce Instagram :</strong> Téléchargez l'image, puis publiez-la depuis votre téléphone.
+                        N'oubliez pas d'ajouter des hashtags comme #restaurantlocal #menudujouroffer
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    element.select();
+    element.setSelectionRange(0, 99999); // Pour mobile
+
+    navigator.clipboard.writeText(element.value).then(() => {
+        // Créer une notification temporaire
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check"></i> Copié !';
+        btn.classList.add('btn-success');
+        btn.classList.remove('btn-outline-secondary');
+
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-secondary');
+        }, 2000);
+    });
+}
+</script>
 {% endblock %}
