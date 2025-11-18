@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Ardoises - L'Ardoise Magique{% endblock %}
+
+{% block extra_styles %}
+    .ardoises-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+    }
+
+    .ardoise-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .ardoise-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .ardoise-card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 25px;
+        color: white;
+        text-align: center;
+    }
+
+    .ardoise-card-header h2 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+        font-weight: 400;
+    }
+
+    .ardoise-card-date {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .ardoise-card-body {
+        padding: 25px;
+    }
+
+    .ardoise-card-prices {
+        text-align: center;
+    }
+
+    .price-main {
+        font-size: 2rem;
+        color: #667eea;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .price-formules {
+        font-size: 0.95rem;
+        color: #666;
+        margin-top: 10px;
+    }
+
+    .ardoise-card-sections {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    .section-preview {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        color: white;
+    }
+
+    .empty-state h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+{% endblock %}
+
+{% block body %}
+    {% if ardoises is empty %}
+        <div class="empty-state">
+            <h2>📋 Aucune ardoise disponible</h2>
+            <p>Les menus seront bientôt disponibles. Revenez plus tard !</p>
+            <p style="margin-top: 20px;">
+                <a href="/admin" style="color: white; text-decoration: underline;">Créer votre première ardoise</a>
+            </p>
+        </div>
+    {% else %}
+        <div class="ardoises-grid">
+            {% for ardoise in ardoises %}
+                <a href="{{ path('app_ardoise_show', {id: ardoise.id}) }}" class="ardoise-card">
+                    <div class="ardoise-card-header">
+                        <h2>{{ ardoise.titre }}</h2>
+                        <div class="ardoise-card-date">
+                            📅 {{ ardoise.dateCreation|date('d/m/Y') }}
+                        </div>
+                    </div>
+                    <div class="ardoise-card-body">
+                        <div class="ardoise-card-prices">
+                            {% if ardoise.prixComplet %}
+                                <div class="price-main">{{ ardoise.prixComplet }}€</div>
+                                <div>Menu complet</div>
+                            {% endif %}
+
+                            {% if ardoise.afficherPrixFormules and (ardoise.prixEntreePlat or ardoise.prixPlatDessert) %}
+                                <div class="price-formules">
+                                    {% if ardoise.prixEntreePlat %}
+                                        Formule Entrée + Plat : {{ ardoise.prixEntreePlat }}€
+                                    {% endif %}
+                                    {% if ardoise.prixPlatDessert %}
+                                        <br>Formule Plat + Dessert : {{ ardoise.prixPlatDessert }}€
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if ardoise.sections|length > 0 %}
+                            <div class="ardoise-card-sections">
+                                <div class="section-preview">
+                                    📖 {{ ardoise.sections|length }} section(s)
+                                    {% set totalPlats = 0 %}
+                                    {% for section in ardoise.sections %}
+                                        {% set totalPlats = totalPlats + section.plats|length %}
+                                    {% endfor %}
+                                    • {{ totalPlats }} plat(s)
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

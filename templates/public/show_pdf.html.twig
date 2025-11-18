@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ ardoise.titre }} - {{ user.nomRestaurant }}</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #f5f5dc;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 4px double #ffd700;
+            padding-bottom: 20px;
+        }
+
+        .restaurant-name {
+            font-size: 32px;
+            color: #f5f5dc;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .ardoise-title {
+            font-size: 24px;
+            color: #ffd700;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #ff6b6b;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .plat {
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .plat-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .plat-nom {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f5f5dc;
+            flex: 1;
+        }
+
+        .plat-prix {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-left: 20px;
+            white-space: nowrap;
+        }
+
+        .plat-description {
+            font-size: 13px;
+            color: #b0b0b0;
+            font-style: italic;
+            margin-left: 15px;
+            margin-top: 4px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            border-top: 1px dashed #666;
+            padding-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .dots {
+            border-bottom: 2px dotted #666;
+            flex: 1;
+            margin: 0 10px;
+            align-self: flex-end;
+            margin-bottom: 5px;
+        }
+
+        .plat-line {
+            display: table;
+            width: 100%;
+        }
+
+        .plat-name-col {
+            display: table-cell;
+            width: 70%;
+            vertical-align: bottom;
+        }
+
+        .plat-dots-col {
+            display: table-cell;
+            border-bottom: 2px dotted #666;
+        }
+
+        .plat-prix-col {
+            display: table-cell;
+            width: 20%;
+            text-align: right;
+            vertical-align: bottom;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="restaurant-name">{{ user.nomRestaurant }}</div>
+        <div class="ardoise-title">{{ ardoise.titre }}</div>
+    </div>
+
+    {% for section in ardoise.sections %}
+        <div class="section">
+            <div class="section-title">{{ section.titre }}</div>
+
+            {% for plat in section.plats %}
+                <div class="plat">
+                    <div class="plat-line">
+                        <div class="plat-name-col">
+                            <span class="plat-nom">{{ plat.nom }}</span>
+                        </div>
+                        <div class="plat-dots-col"></div>
+                        <div class="plat-prix-col">
+                            <span class="plat-prix">{{ plat.prix|number_format(2, ',', ' ') }} €</span>
+                        </div>
+                    </div>
+                    {% if plat.description %}
+                        <div class="plat-description">{{ plat.description }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <div class="footer">
+        Mise à jour le {{ ardoise.dateCreation|date('d/m/Y') }}
+    </div>
+</body>
+</html>

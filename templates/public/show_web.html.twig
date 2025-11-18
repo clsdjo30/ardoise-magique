@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ardoise.titre }} - {{ user.nomRestaurant }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .ardoise {
+            background: #1a1a1a;
+            border: 15px solid #8b7355;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                        inset 0 0 100px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            position: relative;
+        }
+
+        .ardoise::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .restaurant-name {
+            text-align: center;
+            color: #f5f5dc;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .ardoise-title {
+            text-align: center;
+            color: #ffd700;
+            font-size: 1.8em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            border-bottom: 3px double #ffd700;
+            padding-bottom: 15px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #ff6b6b;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .plat {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+
+        .plat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .plat-nom {
+            color: #f5f5dc;
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+
+        .plat-prix {
+            color: #4ecdc4;
+            font-size: 1.4em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .plat-description {
+            color: #a0a0a0;
+            font-size: 0.95em;
+            font-style: italic;
+            margin-left: 20px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: #4ecdc4;
+            color: #1a1a1a;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #45b7aa;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-secondary {
+            background: #ffd700;
+        }
+
+        .btn-secondary:hover {
+            background: #e6c200;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .ardoise {
+                padding: 20px;
+            }
+
+            .restaurant-name {
+                font-size: 2em;
+            }
+
+            .ardoise-title {
+                font-size: 1.4em;
+            }
+
+            .section-title {
+                font-size: 1.3em;
+            }
+
+            .plat-nom {
+                font-size: 1.1em;
+            }
+
+            .btn {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ardoise">
+            <h1 class="restaurant-name">{{ user.nomRestaurant }}</h1>
+            <h2 class="ardoise-title">{{ ardoise.titre }}</h2>
+
+            {% for section in ardoise.sections %}
+                <div class="section">
+                    <h3 class="section-title">{{ section.titre }}</h3>
+
+                    {% for plat in section.plats %}
+                        <div class="plat">
+                            <div class="plat-header">
+                                <span class="plat-nom">{{ plat.nom }}</span>
+                                <span class="plat-prix">{{ plat.prix|number_format(2, ',', ' ') }} €</span>
+                            </div>
+                            {% if plat.description %}
+                                <div class="plat-description">{{ plat.description }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="actions">
+                <a href="{{ path('app_public_pdf', {slug: user.slug}) }}" class="btn" target="_blank">
+                    📄 Télécharger en PDF
+                </a>
+                <a href="{{ path('app_public_image', {slug: user.slug}) }}" class="btn btn-secondary">
+                    📸 Télécharger l'image
+                </a>
+            </div>
+
+            <div class="footer">
+                Mise à jour : {{ ardoise.dateCreation|date('d/m/Y') }}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

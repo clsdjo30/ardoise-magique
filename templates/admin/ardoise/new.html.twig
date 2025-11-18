@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Ardoise - L'Ardoise Magique{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="bi bi-plus-circle"></i> Créer une nouvelle ardoise
+            </h1>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                <strong>Astuce :</strong> Vous pouvez créer plusieurs sections (Entrées, Plats, Desserts, etc.) et ajouter des plats à chacune d'elles.
+            </div>
+
+            {{ include('admin/ardoise/_form.html.twig') }}
+        </div>
+    </div>
+</div>
+{% endblock %}

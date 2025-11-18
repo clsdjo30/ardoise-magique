@@ -1,0 +1,101 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    <h1 class="title">
+        <i class="fa fa-home"></i> Bienvenue sur L'Ardoise Magique
+    </h1>
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fa fa-info-circle"></i> Guide d'utilisation
+                </div>
+                <div class="card-body">
+                    <h5>Gestion Avancée avec Interface à Onglets</h5>
+                    <p>Le système vous permet de gérer des structures de menus complexes avec une interface intuitive organisée en 3 onglets :</p>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-cog fa-3x text-primary mb-2"></i>
+                                    <h6>1. Configuration</h6>
+                                    <small>Titre et mise en ligne</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-euro-sign fa-3x text-success mb-2"></i>
+                                    <h6>2. Tarification</h6>
+                                    <small>Définition des prix et formules</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-utensils fa-3x text-warning mb-2"></i>
+                                    <h6>3. Composition</h6>
+                                    <small>Ajout de sections et plats</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h6><i class="fa fa-lightbulb"></i> Exemple : Menu Dégustation 7 Services</h6>
+                    <ol>
+                        <li><strong>Configuration :</strong> Saisissez "Menu Prestige d'Automne", cochez "Mettre en ligne"</li>
+                        <li><strong>Tarification :</strong> Saisissez 85€ dans "Prix Menu Complet"</li>
+                        <li><strong>Composition :</strong> Ajoutez 7 sections :
+                            <ul class="small">
+                                <li>Mise en Bouche → Cromesquis de Truffe</li>
+                                <li>Entrée Froide → Carpaccio de St Jacques</li>
+                                <li>Entrée Chaude → Foie Gras Poêlé</li>
+                                <li>Poisson → Turbot Sauvage</li>
+                                <li>Viande → Biche Grand Veneur</li>
+                                <li>Fromage → Chariot Affiné</li>
+                                <li>Dessert → La Sphère Chocolat</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fa fa-chart-bar"></i> Statistiques
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>Total ardoises :</strong>
+                        <span class="badge bg-primary">{{ ea.crud.filtersConfig.filters|length ?? 0 }}</span>
+                    </p>
+                    <p class="mb-2">
+                        <strong>Ardoises en ligne :</strong>
+                        <span class="badge bg-success">0</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-question-circle"></i> Aide rapide
+                </div>
+                <div class="card-body">
+                    <p class="small mb-2"><strong>Sections :</strong> Structurent votre menu (Entrées, Plats, Desserts...)</p>
+                    <p class="small mb-2"><strong>Ordre :</strong> Définit la séquence d'affichage (1, 2, 3...)</p>
+                    <p class="small mb-0"><strong>Supplément :</strong> Prix additionnel pour un plat spécifique (ex: +5€ truffe)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

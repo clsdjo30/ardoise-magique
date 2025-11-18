@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - L'Ardoise Magique{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Créer un compte</h4>
+                </div>
+                <div class="card-body">
+                    {{ form_start(registrationForm) }}
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.nom_restaurant) }}
+                            {{ form_widget(registrationForm.nom_restaurant) }}
+                            {{ form_errors(registrationForm.nom_restaurant) }}
+                            <div class="form-text">
+                                Ce nom sera utilisé pour créer votre URL publique (ex: /ardoise/le-petit-nicois)
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.email) }}
+                            {{ form_widget(registrationForm.email) }}
+                            {{ form_errors(registrationForm.email) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.plainPassword.first) }}
+                            {{ form_widget(registrationForm.plainPassword.first) }}
+                            {{ form_errors(registrationForm.plainPassword.first) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.plainPassword.second) }}
+                            {{ form_widget(registrationForm.plainPassword.second) }}
+                            {{ form_errors(registrationForm.plainPassword.second) }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">S'inscrire</button>
+                        </div>
+                    {{ form_end(registrationForm) }}
+
+                    <hr>
+
+                    <div class="text-center">
+                        <p class="mb-0">Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
