@@ -98,6 +98,17 @@ function addSection(button) {
     const wrapper = document.createElement('div');
     wrapper.className = 'section-item card mb-3';
     wrapper.dataset.sectionIndex = sectionIndex;
+
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = newForm;
+
+    // Trouver le prototype des plats dans le nouveau formulaire
+    const platsContainer = tempDiv.querySelector('.plats-collection');
+    let platsPrototype = '';
+    if (platsContainer && platsContainer.dataset.prototype) {
+        platsPrototype = platsContainer.dataset.prototype;
+    }
+
     wrapper.innerHTML = `
         <div class="card-header bg-light d-flex justify-content-between align-items-center">
             <h6 class="mb-0">Section #${sectionIndex + 1}</h6>
@@ -107,17 +118,27 @@ function addSection(button) {
         </div>
         <div class="card-body">
             ${newForm}
-            <div class="mt-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong><i class="bi bi-egg-fried"></i> Plats</strong>
-                    <button type="button" class="btn btn-sm btn-success" onclick="addPlat(this, ${sectionIndex})">
-                        <i class="bi bi-plus-circle"></i> Ajouter un plat
-                    </button>
-                </div>
-                <div class="plats-container" data-index="0"></div>
-            </div>
         </div>
     `;
+
+    // Ajouter les boutons d'ajout de plats
+    const platContainers = wrapper.querySelectorAll('.plats-collection');
+    platContainers.forEach((platContainer, idx) => {
+        const addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.className = 'btn btn-sm btn-success mb-2';
+        addButton.innerHTML = '<i class="bi bi-plus-circle"></i> Ajouter un plat';
+        addButton.onclick = function() {
+            addPlatToContainer(platContainer);
+        };
+
+        const buttonWrapper = document.createElement('div');
+        buttonWrapper.className = 'd-flex justify-content-between align-items-center mb-2';
+        buttonWrapper.innerHTML = '<strong><i class="bi bi-egg-fried"></i> Plats</strong>';
+        buttonWrapper.appendChild(addButton);
+
+        platContainer.parentNode.insertBefore(buttonWrapper, platContainer);
+    });
 
     container.appendChild(wrapper);
     sectionIndex++;
@@ -131,38 +152,28 @@ function removeSection(button) {
 
 function addPlat(button, sectionIdx) {
     const sectionItem = button.closest('.section-item');
-    const platsContainer = sectionItem.querySelector('.plats-container');
-    let platIndex = parseInt(platsContainer.dataset.index || 0);
+    const platsContainer = sectionItem.querySelector('.plats-collection');
+    addPlatToContainer(platsContainer);
+}
 
-    // Récupérer le prototype depuis le container parent
-    const sectionContainer = document.getElementById('sections-container');
-    const sectionPrototype = sectionContainer.dataset.prototype;
-
-    // Créer un template temporaire pour extraire le prototype des plats
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = sectionPrototype;
-
-    // Trouver le prototype des plats dans la section
-    const platPrototypeContainer = tempDiv.querySelector('[data-prototype]');
-    if (!platPrototypeContainer) {
+function addPlatToContainer(platsContainer) {
+    const prototype = platsContainer.dataset.prototype;
+    if (!prototype) {
         console.error('Prototype des plats non trouvé');
         return;
     }
 
-    let platPrototype = platPrototypeContainer.dataset.prototype;
-
-    // Remplacer les placeholders
-    platPrototype = platPrototype.replace(/sections\]\[__name__\]/g, `sections][${sectionIdx}`);
-    platPrototype = platPrototype.replace(/__name__/g, platIndex);
+    const index = platsContainer.children.length;
+    const newPlat = prototype.replace(/__name__/g, index);
 
     const wrapper = document.createElement('div');
     wrapper.className = 'plat-item border rounded p-3 mb-2 bg-white';
     wrapper.innerHTML = `
         <div class="row align-items-end">
-            <div class="col-md-12">
-                ${platPrototype}
+            <div class="col-md-12 mb-2">
+                ${newPlat}
             </div>
-            <div class="col-md-12 mt-2 text-end">
+            <div class="col-md-12 text-end">
                 <button type="button" class="btn btn-sm btn-danger" onclick="removePlat(this)">
                     <i class="bi bi-trash"></i> Supprimer ce plat
                 </button>
@@ -171,7 +182,6 @@ function addPlat(button, sectionIdx) {
     `;
 
     platsContainer.appendChild(wrapper);
-    platsContainer.dataset.index = platIndex + 1;
 }
 
 function removePlat(button) {
