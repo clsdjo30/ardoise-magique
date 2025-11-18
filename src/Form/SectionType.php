@@ -36,7 +36,7 @@ class SectionType extends AbstractType
                     'class' => 'form-control',
                     'min' => 0,
                 ],
-                'data' => $options['data']->getOrdre() ?: 0,
+                'data' => ($options['data'] && $options['data']->getOrdre()) ? $options['data']->getOrdre() : 0,
             ])
             ->add('plats', CollectionType::class, [
                 'entry_type' => PlatType::class,

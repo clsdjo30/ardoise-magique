@@ -64,7 +64,7 @@ class PlatType extends AbstractType
                     'class' => 'form-control',
                     'min' => 0,
                 ],
-                'data' => $options['data']->getOrdre() ?: 0,
+                'data' => ($options['data'] && $options['data']->getOrdre()) ? $options['data']->getOrdre() : 0,
             ])
         ;
     }
