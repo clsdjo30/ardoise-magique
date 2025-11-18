@@ -4,42 +4,33 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\Section;
+use App\Entity\Ardoise;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class SectionType extends AbstractType
+class ArdoiseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('titre', TextType::class, [
-                'label' => 'Titre de la section',
+                'label' => 'Titre de l\'ardoise',
                 'attr' => [
-                    'placeholder' => 'Ex: Nos Entrées, Plats du jour, Desserts...',
+                    'placeholder' => 'Ex: Menu du 18 Novembre, Ardoise de Noël...',
                     'class' => 'form-control',
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Le titre de la section est obligatoire',
+                        'message' => 'Le titre de l\'ardoise est obligatoire',
                     ]),
                 ],
             ])
-            ->add('ordre', NumberType::class, [
-                'label' => 'Ordre',
-                'attr' => [
-                    'class' => 'form-control',
-                    'min' => 0,
-                ],
-                'data' => $options['data']->getOrdre() ?: 0,
-            ])
-            ->add('plats', CollectionType::class, [
-                'entry_type' => PlatType::class,
+            ->add('sections', CollectionType::class, [
+                'entry_type' => SectionType::class,
                 'entry_options' => [
                     'label' => false,
                 ],
@@ -49,7 +40,7 @@ class SectionType extends AbstractType
                 'prototype' => true,
                 'label' => false,
                 'attr' => [
-                    'class' => 'plats-collection',
+                    'class' => 'sections-collection',
                 ],
             ])
         ;
@@ -58,7 +49,7 @@ class SectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Section::class,
+            'data_class' => Ardoise::class,
         ]);
     }
 }

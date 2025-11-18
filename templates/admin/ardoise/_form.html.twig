@@ -1,0 +1,180 @@
+{{ form_start(form) }}
+
+<div class="mb-4">
+    {{ form_row(form.titre) }}
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-list-ul"></i> Sections</h5>
+        <button type="button" class="btn btn-sm btn-light" onclick="addSection(this)">
+            <i class="bi bi-plus-circle"></i> Ajouter une section
+        </button>
+    </div>
+    <div class="card-body">
+        <div id="sections-container" data-prototype="{{ form_widget(form.sections.vars.prototype)|e('html_attr') }}" data-index="{{ form.sections|length }}">
+            {% for sectionForm in form.sections %}
+                <div class="section-item card mb-3" data-section-index="{{ loop.index0 }}">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Section #{{ loop.index }}</h6>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeSection(this)">
+                            <i class="bi bi-trash"></i> Supprimer la section
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        {{ form_row(sectionForm.titre) }}
+                        {{ form_row(sectionForm.ordre) }}
+
+                        <div class="mt-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong><i class="bi bi-egg-fried"></i> Plats</strong>
+                                <button type="button" class="btn btn-sm btn-success" onclick="addPlat(this, {{ loop.index0 }})">
+                                    <i class="bi bi-plus-circle"></i> Ajouter un plat
+                                </button>
+                            </div>
+
+                            <div class="plats-container" data-prototype="{{ form_widget(sectionForm.plats.vars.prototype)|e('html_attr') }}" data-index="{{ sectionForm.plats|length }}">
+                                {% for platForm in sectionForm.plats %}
+                                    <div class="plat-item border rounded p-3 mb-2 bg-white">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-4">
+                                                {{ form_row(platForm.nom) }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ form_row(platForm.description) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form_row(platForm.prix) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form_row(platForm.ordre) }}
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-sm btn-danger w-100" onclick="removePlat(this)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if form.sections|length == 0 %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Aucune section pour le moment. Cliquez sur "Ajouter une section" pour commencer.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a href="{{ path('app_admin_dashboard') }}" class="btn btn-secondary">
+        <i class="bi bi-x-circle"></i> Annuler
+    </a>
+    <button type="submit" class="btn btn-success">
+        <i class="bi bi-save"></i> Enregistrer
+    </button>
+</div>
+
+{{ form_end(form) }}
+
+<script>
+// JavaScript pour gérer les collections dynamiques
+let sectionIndex = {{ form.sections|length }};
+
+function addSection(button) {
+    const container = document.getElementById('sections-container');
+    const prototype = container.dataset.prototype;
+
+    // Remplacer __name__ par l'index
+    const newForm = prototype.replace(/__name__/g, sectionIndex);
+
+    // Créer un wrapper pour la nouvelle section
+    const wrapper = document.createElement('div');
+    wrapper.className = 'section-item card mb-3';
+    wrapper.dataset.sectionIndex = sectionIndex;
+    wrapper.innerHTML = `
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Section #${sectionIndex + 1}</h6>
+            <button type="button" class="btn btn-sm btn-danger" onclick="removeSection(this)">
+                <i class="bi bi-trash"></i> Supprimer la section
+            </button>
+        </div>
+        <div class="card-body">
+            ${newForm}
+            <div class="mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong><i class="bi bi-egg-fried"></i> Plats</strong>
+                    <button type="button" class="btn btn-sm btn-success" onclick="addPlat(this, ${sectionIndex})">
+                        <i class="bi bi-plus-circle"></i> Ajouter un plat
+                    </button>
+                </div>
+                <div class="plats-container" data-index="0"></div>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(wrapper);
+    sectionIndex++;
+}
+
+function removeSection(button) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette section et tous ses plats ?')) {
+        button.closest('.section-item').remove();
+    }
+}
+
+function addPlat(button, sectionIdx) {
+    const sectionItem = button.closest('.section-item');
+    const platsContainer = sectionItem.querySelector('.plats-container');
+    let platIndex = parseInt(platsContainer.dataset.index || 0);
+
+    // Récupérer le prototype depuis le container parent
+    const sectionContainer = document.getElementById('sections-container');
+    const sectionPrototype = sectionContainer.dataset.prototype;
+
+    // Créer un template temporaire pour extraire le prototype des plats
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = sectionPrototype;
+
+    // Trouver le prototype des plats dans la section
+    const platPrototypeContainer = tempDiv.querySelector('[data-prototype]');
+    if (!platPrototypeContainer) {
+        console.error('Prototype des plats non trouvé');
+        return;
+    }
+
+    let platPrototype = platPrototypeContainer.dataset.prototype;
+
+    // Remplacer les placeholders
+    platPrototype = platPrototype.replace(/sections\]\[__name__\]/g, `sections][${sectionIdx}`);
+    platPrototype = platPrototype.replace(/__name__/g, platIndex);
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'plat-item border rounded p-3 mb-2 bg-white';
+    wrapper.innerHTML = `
+        <div class="row align-items-end">
+            <div class="col-md-12">
+                ${platPrototype}
+            </div>
+            <div class="col-md-12 mt-2 text-end">
+                <button type="button" class="btn btn-sm btn-danger" onclick="removePlat(this)">
+                    <i class="bi bi-trash"></i> Supprimer ce plat
+                </button>
+            </div>
+        </div>
+    `;
+
+    platsContainer.appendChild(wrapper);
+    platsContainer.dataset.index = platIndex + 1;
+}
+
+function removePlat(button) {
+    button.closest('.plat-item').remove();
+}
+</script>
