@@ -1,14 +1,18 @@
-{# {% extends 'base.html.twig' %} #}
-
-{# {% block title %}{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}{% endblock %} #}
-
-{% block body %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
 <div class="special-menu-container">
     <div class="menu-header">
         <h1 class="restaurant-name">{{ restaurant.nomRestaurant }}</h1>
         <h2 class="menu-title">{{ ardoise.titre }}</h2>
         {% if ardoise.specialGlobalPrice %}
-        <div class="global-price">{{ ardoise.specialGlobalPrice }}�</div>
+        <div class="global-price">{{ ardoise.specialGlobalPrice|number_format(2, ',', ' ') }} €</div>
         {% endif %}
     </div>
 
@@ -18,7 +22,7 @@
             <div class="item-header">
                 <h3 class="item-name">{{ item.name }}</h3>
                 {% if item.price %}
-                <span class="item-price">{{ item.price }}�</span>
+                <span class="item-price">{{ item.price|number_format(2, ',', ' ') }} €</span>
                 {% endif %}
             </div>
             {% if item.description %}
@@ -166,7 +170,5 @@
         }
     }
 </style>
-
-{# Charger la police Google Fonts #}
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-{% endblock %}
+</body>
+</html>

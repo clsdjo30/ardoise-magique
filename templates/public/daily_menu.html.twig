@@ -1,8 +1,11 @@
-{# {% extends 'base.html.twig' %} #}
-
-{# {% block title %}{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}{% endblock %} #}
-
-{% block body %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}</title>
+</head>
+<body>
 <div class="menu-container daily-menu">
     <div class="menu-header">
         <h1 class="restaurant-name">{{ restaurant.nomRestaurant }}</h1>
@@ -12,7 +15,7 @@
     <div class="menu-content">
         {% if ardoise.dailyEntree %}
         <div class="menu-section">
-            <h3 class="section-title">Entr�e</h3>
+            <h3 class="section-title">Entrée</h3>
             <div class="section-content">
                 {{ ardoise.dailyEntree|nl2br }}
             </div>
@@ -42,20 +45,20 @@
             <h3 class="pricing-title">Nos Formules</h3>
             {% if ardoise.priceEpd %}
             <div class="price-item">
-                <span class="formula">Entr�e + Plat + Dessert</span>
-                <span class="price">{{ ardoise.priceEpd }}�</span>
+                <span class="formula">Entrée + Plat + Dessert</span>
+                <span class="price">{{ ardoise.priceEpd|number_format(2, ',', ' ') }} €</span>
             </div>
             {% endif %}
             {% if ardoise.priceEp %}
             <div class="price-item">
-                <span class="formula">Entr�e + Plat</span>
-                <span class="price">{{ ardoise.priceEp }}�</span>
+                <span class="formula">Entrée + Plat</span>
+                <span class="price">{{ ardoise.priceEp|number_format(2, ',', ' ') }} €</span>
             </div>
             {% endif %}
             {% if ardoise.pricePd %}
             <div class="price-item">
                 <span class="formula">Plat + Dessert</span>
-                <span class="price">{{ ardoise.pricePd }}�</span>
+                <span class="price">{{ ardoise.pricePd|number_format(2, ',', ' ') }} €</span>
             </div>
             {% endif %}
         </div>
@@ -65,28 +68,34 @@
 
 <style>
     body {
-        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        margin: 0;
+        padding: 0;
         font-family: 'Georgia', serif;
-        padding: 20px;
         min-height: 100vh;
+        background-image: url('/images/ardoise_bg.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .menu-container {
         max-width: 800px;
-        margin: 0 auto;
-        background: #2c2c2c;
-        color: #f5f5f5;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        border: 8px solid #8B4513;
+        width: 90%;
+        margin: 40px auto;
+        color: #fff;
+        padding: 60px 50px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     }
 
     .menu-header {
         text-align: center;
         margin-bottom: 40px;
         padding-bottom: 30px;
-        border-bottom: 3px double #f5f5f5;
+        border-bottom: 3px double rgba(255, 215, 0, 0.8);
     }
 
     .restaurant-name {
@@ -95,12 +104,14 @@
         margin-bottom: 10px;
         text-transform: uppercase;
         letter-spacing: 3px;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
     }
 
     .menu-title {
         font-size: 1.8em;
-        color: #f5f5f5;
+        color: #fff;
         font-style: italic;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
     }
 
     .menu-section {
@@ -112,20 +123,22 @@
         color: #FFD700;
         margin-bottom: 15px;
         text-transform: uppercase;
-        border-bottom: 2px solid #FFD700;
+        border-bottom: 2px solid rgba(255, 215, 0, 0.8);
         padding-bottom: 10px;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
     }
 
     .section-content {
         font-size: 1.2em;
         line-height: 1.8;
         padding-left: 20px;
+        color: #fff;
     }
 
     .menu-pricing {
         margin-top: 40px;
         padding-top: 30px;
-        border-top: 3px double #f5f5f5;
+        border-top: 3px double rgba(255, 215, 0, 0.8);
     }
 
     .pricing-title {
@@ -134,6 +147,7 @@
         text-align: center;
         margin-bottom: 25px;
         text-transform: uppercase;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
     }
 
     .price-item {
@@ -142,23 +156,27 @@
         align-items: center;
         padding: 15px 20px;
         margin-bottom: 10px;
-        background: rgba(255,255,255,0.05);
+        background: rgba(0,0,0,0.3);
         border-radius: 8px;
+        backdrop-filter: blur(5px);
     }
 
     .formula {
         font-size: 1.3em;
+        color: #fff;
     }
 
     .price {
         font-size: 1.5em;
         font-weight: bold;
         color: #FFD700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
     }
 
     @media (max-width: 768px) {
         .menu-container {
-            padding: 20px;
+            padding: 40px 30px;
+            width: 95%;
         }
         .restaurant-name {
             font-size: 1.8em;
@@ -169,6 +187,10 @@
         .section-title {
             font-size: 1.4em;
         }
+        .section-content {
+            font-size: 1.1em;
+        }
     }
 </style>
-{% endblock %}
+</body>
+</html>

@@ -7,7 +7,7 @@ namespace App\Form;
 use App\Entity\ArdoiseItem;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,19 +35,21 @@ class ArdoiseItemType extends AbstractType
                 'label' => 'Description',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Ex: AccompagnÈ de son chutney de figues',
+                    'placeholder' => 'Ex: Accompagn√© de son chutney de figues',
                     'class' => 'form-control',
                     'rows' => 3,
                 ],
             ])
-            ->add('price', MoneyType::class, [
-                'label' => 'Prix (¨)',
-                'currency' => 'EUR',
+            ->add('price', NumberType::class, [
+                'label' => 'Prix (‚Ç¨)',
+                'scale' => 2,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => '0.00',
+                    'placeholder' => '15.50',
                     'class' => 'form-control',
+                    'step' => '0.01',
                 ],
+                'help' => 'Saisissez le prix avec deux d√©cimales (ex: 15.50)',
             ])
             ->add('position', IntegerType::class, [
                 'label' => 'Position',
@@ -56,7 +58,7 @@ class ArdoiseItemType extends AbstractType
                     'class' => 'form-control',
                     'min' => 0,
                 ],
-                'help' => 'L\'ordre d\'affichage sera gÈrÈ automatiquement',
+                'help' => 'L\'ordre d\'affichage sera g√©r√© automatiquement',
             ]);
     }
 

@@ -16,7 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -35,25 +35,25 @@ class SpecialMenuCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Menu Special')
-            ->setEntityLabelInPlural('Menus Speciaux')
-            ->setPageTitle('index', 'Menus Speciaux')
-            ->setPageTitle('new', 'Nouveau Menu Special')
-            ->setPageTitle('edit', 'Edition Menu Special')
+            ->setEntityLabelInSingular('Menu Spécial')
+            ->setEntityLabelInPlural('Menus Spéciaux')
+            ->setPageTitle('index', 'Menus Spéciaux')
+            ->setPageTitle('new', 'Nouveau Menu Spécial')
+            ->setPageTitle('edit', 'Edition Menu Spécial')
             ->setDefaultSort(['id' => 'DESC']);
     }
 
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('titre', 'Titre du menu')
-            ->setHelp('Ex: Menu de Noel 2024, Menu Saint-Valentin');
+            ->setHelp('Ex: Menu de Noël 2024, Menu Saint-Valentin');
 
-        yield BooleanField::new('status', 'Publie')
+        yield BooleanField::new('status', 'Publié')
             ->setHelp('Cochez pour rendre ce menu visible publiquement');
 
-        yield MoneyField::new('special_global_price', 'Prix global')
-            ->setCurrency('EUR')
-            ->setHelp('Prix total du menu special (optionnel)')
+        yield NumberField::new('special_global_price', 'Prix global')
+            ->setNumDecimals(2)
+            ->setHelp('Prix total du menu spécial (ex: 45.00) - Optionnel')
             ->hideOnIndex();
 
         yield CollectionField::new('items', 'Composition du menu')
@@ -65,7 +65,7 @@ class SpecialMenuCrudController extends AbstractCrudController
             ->allowDelete(true)
             ->setEntryIsComplex(true)
             ->hideOnIndex()
-            ->setHelp('Ajoutez les differents elements de votre menu special');
+            ->setHelp('Ajoutez les différents éléments de votre menu spécial');
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
