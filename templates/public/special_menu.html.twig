@@ -1,0 +1,172 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}{% endblock %}
+
+{% block body %}
+<div class="special-menu-container">
+    <div class="menu-header">
+        <h1 class="restaurant-name">{{ restaurant.nomRestaurant }}</h1>
+        <h2 class="menu-title">{{ ardoise.titre }}</h2>
+        {% if ardoise.specialGlobalPrice %}
+        <div class="global-price">{{ ardoise.specialGlobalPrice }}¬</div>
+        {% endif %}
+    </div>
+
+    <div class="menu-items">
+        {% for item in ardoise.items %}
+        <div class="menu-item">
+            <div class="item-header">
+                <h3 class="item-name">{{ item.name }}</h3>
+                {% if item.price %}
+                <span class="item-price">{{ item.price }}¬</span>
+                {% endif %}
+            </div>
+            {% if item.description %}
+            <p class="item-description">{{ item.description }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #434343 0%, #000000 100%);
+        font-family: 'Playfair Display', serif;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .special-menu-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: linear-gradient(to bottom, #1a1a1a 0%, #2d2d2d 100%);
+        color: #f5f5f5;
+        padding: 50px;
+        border-radius: 20px;
+        box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+        border: 1px solid #d4af37;
+    }
+
+    .menu-header {
+        text-align: center;
+        margin-bottom: 50px;
+        padding-bottom: 40px;
+        border-bottom: 2px solid #d4af37;
+        position: relative;
+    }
+
+    .menu-header::after {
+        content: '&';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 30px;
+        color: #d4af37;
+        background: #1a1a1a;
+        padding: 0 20px;
+    }
+
+    .restaurant-name {
+        font-size: 3em;
+        color: #d4af37;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        font-weight: 700;
+    }
+
+    .menu-title {
+        font-size: 2.2em;
+        color: #f5f5f5;
+        font-style: italic;
+        margin-bottom: 20px;
+        font-weight: 400;
+    }
+
+    .global-price {
+        font-size: 2em;
+        color: #d4af37;
+        font-weight: bold;
+        margin-top: 20px;
+        padding: 15px 30px;
+        border: 2px solid #d4af37;
+        border-radius: 50px;
+        display: inline-block;
+    }
+
+    .menu-items {
+        display: grid;
+        gap: 30px;
+    }
+
+    .menu-item {
+        background: rgba(255,255,255,0.03);
+        padding: 30px;
+        border-radius: 12px;
+        border-left: 4px solid #d4af37;
+        transition: all 0.3s ease;
+    }
+
+    .menu-item:hover {
+        background: rgba(255,255,255,0.06);
+        transform: translateX(10px);
+    }
+
+    .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .item-name {
+        font-size: 1.8em;
+        color: #f5f5f5;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .item-price {
+        font-size: 1.6em;
+        color: #d4af37;
+        font-weight: bold;
+    }
+
+    .item-description {
+        font-size: 1.2em;
+        line-height: 1.6;
+        color: #cccccc;
+        margin: 0;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .special-menu-container {
+            padding: 30px 20px;
+        }
+        .restaurant-name {
+            font-size: 2em;
+            letter-spacing: 3px;
+        }
+        .menu-title {
+            font-size: 1.5em;
+        }
+        .item-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .item-name {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+        .item-price {
+            font-size: 1.3em;
+        }
+    }
+</style>
+
+{# Charger la police Google Fonts #}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}

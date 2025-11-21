@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ArdoiseRepository;
@@ -7,10 +9,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ArdoiseRepository::class)]
 class Ardoise
 {
+    public const TYPE_DAILY = 'DAILY';
+    public const TYPE_SPECIAL = 'SPECIAL';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -19,35 +25,59 @@ class Ardoise
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
+    #[Gedmo\Slug(fields: ['titre'])]
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $type = null;
 
     #[ORM\Column]
-    private bool $isActive = false;
+    private bool $status = false;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ardoises')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $owner = null;
+
+    // ==========================================
+    // CHAMPS MENU DU JOUR (type=DAILY)
+    // ==========================================
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $daily_entree = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $daily_plat = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $daily_dessert = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $prixComplet = null;
+    private ?string $price_epd = null; // Prix Entrée + Plat + Dessert
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $prixEntreePlat = null;
+    private ?string $price_ep = null; // Prix Entrée + Plat
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $prixPlatDessert = null;
+    private ?string $price_pd = null; // Prix Plat + Dessert
 
-    #[ORM\Column]
-    private bool $afficherPrixFormules = false;
+    // ==========================================
+    // CHAMPS MENU SPÉCIAL (type=SPECIAL)
+    // ==========================================
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $special_global_price = null;
 
     /**
-     * @var Collection<int, Section>
+     * @var Collection<int, ArdoiseItem>
      */
-    #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'ardoise', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['ordre' => 'ASC'])]
-    private Collection $sections;
+    #[ORM\OneToMany(targetEntity: ArdoiseItem::class, mappedBy: 'parent', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $items;
 
     public function __construct()
     {
-        $this->sections = new ArrayCollection();
-        $this->dateCreation = new \DateTime();
+        $this->items = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,102 +97,170 @@ class Ardoise
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getSlug(): ?string
     {
-        return $this->dateCreation;
+        return $this->slug;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    public function setSlug(string $slug): static
     {
-        $this->dateCreation = $dateCreation;
+        $this->slug = $slug;
 
         return $this;
     }
 
-    public function isActive(): bool
+    public function getType(): ?string
     {
-        return $this->isActive;
+        return $this->type;
     }
 
-    public function setIsActive(bool $isActive): static
+    public function setType(string $type): static
     {
-        $this->isActive = $isActive;
+        $this->type = $type;
 
         return $this;
     }
 
-    public function getPrixComplet(): ?string
+    public function getStatus(): bool
     {
-        return $this->prixComplet;
+        return $this->status;
     }
 
-    public function setPrixComplet(?string $prixComplet): static
+    public function setStatus(bool $status): static
     {
-        $this->prixComplet = $prixComplet;
+        $this->status = $status;
 
         return $this;
     }
 
-    public function getPrixEntreePlat(): ?string
+    public function getOwner(): ?User
     {
-        return $this->prixEntreePlat;
+        return $this->owner;
     }
 
-    public function setPrixEntreePlat(?string $prixEntreePlat): static
+    public function setOwner(?User $owner): static
     {
-        $this->prixEntreePlat = $prixEntreePlat;
+        $this->owner = $owner;
 
         return $this;
     }
 
-    public function getPrixPlatDessert(): ?string
+    // ==========================================
+    // GETTERS/SETTERS MENU DU JOUR
+    // ==========================================
+
+    public function getDailyEntree(): ?string
     {
-        return $this->prixPlatDessert;
+        return $this->daily_entree;
     }
 
-    public function setPrixPlatDessert(?string $prixPlatDessert): static
+    public function setDailyEntree(?string $daily_entree): static
     {
-        $this->prixPlatDessert = $prixPlatDessert;
+        $this->daily_entree = $daily_entree;
 
         return $this;
     }
 
-    public function isAfficherPrixFormules(): bool
+    public function getDailyPlat(): ?string
     {
-        return $this->afficherPrixFormules;
+        return $this->daily_plat;
     }
 
-    public function setAfficherPrixFormules(bool $afficherPrixFormules): static
+    public function setDailyPlat(?string $daily_plat): static
     {
-        $this->afficherPrixFormules = $afficherPrixFormules;
+        $this->daily_plat = $daily_plat;
+
+        return $this;
+    }
+
+    public function getDailyDessert(): ?string
+    {
+        return $this->daily_dessert;
+    }
+
+    public function setDailyDessert(?string $daily_dessert): static
+    {
+        $this->daily_dessert = $daily_dessert;
+
+        return $this;
+    }
+
+    public function getPriceEpd(): ?string
+    {
+        return $this->price_epd;
+    }
+
+    public function setPriceEpd(?string $price_epd): static
+    {
+        $this->price_epd = $price_epd;
+
+        return $this;
+    }
+
+    public function getPriceEp(): ?string
+    {
+        return $this->price_ep;
+    }
+
+    public function setPriceEp(?string $price_ep): static
+    {
+        $this->price_ep = $price_ep;
+
+        return $this;
+    }
+
+    public function getPricePd(): ?string
+    {
+        return $this->price_pd;
+    }
+
+    public function setPricePd(?string $price_pd): static
+    {
+        $this->price_pd = $price_pd;
+
+        return $this;
+    }
+
+    // ==========================================
+    // GETTERS/SETTERS MENU SPÉCIAL
+    // ==========================================
+
+    public function getSpecialGlobalPrice(): ?string
+    {
+        return $this->special_global_price;
+    }
+
+    public function setSpecialGlobalPrice(?string $special_global_price): static
+    {
+        $this->special_global_price = $special_global_price;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Section>
+     * @return Collection<int, ArdoiseItem>
      */
-    public function getSections(): Collection
+    public function getItems(): Collection
     {
-        return $this->sections;
+        return $this->items;
     }
 
-    public function addSection(Section $section): static
+    public function addItem(ArdoiseItem $item): static
     {
-        if (!$this->sections->contains($section)) {
-            $this->sections->add($section);
-            $section->setArdoise($this);
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setParent($this);
         }
 
         return $this;
     }
 
-    public function removeSection(Section $section): static
+    public function removeItem(ArdoiseItem $item): static
     {
-        if ($this->sections->removeElement($section)) {
+        if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
-            if ($section->getArdoise() === $this) {
-                $section->setArdoise(null);
+            if ($item->getParent() === $this) {
+                $item->setParent(null);
             }
         }
 
@@ -171,6 +269,6 @@ class Ardoise
 
     public function __toString(): string
     {
-        return $this->titre ?? 'Nouvelle ardoise';
+        return $this->titre ?? 'Nouveau menu';
     }
 }

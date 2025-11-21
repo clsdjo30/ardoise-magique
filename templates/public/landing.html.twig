@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}L'Ardoise Magique - Gestion de menus pour restaurateurs{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h1 class="display-3 fw-bold mb-4"><} L'Ardoise Magique</h1>
+            <p class="lead mb-5">
+                La solution moderne pour créer et partager vos menus de restaurant.<br>
+                Gérez vos menus du jour et menus spéciaux en quelques clics.
+            </p>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-sun fa-3x text-warning mb-3"></i>
+                            <h5 class="card-title">Menus du Jour</h5>
+                            <p class="card-text">Créez et publiez vos menus quotidiens avec entrée, plat et dessert.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-star fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">Menus Spéciaux</h5>
+                            <p class="card-text">Gérez vos menus événementiels (Noël, Saint-Valentin, etc.).</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-share-alt fa-3x text-success mb-3"></i>
+                            <h5 class="card-title">Partage Facile</h5>
+                            <p class="card-text">Partagez vos menus avec une URL unique et personnalisée.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-user-plus me-2"></i>Créer mon compte
+                </a>
+                <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-lg px-5">
+                    <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 pt-5 border-top">
+        <div class="col-lg-12 text-center">
+            <h2 class="mb-4">Fonctionnalités</h2>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                </div>
+                <div>
+                    <h5>Interface Intuitive</h5>
+                    <p class="text-muted">Tableau de bord simple et efficace avec EasyAdmin</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                </div>
+                <div>
+                    <h5>Design Responsive</h5>
+                    <p class="text-muted">Vos menus s'affichent parfaitement sur mobile et tablette</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                </div>
+                <div>
+                    <h5>Sécurité Multi-Tenant</h5>
+                    <p class="text-muted">Vos données sont isolées et sécurisées</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle fa-2x text-success me-3"></i>
+                </div>
+                <div>
+                    <h5>Mise à Jour en Temps Réel</h5>
+                    <p class="text-muted">Modifiez vos menus à tout moment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    .card {
+        border: none;
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}

@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Ardoise>
      */
-    #[ORM\OneToMany(targetEntity: Ardoise::class, mappedBy: 'restaurateur', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Ardoise::class, mappedBy: 'owner', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $ardoises;
 
     public function __construct()
@@ -162,7 +162,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->ardoises->contains($ardoise)) {
             $this->ardoises->add($ardoise);
-            $ardoise->setRestaurateur($this);
+            $ardoise->setOwner($this);
         }
 
         return $this;
@@ -172,8 +172,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->ardoises->removeElement($ardoise)) {
             // set the owning side to null (unless already changed)
-            if ($ardoise->getRestaurateur() === $this) {
-                $ardoise->setRestaurateur(null);
+            if ($ardoise->getOwner() === $this) {
+                $ardoise->setOwner(null);
             }
         }
 
