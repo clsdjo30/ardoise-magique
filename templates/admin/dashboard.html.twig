@@ -9,6 +9,103 @@
 {% block page_content %}
     <div class="row">
         <div class="col-md-8">
+            {% if menus is defined and menus|length > 0 %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fa fa-link"></i> Mes Menus et Liens Publics
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">
+                        <i class="fa fa-info-circle"></i>
+                        Partagez ces liens sur vos reseaux sociaux, site web ou imprimez-les avec des QR codes !
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Titre</th>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        <th>Restaurant</th>
+                                    {% endif %}
+                                    <th>Statut</th>
+                                    <th>Lien Public</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for menu in menus %}
+                                <tr>
+                                    <td>
+                                        {% if menu.type == 'DAILY' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fa fa-sun"></i> Jour
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-primary">
+                                                <i class="fa fa-star"></i> Special
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <strong>{{ menu.titre }}</strong>
+                                    </td>
+                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                        <td>
+                                            <small class="text-muted">{{ menu.owner.nomRestaurant }}</small>
+                                        </td>
+                                    {% endif %}
+                                    <td>
+                                        {% if menu.status %}
+                                            <span class="badge bg-success">
+                                                <i class="fa fa-check"></i> Publie
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fa fa-eye-slash"></i> Brouillon
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% set publicUrl = url('app_public_menu', {
+                                            'restaurant': menu.owner.slug,
+                                            'slug': menu.slug
+                                        }) %}
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                value="{{ publicUrl }}"
+                                                id="url-{{ menu.id }}"
+                                                readonly
+                                            >
+                                            <button
+                                                class="btn btn-outline-primary"
+                                                type="button"
+                                                onclick="copyToClipboard('url-{{ menu.id }}')"
+                                                title="Copier le lien"
+                                            >
+                                                <i class="fa fa-copy"></i>
+                                            </button>
+                                            <a
+                                                href="{{ publicUrl }}"
+                                                class="btn btn-outline-success"
+                                                target="_blank"
+                                                title="Voir le menu"
+                                            >
+                                                <i class="fa fa-external-link-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fa fa-info-circle"></i> Guide d'utilisation
@@ -100,4 +197,32 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function copyToClipboard(elementId) {
+            const input = document.getElementById(elementId);
+            input.select();
+            input.setSelectionRange(0, 99999); // Pour mobile
+
+            navigator.clipboard.writeText(input.value).then(function() {
+                // Feedback visuel
+                const button = input.nextElementSibling;
+                const originalHtml = button.innerHTML;
+                button.innerHTML = '<i class="fa fa-check"></i>';
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-success');
+
+                setTimeout(function() {
+                    button.innerHTML = originalHtml;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-outline-primary');
+                }, 2000);
+            }).catch(function(err) {
+                alert('Erreur lors de la copie : ' + err);
+            });
+        }
+    </script>
 {% endblock %}

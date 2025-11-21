@@ -39,9 +39,13 @@ class DashboardController extends AbstractDashboardController
         $totalMenus = $this->ardoiseRepository->count([]);
         $menusPublies = $this->ardoiseRepository->count(['status' => true]);
 
+        // Liste de tous les menus (pour super admin)
+        $menus = $this->ardoiseRepository->findBy([], ['id' => 'DESC']);
+
         return $this->render('admin/dashboard.html.twig', [
             'totalMenus' => $totalMenus,
             'menusPublies' => $menusPublies,
+            'menus' => $menus,
         ]);
     }
 
@@ -65,9 +69,16 @@ class DashboardController extends AbstractDashboardController
         $totalMenus = $this->ardoiseRepository->count(['owner' => $user]);
         $menusPublies = $this->ardoiseRepository->count(['owner' => $user, 'status' => true]);
 
+        // Recuperer tous les menus du restaurateur pour afficher les liens publics
+        $menus = $this->ardoiseRepository->findBy(
+            ['owner' => $user],
+            ['id' => 'DESC']
+        );
+
         return $this->render('admin/dashboard.html.twig', [
             'totalMenus' => $totalMenus,
             'menusPublies' => $menusPublies,
+            'menus' => $menus,
         ]);
     }
 
