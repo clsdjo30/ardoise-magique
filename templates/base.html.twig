@@ -111,7 +111,7 @@
                 <ul class="navbar-nav ms-auto">
                     {% if app.user %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('admin') }}">
+                            <a class="nav-link" href="{% if is_granted('ROLE_SUPER_ADMIN') %}{{ path('app_admin_dashboard') }}{% else %}{{ path('admin', {'restaurant': app.user.slug}) }}{% endif %}">
                                 <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                             </a>
                         </li>
