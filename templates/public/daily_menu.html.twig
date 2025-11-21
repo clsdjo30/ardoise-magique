@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %} #}
 
-{% block title %}{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}{% endblock %}
+{# {% block title %}{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}{% endblock %} #}
 
 {% block body %}
 <div class="menu-container daily-menu">
@@ -12,7 +12,7 @@
     <div class="menu-content">
         {% if ardoise.dailyEntree %}
         <div class="menu-section">
-            <h3 class="section-title">Entrée</h3>
+            <h3 class="section-title">Entrï¿½e</h3>
             <div class="section-content">
                 {{ ardoise.dailyEntree|nl2br }}
             </div>
@@ -42,20 +42,20 @@
             <h3 class="pricing-title">Nos Formules</h3>
             {% if ardoise.priceEpd %}
             <div class="price-item">
-                <span class="formula">Entrée + Plat + Dessert</span>
-                <span class="price">{{ ardoise.priceEpd }}¬</span>
+                <span class="formula">Entrï¿½e + Plat + Dessert</span>
+                <span class="price">{{ ardoise.priceEpd }}ï¿½</span>
             </div>
             {% endif %}
             {% if ardoise.priceEp %}
             <div class="price-item">
-                <span class="formula">Entrée + Plat</span>
-                <span class="price">{{ ardoise.priceEp }}¬</span>
+                <span class="formula">Entrï¿½e + Plat</span>
+                <span class="price">{{ ardoise.priceEp }}ï¿½</span>
             </div>
             {% endif %}
             {% if ardoise.pricePd %}
             <div class="price-item">
                 <span class="formula">Plat + Dessert</span>
-                <span class="price">{{ ardoise.pricePd }}¬</span>
+                <span class="price">{{ ardoise.pricePd }}ï¿½</span>
             </div>
             {% endif %}
         </div>

@@ -122,7 +122,7 @@ class DailyMenuCrudController extends AbstractCrudController
         /** @var User $user */
         $user = $this->getUser();
 
-        $publicUrl = $this->urlGenerator->generate('app_public_menu', [
+        $publicUrl = $this->urlGenerator->generate('app_show_menu', [
             'restaurant' => $user->getSlug(),
             'slug' => $ardoise->getSlug()
         ], UrlGeneratorInterface::ABSOLUTE_URL);

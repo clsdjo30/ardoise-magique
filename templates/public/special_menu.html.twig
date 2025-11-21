@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %} #}
 
-{% block title %}{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}{% endblock %}
+{# {% block title %}{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}{% endblock %} #}
 
 {% block body %}
 <div class="special-menu-container">
@@ -8,7 +8,7 @@
         <h1 class="restaurant-name">{{ restaurant.nomRestaurant }}</h1>
         <h2 class="menu-title">{{ ardoise.titre }}</h2>
         {% if ardoise.specialGlobalPrice %}
-        <div class="global-price">{{ ardoise.specialGlobalPrice }}¬</div>
+        <div class="global-price">{{ ardoise.specialGlobalPrice }}ï¿½</div>
         {% endif %}
     </div>
 
@@ -18,7 +18,7 @@
             <div class="item-header">
                 <h3 class="item-name">{{ item.name }}</h3>
                 {% if item.price %}
-                <span class="item-price">{{ item.price }}¬</span>
+                <span class="item-price">{{ item.price }}ï¿½</span>
                 {% endif %}
             </div>
             {% if item.description %}
