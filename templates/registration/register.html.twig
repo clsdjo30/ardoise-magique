@@ -2,55 +2,213 @@
 
 {% block title %}Inscription - L'Ardoise Magique{% endblock %}
 
+{% block extra_styles %}
+    .register-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .register-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        max-width: 500px;
+        width: 100%;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .register-header {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+    }
+
+    .register-header h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .register-header p {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    .register-body {
+        padding: 40px 30px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-group .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-group .form-control:focus {
+        border-color: #11998e;
+        box-shadow: 0 0 0 0.2rem rgba(17, 153, 142, 0.25);
+        outline: none;
+    }
+
+    .form-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    .invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+
+    .btn-register {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        margin-top: 10px;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border: none;
+        color: white;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(17, 153, 142, 0.4);
+        color: white;
+    }
+
+    .login-link {
+        text-align: center;
+        padding: 20px 30px;
+        background: #f8f9fa;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .login-link a {
+        color: #11998e;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .feature-box {
+        background: #f0f9ff;
+        border-left: 4px solid #11998e;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .feature-box i {
+        color: #11998e;
+        margin-right: 10px;
+    }
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0">Créer un compte</h4>
-                </div>
-                <div class="card-body">
-                    {{ form_start(registrationForm) }}
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.nom_restaurant) }}
-                            {{ form_widget(registrationForm.nom_restaurant) }}
-                            {{ form_errors(registrationForm.nom_restaurant) }}
-                            <div class="form-text">
-                                Ce nom sera utilisé pour créer votre URL publique (ex: /ardoise/le-petit-nicois)
-                            </div>
-                        </div>
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <i class="fas fa-user-plus fa-3x mb-3"></i>
+            <h1>Creer un compte</h1>
+            <p>Rejoignez L'Ardoise Magique aujourd'hui</p>
+        </div>
 
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.email) }}
-                            {{ form_widget(registrationForm.email) }}
-                            {{ form_errors(registrationForm.email) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.plainPassword.first) }}
-                            {{ form_widget(registrationForm.plainPassword.first) }}
-                            {{ form_errors(registrationForm.plainPassword.first) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.plainPassword.second) }}
-                            {{ form_widget(registrationForm.plainPassword.second) }}
-                            {{ form_errors(registrationForm.plainPassword.second) }}
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success">S'inscrire</button>
-                        </div>
-                    {{ form_end(registrationForm) }}
-
-                    <hr>
-
-                    <div class="text-center">
-                        <p class="mb-0">Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
-                    </div>
-                </div>
+        <div class="register-body">
+            <div class="feature-box">
+                <p class="mb-0">
+                    <i class="fas fa-check-circle"></i>
+                    <strong>Gratuit</strong> - Creez vos menus en quelques minutes
+                </p>
             </div>
+
+            {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="form-group">
+                {{ form_label(registrationForm.nom_restaurant, 'Nom du restaurant') }}
+                {{ form_widget(registrationForm.nom_restaurant, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Le Petit Nicois'}}) }}
+                {{ form_errors(registrationForm.nom_restaurant) }}
+                <small class="form-text">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Ce nom sera utilise pour creer votre URL publique
+                </small>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.email, 'Adresse email') }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'exemple@restaurant.fr'}}) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword.first, 'Mot de passe') }}
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Minimum 6 caracteres'}}) }}
+                {{ form_errors(registrationForm.plainPassword.first) }}
+                <small class="form-text">
+                    <i class="fas fa-lock me-1"></i>
+                    Minimum 6 caracteres recommandes
+                </small>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe') }}
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Retapez votre mot de passe'}}) }}
+                {{ form_errors(registrationForm.plainPassword.second) }}
+            </div>
+
+            <button type="submit" class="btn btn-register">
+                <i class="fas fa-rocket me-2"></i>
+                Creer mon compte
+            </button>
+
+            {{ form_end(registrationForm) }}
+        </div>
+
+        <div class="login-link">
+            <p class="mb-0">
+                Vous avez deja un compte ?
+                <a href="{{ path('app_login') }}">
+                    <i class="fas fa-sign-in-alt me-1"></i>
+                    Se connecter
+                </a>
+            </p>
         </div>
     </div>
 </div>

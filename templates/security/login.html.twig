@@ -2,54 +2,218 @@
 
 {% block title %}Connexion - L'Ardoise Magique{% endblock %}
 
+{% block extra_styles %}
+    .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        max-width: 450px;
+        width: 100%;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+    }
+
+    .login-header h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .login-header p {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    .login-body {
+        padding: 40px 30px;
+    }
+
+    .form-floating {
+        margin-bottom: 20px;
+    }
+
+    .form-floating > .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 1rem 0.75rem;
+        height: calc(3.5rem + 2px);
+    }
+
+    .form-floating > .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .form-floating > label {
+        padding: 1rem 0.75rem;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    .divider {
+        text-align: center;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 1px;
+        background: #e0e0e0;
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 15px;
+        position: relative;
+        color: #999;
+        font-size: 0.9rem;
+    }
+
+    .register-link {
+        text-align: center;
+        padding: 20px 30px;
+        background: #f8f9fa;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .register-link a {
+        color: #667eea;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+
+    .icon-input {
+        position: relative;
+    }
+
+    .icon-input i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+    }
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Connexion</h4>
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <i class="fas fa-utensils fa-3x mb-3"></i>
+            <h1>Connexion</h1>
+            <p>Acced ez a votre tableau de bord</p>
+        </div>
+
+        <div class="login-body">
+            {% if error %}
+                <div class="alert alert-danger mb-4">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
                 </div>
-                <div class="card-body">
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                    {% endif %}
+            {% endif %}
 
-                    {% if app.user %}
-                        <div class="alert alert-info">
-                            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
-                        </div>
-                    {% endif %}
-
-                    <form method="post">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Email</label>
-                            <input type="email" value="{{ last_username }}" name="_username" id="username"
-                                   class="form-control" autocomplete="email" required autofocus>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mot de passe</label>
-                            <input type="password" name="_password" id="password"
-                                   class="form-control" autocomplete="current-password" required>
-                        </div>
-
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" type="submit">
-                                Se connecter
-                            </button>
-                        </div>
-                    </form>
-
-                    <hr>
-
-                    <div class="text-center">
-                        <p class="mb-0">Pas encore de compte ? <a href="{{ path('app_register') }}">Créer un compte</a></p>
-                    </div>
+            {% if app.user %}
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Vous etes connecte en tant que <strong>{{ app.user.userIdentifier }}</strong>
+                    <br>
+                    <a href="{{ path('app_logout') }}" class="text-decoration-underline">Se deconnecter</a>
                 </div>
-            </div>
+            {% endif %}
+
+            <form method="post">
+                <div class="form-floating icon-input">
+                    <input type="email"
+                           value="{{ last_username }}"
+                           name="_username"
+                           id="username"
+                           class="form-control"
+                           placeholder="Email"
+                           autocomplete="email"
+                           required
+                           autofocus>
+                    <label for="username">
+                        <i class="fas fa-envelope me-2"></i>Email
+                    </label>
+                </div>
+
+                <div class="form-floating icon-input">
+                    <input type="password"
+                           name="_password"
+                           id="password"
+                           class="form-control"
+                           placeholder="Mot de passe"
+                           autocomplete="current-password"
+                           required>
+                    <label for="password">
+                        <i class="fas fa-lock me-2"></i>Mot de passe
+                    </label>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button class="btn btn-gradient btn-login" type="submit">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Se connecter
+                </button>
+            </form>
+        </div>
+
+        <div class="register-link">
+            <p class="mb-0">
+                Pas encore de compte ?
+                <a href="{{ path('app_register') }}">
+                    <i class="fas fa-user-plus me-1"></i>
+                    Creer un compte
+                </a>
+            </p>
         </div>
     </div>
 </div>
