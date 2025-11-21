@@ -20,25 +20,48 @@ class DashboardController extends AbstractDashboardController
     ) {
     }
 
-    #[Route('/admin/{restaurant}', name: 'admin', defaults: ['restaurant' => null])]
+    /**
+     * Route principale admin - accessible uniquement par ROLE_SUPER_ADMIN
+     * Redirige les ROLE_USER vers leur route personnalisee
+     */
     #[Route('/admin', name: 'app_admin_dashboard')]
-    public function index(?string $restaurant): Response
+    public function index(): Response
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        // Si un restaurant est specifie dans l'URL, verifier que c'est bien celui de l'utilisateur
-        if ($restaurant && $user->getSlug() !== $restaurant && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+        // Si l'utilisateur n'est pas super admin, rediriger vers sa route personnalisee
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            return $this->redirectToRoute('admin', ['restaurant' => $user->getSlug()]);
+        }
+
+        // Dashboard pour super admin
+        $totalMenus = $this->ardoiseRepository->count([]);
+        $menusPublies = $this->ardoiseRepository->count(['status' => true]);
+
+        return $this->render('admin/dashboard.html.twig', [
+            'totalMenus' => $totalMenus,
+            'menusPublies' => $menusPublies,
+        ]);
+    }
+
+    /**
+     * Route personnalisee pour ROLE_USER - affiche /admin/{restaurant-slug}
+     * Accessible par tous les utilisateurs authentifies
+     */
+    #[Route('/admin/{restaurant}', name: 'admin')]
+    public function restaurantDashboard(string $restaurant): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Verifier que l'utilisateur accede bien a son propre restaurant (sauf super admin)
+        if ($user->getSlug() !== $restaurant && !$this->isGranted('ROLE_SUPER_ADMIN')) {
             // Rediriger vers le bon slug
             return $this->redirectToRoute('admin', ['restaurant' => $user->getSlug()]);
         }
 
-        // Si pas de restaurant dans l'URL et que c'est un ROLE_USER, rediriger avec le slug
-        if (!$restaurant && !$this->isGranted('ROLE_SUPER_ADMIN')) {
-            return $this->redirectToRoute('admin', ['restaurant' => $user->getSlug()]);
-        }
-
-        // Statistiques pour le dashboard
+        // Statistiques pour le dashboard du restaurateur
         $totalMenus = $this->ardoiseRepository->count(['owner' => $user]);
         $menusPublies = $this->ardoiseRepository->count(['owner' => $user, 'status' => true]);
 
