@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Ardoise;
+use App\Entity\User;
 use App\Form\ArdoiseItemType;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -17,9 +18,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SpecialMenuCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator
+    ) {
+    }
+
     public static function getEntityFqcn(): string
     {
         return Ardoise::class;
@@ -96,5 +103,40 @@ class SpecialMenuCrudController extends AbstractCrudController
         }
 
         parent::persistEntity($entityManager, $entityInstance);
+
+        // Generer l'URL publique du menu
+        $this->addPublicUrlFlash($entityInstance);
+    }
+
+    public function updateEntity($entityManager, $entityInstance): void
+    {
+        /** @var Ardoise $entityInstance */
+        // Mise a jour automatique de la position des items
+        $position = 0;
+        foreach ($entityInstance->getItems() as $item) {
+            $item->setPosition($position++);
+        }
+
+        parent::updateEntity($entityManager, $entityInstance);
+
+        // Generer l'URL publique du menu
+        $this->addPublicUrlFlash($entityInstance);
+    }
+
+    private function addPublicUrlFlash(Ardoise $ardoise): void
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $publicUrl = $this->urlGenerator->generate('app_public_menu', [
+            'restaurant' => $user->getSlug(),
+            'slug' => $ardoise->getSlug()
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $this->addFlash('success', sprintf(
+            'Menu cree avec succes ! URL publique : <a href="%s" target="_blank">%s</a>',
+            $publicUrl,
+            $publicUrl
+        ));
     }
 }

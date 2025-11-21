@@ -14,34 +14,25 @@
                     <i class="fa fa-info-circle"></i> Guide d'utilisation
                 </div>
                 <div class="card-body">
-                    <h5>Gestion Avancée avec Interface à Onglets</h5>
-                    <p>Le système vous permet de gérer des structures de menus complexes avec une interface intuitive organisée en 3 onglets :</p>
+                    <h5>Gestion de vos Menus</h5>
+                    <p>L'Ardoise Magique vous permet de gerer facilement deux types de menus :</p>
 
                     <div class="row mt-3">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="card bg-light">
-                                <div class="card-body text-center">
-                                    <i class="fa fa-cog fa-3x text-primary mb-2"></i>
-                                    <h6>1. Configuration</h6>
-                                    <small>Titre et mise en ligne</small>
+                                <div class="card-body">
+                                    <i class="fa fa-sun fa-2x text-warning mb-2"></i>
+                                    <h6>Menus du Jour</h6>
+                                    <p class="small mb-0">Creez vos menus quotidiens avec entree, plat, dessert et formules tarifaires.</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="card bg-light">
-                                <div class="card-body text-center">
-                                    <i class="fa fa-euro-sign fa-3x text-success mb-2"></i>
-                                    <h6>2. Tarification</h6>
-                                    <small>Définition des prix et formules</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card bg-light">
-                                <div class="card-body text-center">
-                                    <i class="fa fa-utensils fa-3x text-warning mb-2"></i>
-                                    <h6>3. Composition</h6>
-                                    <small>Ajout de sections et plats</small>
+                                <div class="card-body">
+                                    <i class="fa fa-star fa-2x text-primary mb-2"></i>
+                                    <h6>Menus Speciaux</h6>
+                                    <p class="small mb-0">Composez vos menus evenementiels avec une liste d'items personnalisables.</p>
                                 </div>
                             </div>
                         </div>
@@ -49,21 +40,12 @@
 
                     <hr class="my-4">
 
-                    <h6><i class="fa fa-lightbulb"></i> Exemple : Menu Dégustation 7 Services</h6>
+                    <h6><i class="fa fa-lightbulb"></i> Comment ca marche ?</h6>
                     <ol>
-                        <li><strong>Configuration :</strong> Saisissez "Menu Prestige d'Automne", cochez "Mettre en ligne"</li>
-                        <li><strong>Tarification :</strong> Saisissez 85€ dans "Prix Menu Complet"</li>
-                        <li><strong>Composition :</strong> Ajoutez 7 sections :
-                            <ul class="small">
-                                <li>Mise en Bouche → Cromesquis de Truffe</li>
-                                <li>Entrée Froide → Carpaccio de St Jacques</li>
-                                <li>Entrée Chaude → Foie Gras Poêlé</li>
-                                <li>Poisson → Turbot Sauvage</li>
-                                <li>Viande → Biche Grand Veneur</li>
-                                <li>Fromage → Chariot Affiné</li>
-                                <li>Dessert → La Sphère Chocolat</li>
-                            </ul>
-                        </li>
+                        <li><strong>Creer un menu :</strong> Cliquez sur "Creer un Menu du Jour" ou "Creer un Menu Special"</li>
+                        <li><strong>Remplir les informations :</strong> Titre, contenu, prix</li>
+                        <li><strong>Publier :</strong> Cochez "Publie" pour rendre le menu visible</li>
+                        <li><strong>Partager :</strong> Recuperez l'URL publique pour partager votre menu</li>
                     </ol>
                 </div>
             </div>
@@ -76,12 +58,32 @@
                 </div>
                 <div class="card-body">
                     <p class="mb-2">
-                        <strong>Total ardoises :</strong>
-                        <span class="badge bg-primary">{{ ea.crud.filtersConfig.filters|length ?? 0 }}</span>
+                        <strong>Total menus :</strong>
+                        <span class="badge bg-primary">{{ totalMenus }}</span>
                     </p>
                     <p class="mb-2">
-                        <strong>Ardoises en ligne :</strong>
-                        <span class="badge bg-success">0</span>
+                        <strong>Menus publies :</strong>
+                        <span class="badge bg-success">{{ menusPublies }}</span>
+                    </p>
+                    <p class="mb-0">
+                        <strong>Menus non publies :</strong>
+                        <span class="badge bg-secondary">{{ totalMenus - menusPublies }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fa fa-user"></i> Mon Restaurant
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>Nom :</strong><br>
+                        {{ app.user.nomRestaurant }}
+                    </p>
+                    <p class="mb-0">
+                        <strong>URL publique :</strong><br>
+                        <small class="text-muted">/m/{{ app.user.slug }}/[menu-slug]</small>
                     </p>
                 </div>
             </div>
@@ -91,9 +93,9 @@
                     <i class="fa fa-question-circle"></i> Aide rapide
                 </div>
                 <div class="card-body">
-                    <p class="small mb-2"><strong>Sections :</strong> Structurent votre menu (Entrées, Plats, Desserts...)</p>
-                    <p class="small mb-2"><strong>Ordre :</strong> Définit la séquence d'affichage (1, 2, 3...)</p>
-                    <p class="small mb-0"><strong>Supplément :</strong> Prix additionnel pour un plat spécifique (ex: +5€ truffe)</p>
+                    <p class="small mb-2"><strong>Status :</strong> Active/desactive la visibilite publique</p>
+                    <p class="small mb-2"><strong>Slug :</strong> Identifiant unique dans l'URL</p>
+                    <p class="small mb-0"><strong>Prix :</strong> Utilise le point comme separateur (ex: 12.50)</p>
                 </div>
             </div>
         </div>
