@@ -30,8 +30,8 @@ class DailyMenuCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Menu du Jour')
             ->setEntityLabelInPlural('Menus du Jour')
             ->setPageTitle('index', 'Menus du Jour')
-            ->setPageTitle('new', 'Créer un Menu du Jour')
-            ->setPageTitle('edit', 'Modifier le Menu du Jour')
+            ->setPageTitle('new', 'Nouveau Menu du Jour')
+            ->setPageTitle('edit', 'Edition Menu du Jour')
             ->setDefaultSort(['id' => 'DESC']);
     }
 
@@ -40,28 +40,28 @@ class DailyMenuCrudController extends AbstractCrudController
         yield TextField::new('titre', 'Titre du menu')
             ->setHelp('Ex: Menu du Jour du 21 Novembre');
 
-        yield BooleanField::new('status', 'Publié')
+        yield BooleanField::new('status', 'Publie')
             ->setHelp('Cochez pour rendre ce menu visible publiquement');
 
-        yield TextareaField::new('daily_entree', 'Entrée')
-            ->setHelp('Décrivez l\'entrée du jour')
+        yield TextareaField::new('daily_entree', 'Entree')
+            ->setHelp('Decrivez l\'entree du jour')
             ->hideOnIndex();
 
         yield TextareaField::new('daily_plat', 'Plat')
-            ->setHelp('Décrivez le plat du jour')
+            ->setHelp('Decrivez le plat du jour')
             ->hideOnIndex();
 
         yield TextareaField::new('daily_dessert', 'Dessert')
-            ->setHelp('Décrivez le dessert du jour')
+            ->setHelp('Decrivez le dessert du jour')
             ->hideOnIndex();
 
         yield MoneyField::new('price_epd', 'Prix E+P+D')
             ->setCurrency('EUR')
-            ->setHelp('Prix de la formule Entrée + Plat + Dessert');
+            ->setHelp('Prix de la formule Entree + Plat + Dessert');
 
         yield MoneyField::new('price_ep', 'Prix E+P')
             ->setCurrency('EUR')
-            ->setHelp('Prix de la formule Entrée + Plat');
+            ->setHelp('Prix de la formule Entree + Plat');
 
         yield MoneyField::new('price_pd', 'Prix P+D')
             ->setCurrency('EUR')

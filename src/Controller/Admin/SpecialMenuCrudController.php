@@ -28,25 +28,25 @@ class SpecialMenuCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Menu Spécial')
-            ->setEntityLabelInPlural('Menus Spéciaux')
-            ->setPageTitle('index', 'Menus Spéciaux')
-            ->setPageTitle('new', 'Créer un Menu Spécial')
-            ->setPageTitle('edit', 'Modifier le Menu Spécial')
+            ->setEntityLabelInSingular('Menu Special')
+            ->setEntityLabelInPlural('Menus Speciaux')
+            ->setPageTitle('index', 'Menus Speciaux')
+            ->setPageTitle('new', 'Nouveau Menu Special')
+            ->setPageTitle('edit', 'Edition Menu Special')
             ->setDefaultSort(['id' => 'DESC']);
     }
 
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('titre', 'Titre du menu')
-            ->setHelp('Ex: Menu de Noël 2024, Menu Saint-Valentin');
+            ->setHelp('Ex: Menu de Noel 2024, Menu Saint-Valentin');
 
-        yield BooleanField::new('status', 'Publié')
+        yield BooleanField::new('status', 'Publie')
             ->setHelp('Cochez pour rendre ce menu visible publiquement');
 
         yield MoneyField::new('special_global_price', 'Prix global')
             ->setCurrency('EUR')
-            ->setHelp('Prix total du menu spécial (optionnel)')
+            ->setHelp('Prix total du menu special (optionnel)')
             ->hideOnIndex();
 
         yield CollectionField::new('items', 'Composition du menu')
@@ -58,7 +58,7 @@ class SpecialMenuCrudController extends AbstractCrudController
             ->allowDelete(true)
             ->setEntryIsComplex(true)
             ->hideOnIndex()
-            ->setHelp('Ajoutez les différents éléments de votre menu spécial');
+            ->setHelp('Ajoutez les differents elements de votre menu special');
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -89,7 +89,7 @@ class SpecialMenuCrudController extends AbstractCrudController
             $entityInstance->setOwner($this->getUser());
         }
 
-        // Mise à jour automatique de la position des items
+        // Mise a jour automatique de la position des items
         $position = 0;
         foreach ($entityInstance->getItems() as $item) {
             $item->setPosition($position++);

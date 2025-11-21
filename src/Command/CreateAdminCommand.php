@@ -17,7 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
     name: 'app:create-admin',
-    description: 'Créer un utilisateur administrateur',
+    description: 'Creer un utilisateur administrateur',
 )]
 class CreateAdminCommand extends Command
 {
@@ -34,7 +34,7 @@ class CreateAdminCommand extends Command
             ->addArgument('email', InputArgument::REQUIRED, 'Email de l\'administrateur')
             ->addArgument('password', InputArgument::REQUIRED, 'Mot de passe')
             ->addArgument('restaurant_name', InputArgument::OPTIONAL, 'Nom du restaurant', 'Admin Restaurant')
-            ->addOption('super-admin', null, InputOption::VALUE_NONE, 'Créer un super-administrateur');
+            ->addOption('super-admin', null, InputOption::VALUE_NONE, 'Creer un super-administrateur');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -46,15 +46,15 @@ class CreateAdminCommand extends Command
         $restaurantName = $input->getArgument('restaurant_name');
         $isSuperAdmin = $input->getOption('super-admin');
 
-        // Vérifier si l'utilisateur existe déjà
+        // Verifier si l'utilisateur existe deja
         $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
         if ($existingUser) {
-            $io->error(sprintf('Un utilisateur avec l\'email "%s" existe déjà.', $email));
+            $io->error(sprintf('Un utilisateur avec l\'email "%s" existe deja.', $email));
             return Command::FAILURE;
         }
 
-        // Créer le nouvel utilisateur
+        // Creer le nouvel utilisateur
         $user = new User();
         $user->setEmail($email);
         $user->setNomRestaurant($restaurantName);
@@ -63,13 +63,13 @@ class CreateAdminCommand extends Command
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
 
-        // Définir les rôles
+        // Definir les roles
         if ($isSuperAdmin) {
             $user->setRoles(['ROLE_USER', 'ROLE_SUPER_ADMIN']);
-            $io->note('Création d\'un super-administrateur');
+            $io->note('Creation d\'un super-administrateur');
         } else {
             $user->setRoles(['ROLE_USER']);
-            $io->note('Création d\'un utilisateur standard');
+            $io->note('Creation d\'un utilisateur standard');
         }
 
         // Sauvegarder l'utilisateur
@@ -77,15 +77,15 @@ class CreateAdminCommand extends Command
         $this->entityManager->flush();
 
         $io->success([
-            'Utilisateur créé avec succès !',
+            'Utilisateur cree avec succes !',
             sprintf('Email: %s', $email),
             sprintf('Restaurant: %s', $restaurantName),
             sprintf('Slug: %s', $user->getSlug()),
-            sprintf('Rôles: %s', implode(', ', $user->getRoles())),
+            sprintf('Roles: %s', implode(', ', $user->getRoles())),
         ]);
 
         if ($isSuperAdmin) {
-            $io->warning('Cet utilisateur a accès à tous les menus de tous les restaurants.');
+            $io->warning('Cet utilisateur a acces a tous les menus de tous les restaurants.');
         }
 
         return Command::SUCCESS;
