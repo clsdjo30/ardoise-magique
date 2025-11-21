@@ -8,15 +8,16 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec cet email')]
-#[UniqueEntity(fields: ['slug'], message: 'Ce nom de restaurant est déjà utilisé')]
+#[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['email'], message: 'Un compte existe deja avec cet email')]
+#[UniqueEntity(fields: ['slug'], message: 'Ce nom de restaurant est deja utilise')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -42,7 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $nom_restaurant = null;
 
-    #[Gedmo\Slug(fields: ['nom_restaurant'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
@@ -56,6 +56,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->ardoises = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if ($this->nom_restaurant && !$this->slug) {
+            $slugger = new AsciiSlugger();
+            $this->slug = $slugger->slug($this->nom_restaurant)->lower()->toString();
+        }
     }
 
     public function getId(): ?int
@@ -142,12 +152,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->nom_restaurant = $nom_restaurant;
 
+        // Regenerer le slug si le nom du restaurant change
+        if ($this->nom_restaurant) {
+            $slugger = new AsciiSlugger();
+            $this->slug = $slugger->slug($this->nom_restaurant)->lower()->toString();
+        }
+
         return $this;
     }
 
     public function getSlug(): ?string
     {
         return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 
     /**

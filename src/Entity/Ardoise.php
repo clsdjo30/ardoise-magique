@@ -9,9 +9,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: ArdoiseRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Ardoise
 {
     public const TYPE_DAILY = 'DAILY';
@@ -25,7 +26,6 @@ class Ardoise
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
-    #[Gedmo\Slug(fields: ['titre'])]
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
@@ -80,6 +80,18 @@ class Ardoise
         $this->items = new ArrayCollection();
     }
 
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if ($this->titre && !$this->slug) {
+            $slugger = new AsciiSlugger();
+            $baseSlug = $slugger->slug($this->titre)->lower()->toString();
+            // Ajouter un timestamp pour garantir l'unicite
+            $this->slug = $baseSlug . '-' . uniqid();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,6 +106,13 @@ class Ardoise
     {
         $this->titre = $titre;
 
+        // Regenerer le slug si le titre change
+        if ($this->titre && !$this->slug) {
+            $slugger = new AsciiSlugger();
+            $baseSlug = $slugger->slug($this->titre)->lower()->toString();
+            $this->slug = $baseSlug . '-' . uniqid();
+        }
+
         return $this;
     }
 
@@ -102,7 +121,7 @@ class Ardoise
         return $this->slug;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
 
