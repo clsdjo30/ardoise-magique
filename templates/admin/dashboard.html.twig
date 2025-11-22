@@ -1,228 +1,260 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block page_title %}
-    <h1 class="title">
-        <i class="fa fa-home"></i> Bienvenue sur L'Ardoise Magique
-    </h1>
+	<span class="mb-5">
+		<i class="fa fa-fire"></i>
+		Mode StreetFood actif
+	</span>
 {% endblock %}
 
-{% block page_content %}
-    <div class="row">
-        <div class="col-md-8">
-            {% if menus is defined and menus|length > 0 %}
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fa fa-link"></i> Mes Menus et Liens Publics
-                </div>
-                <div class="card-body">
-                    <p class="text-muted mb-3">
-                        <i class="fa fa-info-circle"></i>
-                        Partagez ces liens sur vos reseaux sociaux, site web ou imprimez-les avec des QR codes !
-                    </p>
+{% block main %}
+	{% set publishedMenu = publishedMenu ?? null %}
+	{% if publishedMenu %}
+		{% set publishedUrl = url('app_show_menu', {
+            restaurant: publishedMenu.owner.slug,
+            slug: publishedMenu.slug
+        }) %}
+	{% endif %}
 
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Titre</th>
-                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                        <th>Restaurant</th>
-                                    {% endif %}
-                                    <th>Statut</th>
-                                    <th>Lien Public</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for menu in menus %}
-                                <tr>
-                                    <td>
-                                        {% if menu.type == 'DAILY' %}
-                                            <span class="badge bg-warning text-dark">
-                                                <i class="fa fa-sun"></i> Jour
-                                            </span>
-                                        {% else %}
-                                            <span class="badge bg-primary">
-                                                <i class="fa fa-star"></i> Special
-                                            </span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <strong>{{ menu.titre }}</strong>
-                                    </td>
-                                    {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                        <td>
-                                            <small class="text-muted">{{ menu.owner.nomRestaurant }}</small>
-                                        </td>
-                                    {% endif %}
-                                    <td>
-                                        {% if menu.status %}
-                                            <span class="badge bg-success">
-                                                <i class="fa fa-check"></i> Publie
-                                            </span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">
-                                                <i class="fa fa-eye-slash"></i> Brouillon
-                                            </span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% set publicUrl = url('app_show_menu', {
-                                            'restaurant': menu.owner.slug,
-                                            'slug': menu.slug
-                                        }) %}
-                                        <div class="input-group input-group-sm">
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                value="{{ publicUrl }}"
-                                                id="url-{{ menu.id }}"
-                                                readonly
-                                            >
-                                            <button
-                                                class="btn btn-outline-primary"
-                                                type="button"
-                                                onclick="copyToClipboard('url-{{ menu.id }}')"
-                                                title="Copier le lien"
-                                            >
-                                                <i class="fa fa-copy"></i>
-                                            </button>
-                                            <a
-                                                href="{{ publicUrl }}"
-                                                class="btn btn-outline-success"
-                                                target="_blank"
-                                                title="Voir le menu"
-                                            >
-                                                <i class="fa fa-external-link-alt"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+	<div class="container-fluid my-5">
+		<header class="row align-items-center justify-content-around mb-4">
+			<div class="card col-6">
+				<div class="">
+					<i class="fa fa-truck-fast"></i>
+					Ligne de feu pour les chefs
+				</div>
+				<h1 class="">Ardoise & Menus en mode street</h1>
+				<p class="">
+					Tableaux prêts a partager, liens publics immediats et actions rapides pour garder votre carte a jour sans effort.
+				</p>
+				<div class="">
+					<span class="">
+						<i class="fa fa-location-dot"></i>
+						{{ app.user.nomRestaurant }}</span>
+					<span class="">
+						<i class="fa fa-link"></i>
+						/m/{{ app.user.slug }}/[slug-menu]</span>
+					<span class="">
+						<i class="fa fa-bullhorn"></i>
+						{{ menusPublies }}
+						publie{{ menusPublies > 1 ? 's' : '' }}</span>
+				</div>
+				<div class="">
+					<a class="btn btn-primary" href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}">
+						<i class="fa fa-plus"></i>
+						Menu du jour
+					</a>
+					<a class="btn btn-secondary" href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}">
+						<i class="fa fa-star"></i>
+						Menu special
+					</a>
+					<a class="btn btn-ghost" href="#menus-list">
+						<i class="fa fa-list"></i>
+						Voir mes menus
+					</a>
+				</div>
+			</div>
+			<div class="card col-4">
+				<div class="">
+					<span>Lien public actif</span>
+					<span class=" {{ publishedMenu ? 'success' : 'draft' }}">
+						<i class="fa {{ publishedMenu ? 'fa-check' : 'fa-eye-slash' }}"></i>
+						{{ publishedMenu ? 'Publie' : 'En attente' }}
+					</span>
+				</div>
+				{% if publishedMenu %}
+					<div class=" mb-2">
+						<div class=" mb-2">Menu :
+							{{ publishedMenu.titre }}</div>
+						<div class="input-group input-group-sm">
+							<input type="text" class="form-control" id="published-url" value="{{ publishedUrl }}" readonly>
+							<button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('published-url')" title="Copier le lien">
+								<i class="fa fa-copy"></i>
+							</button>
+							<a class="btn btn-outline-success" href="{{ publishedUrl }}" target="_blank" title="Voir le menu">
+								<i class="fa fa-external-link-alt"></i>
+							</a>
+						</div>
+					</div>
+					<div class="">
+						<span class="btn">
+							<i class="fa fa-qrcode"></i>
+							Imprimez ou collez ce lien dans un QR code pour vos tables.
+						</span>
+						<span class="btn">
+							<i class="fa fa-bolt"></i>
+							Republiez apres chaque service pour rester en tete des feeds.
+						</span>
+					</div>
+				{% else %}
+					<div class="">
+						<p class="mb-2">Aucun menu publie pour l'instant.</p>
+						<p class=" mb-0">Publiez un menu pour activer un lien public partageable.</p>
+					</div>
+				{% endif %}
+			</div>
+		</header>
 
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fa fa-info-circle"></i> Guide d'utilisation
-                </div>
-                <div class="card-body">
-                    <h5>Gestion de vos Menus</h5>
-                    <p>L'Ardoise Magique vous permet de gerer facilement deux types de menus :</p>
+		<section class="container-fluid">
+			<div class="row align-items-center justify-content-around g-5">
+				<div class="col-3 card">
+					<span class="fs-5">Total menus</span>
+					<span class="fs-1">{{ totalMenus }}</span>
+					<span class="fs-5">
+						<i class="fa fa-fire"></i>
+						Ardoises pretes</span>
+				</div>
+				<div class="col-3 card">
+					<span class="fs-5">Publies</span>
+					<span class="fs-1">{{ menusPublies }}</span>
+					<span class="fs-5 text-success">
+						<i class="fa fa-check"></i>
+						Visible par vos clients</span>
+				</div>
+				<div class="col-3 card">
+					<span class="fs-5">Brouillons</span>
+					<span class="fs-1">{{ totalMenus - menusPublies }}</span>
+					<span class="fs-5 text-warning">
+						<i class="fa fa-hourglass-half"></i>
+						En cuisine</span>
+				</div>
+			</div>
+		</section>
 
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <i class="fa fa-sun fa-2x text-warning mb-2"></i>
-                                    <h6>Menus du Jour</h6>
-                                    <p class="small mb-0">Creez vos menus quotidiens avec entree, plat, dessert et formules tarifaires.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <i class="fa fa-star fa-2x text-primary mb-2"></i>
-                                    <h6>Menus Speciaux</h6>
-                                    <p class="small mb-0">Composez vos menus evenementiels avec une liste d'items personnalisables.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+		<section class="container-fluid mt-4">
+			<div class="row row-cols-3  justify-content-evenly gx-5">
+				<div class="card col-4">
+					<h4>
+						<i class="fa fa-wand-magic-sparkles pe-1"></i>
+						Raccourcis de service</h4>
+					<p class="mb-4 fs-6">Creer, dupliquer ou ajuster vos ardoises en quelques secondes.</p>
+					<div class="cta-row">
+						<a class="btn btn-secondary  px-2" href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}">
+							<i class="fa fa-plus"></i>
+							Nouveau menu du jour
+						</a>
+						<a class="btn btn-cta-danger px-2" href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}">
+							<i class="fa fa-star"></i>
+							Nouveau special
+						</a>
+					</div>
+				</div>
+                <div class="card col-3">
+					<h4>
+						<i class="fa fa-lightbulb pe-1"></i>
+						Plan de tir</h4>
+					<ul class="steps ps-3 mb-0 ">
+						<li>Nommer le menu (date ou evenement) de facon claire.</li>
+						<li>Renseigner prix et items, puis cocher "Publie".</li>
+						<li>Copier le lien public et coller en story ou QR code.</li>
+						<li>Mettre a jour chaque jour pour booster la fidelite.</li>
+					</ul>
+				</div>
+				<div class="card col-4">
+					<h4>
+						<i class="fa fa-bullhorn pe-1"></i>
+						Partage express</h4>
+					<p class="mb-3 fs-6">Diffusez votre carte sur vos canaux en un clic. Copiez le lien et balancez-le dans vos stories.</p>
+					<div class="cta-row">
+						<button class="btn btn-outline-primary btn-lg px-3" type="button" onclick="copyFirstPublicUrl()" {% if not publishedMenu %} disabled {% endif %}>
+							<i class="fa fa-copy"></i>
+							Copier le lien actif
+						</button>
+						{% if publishedMenu %}
+							<a class="btn btn-outline-success btn-lg px-3" href="{{ publishedUrl }}" target="_blank">
+								<i class="fa fa-external-link-alt"></i>
+								Voir le rendu client
+							</a>
+						{% endif %}
+					</div>
+					<small class="label-muted d-block mt-3">Astuce : ajoutez le lien dans la bio Instagram ou Google Business.</small>
+				</div>
+			</div>
+		</section>
 
-                    <hr class="my-4">
-
-                    <h6><i class="fa fa-lightbulb"></i> Comment ca marche ?</h6>
-                    <ol>
-                        <li><strong>Creer un menu :</strong> Cliquez sur "Creer un Menu du Jour" ou "Creer un Menu Special"</li>
-                        <li><strong>Remplir les informations :</strong> Titre, contenu, prix</li>
-                        <li><strong>Publier :</strong> Cochez "Publie" pour rendre le menu visible</li>
-                        <li><strong>Partager :</strong> Recuperez l'URL publique pour partager votre menu</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fa fa-chart-bar"></i> Statistiques
-                </div>
-                <div class="card-body">
-                    <p class="mb-2">
-                        <strong>Total menus :</strong>
-                        <span class="badge bg-primary">{{ totalMenus }}</span>
-                    </p>
-                    <p class="mb-2">
-                        <strong>Menus publies :</strong>
-                        <span class="badge bg-success">{{ menusPublies }}</span>
-                    </p>
-                    <p class="mb-0">
-                        <strong>Menus non publies :</strong>
-                        <span class="badge bg-secondary">{{ totalMenus - menusPublies }}</span>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fa fa-user"></i> Mon Restaurant
-                </div>
-                <div class="card-body">
-                    <p class="mb-2">
-                        <strong>Nom :</strong><br>
-                        {{ app.user.nomRestaurant }}
-                    </p>
-                    <p class="mb-0">
-                        <strong>URL publique :</strong><br>
-                        <small class="text-muted">/m/{{ app.user.slug }}/[menu-slug]</small>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fa fa-question-circle"></i> Aide rapide
-                </div>
-                <div class="card-body">
-                    <p class="small mb-2"><strong>Status :</strong> Active/desactive la visibilite publique</p>
-                    <p class="small mb-2"><strong>Slug :</strong> Identifiant unique dans l'URL</p>
-                    <p class="small mb-0"><strong>Prix :</strong> Utilise le point comme separateur (ex: 12.50)</p>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        function copyToClipboard(elementId) {
-            const input = document.getElementById(elementId);
-            input.select();
-            input.setSelectionRange(0, 99999); // Pour mobile
-
-            navigator.clipboard.writeText(input.value).then(function() {
-                // Feedback visuel
-                const button = input.nextElementSibling;
-                const originalHtml = button.innerHTML;
-                button.innerHTML = '<i class="fa fa-check"></i>';
-                button.classList.remove('btn-outline-primary');
-                button.classList.add('btn-success');
-
-                setTimeout(function() {
-                    button.innerHTML = originalHtml;
-                    button.classList.remove('btn-success');
-                    button.classList.add('btn-outline-primary');
-                }, 2000);
-            }).catch(function(err) {
-                alert('Erreur lors de la copie : ' + err);
-            });
-        }
-    </script>
+		<div class="card" >
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<span>
+					<i class="fa fa-clipboard-list"></i>
+					Mes ardoises</span>
+				<span class="label-muted">Lien public uniquement si "Publie" est actif.</span>
+			</div>
+			<div class="card-body">
+				{% if menus is defined and menus|length > 0 %}
+					<div class="table-responsive">
+						<table class="table-modern align-middle">
+							<thead>
+								<tr>
+									<th>Type</th>
+									<th>Titre</th>
+									{% if is_granted('ROLE_SUPER_ADMIN') %}
+										<th>Restaurant</th>
+									{% endif %}
+									<th>Statut</th>
+									<th>Lien</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for menu in menus %}
+									{% set rowUrl = url('app_show_menu', {
+                                        restaurant: menu.owner.slug,
+                                        slug: menu.slug
+                                    }) %}
+									<tr>
+										<td>
+											{% if menu.type == 'DAILY' %}
+												<span class="pill daily">
+													<i class="fa fa-sun"></i>
+													Jour
+												</span>
+											{% else %}
+												<span class="pill special">
+													<i class="fa fa-star"></i>
+													Special
+												</span>
+											{% endif %}
+										</td>
+										<td>
+											<strong>{{ menu.titre }}</strong>
+										</td>
+										{% if is_granted('ROLE_SUPER_ADMIN') %}
+											<td>
+												<small class="text-muted">{{ menu.owner.nomRestaurant }}</small>
+											</td>
+										{% endif %}
+										<td>
+											{% if menu.status %}
+												<span class="pill success">
+													<i class="fa fa-check"></i>
+													Publie
+												</span>
+											{% else %}
+												<span class="pill draft">
+													<i class="fa fa-moon"></i>
+													Brouillon
+												</span>
+											{% endif %}
+										</td>
+										<td>
+											<div class="input-group input-group-sm">
+												<input type="text" class="form-control" value="{{ rowUrl }}" id="url-{{ menu.id }}" readonly>
+												<button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('url-{{ menu.id }}')" title="Copier le lien" {% if not menu.status %} disabled {% endif %}>
+													<i class="fa fa-copy"></i>
+												</button>
+												<a href="{{ rowUrl }}" class="btn {{ menu.status ? 'btn-outline-success' : 'btn-outline-secondary disabled' }}" target="_blank" title="Voir le menu" {% if not menu.status %} aria-disabled="true" tabindex="-1" {% endif %}>
+													<i class="fa fa-external-link-alt"></i>
+												</a>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				{% else %}
+					<p class="mb-0 text-muted">Aucun menu pour le moment. Lancez un menu du jour ou un special pour commencer.</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 {% endblock %}

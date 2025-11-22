@@ -13,11 +13,19 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
+
 class DashboardController extends AbstractDashboardController
 {
     public function __construct(
         private ArdoiseRepository $ardoiseRepository
     ) {
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()->addCssFile('styles/admin.scss');
     }
 
     /**
@@ -41,11 +49,13 @@ class DashboardController extends AbstractDashboardController
 
         // Liste de tous les menus (pour super admin)
         $menus = $this->ardoiseRepository->findBy([], ['id' => 'DESC']);
+        $publishedMenu = $this->getFirstPublishedMenu($menus);
 
         return $this->render('admin/dashboard.html.twig', [
             'totalMenus' => $totalMenus,
             'menusPublies' => $menusPublies,
             'menus' => $menus,
+            'publishedMenu' => $publishedMenu,
         ]);
     }
 
@@ -74,11 +84,13 @@ class DashboardController extends AbstractDashboardController
             ['owner' => $user],
             ['id' => 'DESC']
         );
+        $publishedMenu = $this->getFirstPublishedMenu($menus);
 
         return $this->render('admin/dashboard.html.twig', [
             'totalMenus' => $totalMenus,
             'menusPublies' => $menusPublies,
             'menus' => $menus,
+            'publishedMenu' => $publishedMenu,
         ]);
     }
 
@@ -128,5 +140,21 @@ class DashboardController extends AbstractDashboardController
             ->setLinkRel('nofollow');
         yield MenuItem::linkToUrl('Partage Instagram', 'fab fa-instagram', '#')
             ->setLinkRel('nofollow');
+    }
+
+    /**
+     * Retourne le premier menu publie trouve dans la collection.
+     *
+     * @param iterable<Ardoise> $menus
+     */
+    private function getFirstPublishedMenu(iterable $menus): ?Ardoise
+    {
+        foreach ($menus as $menu) {
+            if ($menu->getStatus()) {
+                return $menu;
+            }
+        }
+
+        return null;
     }
 }

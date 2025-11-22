@@ -1,0 +1,711 @@
+/**
+ * PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ * MINIMALIST ZEN THEME FOR EASYADMIN 4
+ * PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ *
+ * A serene, high-legibility design system emphasizing negative space,
+ * subtle accents, and visual calm for the culinary administration interface.
+ *
+ * Features:
+ * - Light & Dark mode support
+ * - Clean typography (Inter font family)
+ * - Minimal borders and subtle shadows
+ * - Maximum whitespace for visual breathing room
+ * - Soft seafoam green accent colors
+ */
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 1. TYPOGRAPHY IMPORT
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 2. LIGHT THEME (Default)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+:root {
+  // --- Typography ---
+  --ea-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ea-font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ea-font-size-base: 15px;
+  --ea-line-height-base: 1.7;
+
+  // --- Colors: Light Zen Palette ---
+  --ea-bg-color: #F9F9F9;
+  --ea-bg-secondary: #FFFFFF;
+  --ea-text-color: #333333;
+  --ea-text-muted: #6B6B6B;
+  --ea-primary: #A5D6A7;
+  --ea-primary-hover: #8FCC92;
+  --ea-secondary: #E0E0E0;
+  --ea-border-color: #E8E8E8;
+
+  // --- Borders & Shadows ---
+  --ea-border-radius: 4px;
+  --ea-border-width: 1px;
+  --ea-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --ea-box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.08);
+
+  // --- Spacing (Increased for Zen aesthetic) ---
+  --ea-spacing-xs: 8px;
+  --ea-spacing-sm: 16px;
+  --ea-spacing-md: 24px;
+  --ea-spacing-lg: 32px;
+  --ea-spacing-xl: 48px;
+
+  // --- Sidebar ---
+  --ea-sidebar-bg: #FAFAFA;
+  --ea-sidebar-text: #555555;
+  --ea-sidebar-active-bg: #A5D6A7;
+  --ea-sidebar-active-text: #FFFFFF;
+
+  // --- Form Elements ---
+  --ea-input-bg: #FFFFFF;
+  --ea-input-border: #E0E0E0;
+  --ea-input-focus-border: #A5D6A7;
+
+  // --- Tables ---
+  --ea-table-header-bg: #F5F5F5;
+  --ea-table-row-border: #EFEFEF;
+  --ea-table-hover-bg: #F7F9F7;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 3. DARK THEME
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+[data-theme="dark"] {
+  // --- Colors: Dark Zen Palette ---
+  --ea-bg-color: #212121;
+  --ea-bg-secondary: #2A2A2A;
+  --ea-text-color: #E0E0E0;
+  --ea-text-muted: #A0A0A0;
+  --ea-primary: #BCE0BF;
+  --ea-primary-hover: #A8D4AB;
+  --ea-secondary: #3A3A3A;
+  --ea-border-color: #404040;
+
+  // --- Shadows (Lighter for dark mode) ---
+  --ea-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --ea-box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+  // --- Sidebar ---
+  --ea-sidebar-bg: #262626;
+  --ea-sidebar-text: #B0B0B0;
+  --ea-sidebar-active-bg: #BCE0BF;
+  --ea-sidebar-active-text: #212121;
+
+  // --- Form Elements ---
+  --ea-input-bg: #2A2A2A;
+  --ea-input-border: #404040;
+  --ea-input-focus-border: #BCE0BF;
+
+  // --- Tables ---
+  --ea-table-header-bg: #2A2A2A;
+  --ea-table-row-border: #353535;
+  --ea-table-hover-bg: #2D3A2E;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 4. GLOBAL BASE STYLES
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+body.ea {
+  font-family: var(--ea-font-family-base) !important;
+  font-size: var(--ea-font-size-base);
+  line-height: var(--ea-line-height-base);
+  color: var(--ea-text-color);
+  background-color: var(--ea-bg-color);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+// Headings: Clean and minimal weight
+h1, h2, h3, h4, h5, h6,
+.ea h1, .ea h2, .ea h3, .ea h4, .ea h5, .ea h6 {
+  font-family: var(--ea-font-family-heading) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em;
+  color: var(--ea-text-color);
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 5. SIDEBAR (Seamless, Minimal Separation)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.ea-sidebar {
+  background-color: var(--ea-sidebar-bg) !important;
+  border-right: 1px solid var(--ea-border-color) !important;
+  box-shadow: none !important;
+  padding: var(--ea-spacing-md) 0;
+}
+
+// Menu items: Clean and spacious
+.ea-menu-item a,
+.ea-sidebar .menu-item a {
+  color: var(--ea-sidebar-text) !important;
+  padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+  margin: 4px var(--ea-spacing-xs);
+  border-radius: var(--ea-border-radius);
+  font-weight: 400;
+  transition: all 0.2s ease;
+  border: none !important;
+
+  &:hover {
+    background-color: var(--ea-secondary) !important;
+    color: var(--ea-text-color) !important;
+    transform: translateX(2px);
+  }
+}
+
+// Active menu item: Zen accent highlight
+.ea-menu-item.active a,
+.ea-sidebar .menu-item.active a,
+.ea-menu-item a.active {
+  background-color: var(--ea-sidebar-active-bg) !important;
+  color: var(--ea-sidebar-active-text) !important;
+  font-weight: 500;
+  box-shadow: var(--ea-box-shadow);
+}
+
+// Menu icons: Subtle and aligned
+.ea-menu-item i,
+.ea-sidebar .menu-item i {
+  opacity: 0.7;
+  margin-right: var(--ea-spacing-xs);
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 6. MAIN CONTENT AREA
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.ea-content,
+.content-wrapper {
+  background-color: var(--ea-bg-color) !important;
+  padding: var(--ea-spacing-lg) !important;
+}
+
+.content-header-wrapper {
+  margin-bottom: var(--ea-spacing-lg);
+
+  .content-header-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ea-text-color);
+    letter-spacing: -0.02em;
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 7. CARDS & PANELS (Airy, Minimal)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.ea-card,
+.card {
+  background-color: var(--ea-bg-secondary) !important;
+  border: none !important;
+  box-shadow: var(--ea-box-shadow) !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-lg) !important;
+  margin-bottom: var(--ea-spacing-md);
+
+  &:hover {
+    box-shadow: var(--ea-box-shadow-hover) !important;
+  }
+}
+
+.card-header {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--ea-border-color) !important;
+  padding-bottom: var(--ea-spacing-md) !important;
+  margin-bottom: var(--ea-spacing-md) !important;
+  font-weight: 500;
+}
+
+.card-body {
+  padding: var(--ea-spacing-md) 0 !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 8. DATAGRIDS / TABLES (Ultra-Clean, Horizontal Lines Only)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.datagrid {
+  background-color: var(--ea-bg-secondary);
+  border-radius: var(--ea-border-radius);
+  overflow: hidden;
+  box-shadow: var(--ea-box-shadow);
+}
+
+.datagrid-header {
+  background-color: var(--ea-table-header-bg) !important;
+  border-bottom: 2px solid var(--ea-border-color) !important;
+  padding: var(--ea-spacing-md) !important;
+}
+
+.datagrid table {
+  border-collapse: collapse;
+  width: 100%;
+
+  thead {
+    background-color: var(--ea-table-header-bg);
+
+    th {
+      padding: var(--ea-spacing-md) var(--ea-spacing-sm) !important;
+      font-weight: 500 !important;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ea-text-muted) !important;
+      border: none !important;
+      border-bottom: 1px solid var(--ea-table-row-border) !important;
+    }
+  }
+
+  tbody {
+    tr {
+      border-left: none !important;
+      border-right: none !important;
+      border-top: none !important;
+      border-bottom: 1px solid var(--ea-table-row-border) !important;
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: var(--ea-table-hover-bg) !important;
+      }
+
+      &:last-child {
+        border-bottom: none !important;
+      }
+
+      td {
+        padding: var(--ea-spacing-md) var(--ea-spacing-sm) !important;
+        border-left: none !important;
+        border-right: none !important;
+        color: var(--ea-text-color);
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// Remove all vertical borders from table cells
+.datagrid table th,
+.datagrid table td {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 9. FORMS (Minimal Borders, Maximum Spacing)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.ea-form-panel,
+.form-panel {
+  background-color: var(--ea-bg-secondary);
+  border: none !important;
+  box-shadow: var(--ea-box-shadow);
+  border-radius: var(--ea-border-radius);
+  padding: var(--ea-spacing-lg);
+  margin-bottom: var(--ea-spacing-md);
+}
+
+// Field groups: Extra vertical spacing
+.field-group,
+.form-group,
+.ea-form-group {
+  margin-bottom: var(--ea-spacing-lg) !important;
+}
+
+// Labels: Clean and minimal
+.form-label,
+label {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ea-text-color);
+  margin-bottom: var(--ea-spacing-xs) !important;
+  letter-spacing: 0.01em;
+}
+
+// Input fields: Thin borders, focus accent
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+textarea,
+select {
+  background-color: var(--ea-input-bg) !important;
+  border: 1px solid var(--ea-input-border) !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-sm) !important;
+  font-family: var(--ea-font-family-base);
+  font-size: var(--ea-font-size-base);
+  color: var(--ea-text-color) !important;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: var(--ea-input-focus-border) !important;
+    box-shadow: 0 0 0 3px rgba(165, 214, 167, 0.15) !important;
+    outline: none !important;
+  }
+
+  &::placeholder {
+    color: var(--ea-text-muted);
+    opacity: 0.6;
+  }
+}
+
+// Textareas: More vertical space
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+// Select dropdowns
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px !important;
+}
+
+[data-theme="dark"] select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23E0E0E0' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+// Help text
+.form-help,
+.help-text,
+small.form-text {
+  color: var(--ea-text-muted);
+  font-size: 13px;
+  margin-top: var(--ea-spacing-xs);
+  line-height: 1.5;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 10. BUTTONS (Flat, Zen Accent)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.btn {
+  font-family: var(--ea-font-family-base);
+  font-weight: 500 !important;
+  font-size: 14px;
+  padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+  border-radius: var(--ea-border-radius) !important;
+  border: none !important;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+  box-shadow: none !important;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--ea-box-shadow-hover) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Primary button: Zen seafoam green
+.btn-primary {
+  background-color: var(--ea-primary) !important;
+  color: #FFFFFF !important;
+
+  &:hover {
+    background-color: var(--ea-primary-hover) !important;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(165, 214, 167, 0.25) !important;
+  }
+}
+
+// Secondary button: Subtle gray
+.btn-secondary {
+  background-color: var(--ea-secondary) !important;
+  color: var(--ea-text-color) !important;
+
+  &:hover {
+    background-color: var(--ea-border-color) !important;
+  }
+}
+
+// Danger button: Soft red (not aggressive)
+.btn-danger {
+  background-color: #EF9A9A !important;
+  color: #FFFFFF !important;
+
+  &:hover {
+    background-color: #E57373 !important;
+  }
+}
+
+// Link buttons: Minimal
+.btn-link {
+  color: var(--ea-primary) !important;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--ea-primary-hover) !important;
+    text-decoration: underline;
+  }
+}
+
+// Button groups
+.btn-group {
+  .btn {
+    margin-left: var(--ea-spacing-xs);
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 11. ACTIONS & DROPDOWNS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.global-actions,
+.batch-actions {
+  margin-bottom: var(--ea-spacing-md);
+  display: flex;
+  gap: var(--ea-spacing-xs);
+  align-items: center;
+}
+
+.dropdown-menu {
+  background-color: var(--ea-bg-secondary) !important;
+  border: 1px solid var(--ea-border-color) !important;
+  box-shadow: var(--ea-box-shadow-hover) !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-xs) !important;
+
+  .dropdown-item {
+    padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+    color: var(--ea-text-color) !important;
+    border-radius: var(--ea-border-radius);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--ea-table-hover-bg) !important;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 12. PAGINATION (Clean & Minimal)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.pagination {
+  margin-top: var(--ea-spacing-lg);
+
+  .page-item {
+    margin: 0 4px;
+
+    .page-link {
+      background-color: var(--ea-bg-secondary) !important;
+      border: 1px solid var(--ea-border-color) !important;
+      color: var(--ea-text-color) !important;
+      padding: var(--ea-spacing-xs) var(--ea-spacing-sm) !important;
+      border-radius: var(--ea-border-radius) !important;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--ea-primary) !important;
+        color: #FFFFFF !important;
+        border-color: var(--ea-primary) !important;
+      }
+    }
+
+    &.active .page-link {
+      background-color: var(--ea-primary) !important;
+      border-color: var(--ea-primary) !important;
+      color: #FFFFFF !important;
+    }
+
+    &.disabled .page-link {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 13. BADGES & LABELS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.badge {
+  font-weight: 500;
+  font-size: 12px;
+  padding: 4px 12px !important;
+  border-radius: 12px !important;
+  letter-spacing: 0.03em;
+}
+
+.badge-primary {
+  background-color: var(--ea-primary) !important;
+  color: #FFFFFF !important;
+}
+
+.badge-secondary {
+  background-color: var(--ea-secondary) !important;
+  color: var(--ea-text-color) !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 14. ALERTS & FLASH MESSAGES
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.alert {
+  border: none !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-md) !important;
+  margin-bottom: var(--ea-spacing-md);
+  box-shadow: var(--ea-box-shadow);
+}
+
+.alert-success {
+  background-color: #E8F5E9 !important;
+  color: #2E7D32 !important;
+}
+
+[data-theme="dark"] .alert-success {
+  background-color: #1B5E20 !important;
+  color: #C8E6C9 !important;
+}
+
+.alert-danger {
+  background-color: #FFEBEE !important;
+  color: #C62828 !important;
+}
+
+[data-theme="dark"] .alert-danger {
+  background-color: #B71C1C !important;
+  color: #FFCDD2 !important;
+}
+
+.alert-warning {
+  background-color: #FFF3E0 !important;
+  color: #E65100 !important;
+}
+
+[data-theme="dark"] .alert-warning {
+  background-color: #E65100 !important;
+  color: #FFE0B2 !important;
+}
+
+.alert-info {
+  background-color: #E3F2FD !important;
+  color: #1565C0 !important;
+}
+
+[data-theme="dark"] .alert-info {
+  background-color: #0D47A1 !important;
+  color: #BBDEFB !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 15. SEARCH & FILTERS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.datagrid-filters {
+  background-color: var(--ea-bg-secondary);
+  padding: var(--ea-spacing-md);
+  border-radius: var(--ea-border-radius);
+  margin-bottom: var(--ea-spacing-md);
+  box-shadow: var(--ea-box-shadow);
+}
+
+.form-action-search {
+  input[type="search"] {
+    background-color: var(--ea-input-bg) !important;
+    border: 1px solid var(--ea-input-border) !important;
+    border-radius: var(--ea-border-radius) !important;
+    padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+
+    &:focus {
+      border-color: var(--ea-input-focus-border) !important;
+      box-shadow: 0 0 0 3px rgba(165, 214, 167, 0.15) !important;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 16. RESPONSIVE TWEAKS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+@media (max-width: 768px) {
+  .ea-content,
+  .content-wrapper {
+    padding: var(--ea-spacing-md) !important;
+  }
+
+  .ea-card,
+  .card {
+    padding: var(--ea-spacing-md) !important;
+  }
+
+  .datagrid table {
+    font-size: 14px;
+
+    th, td {
+      padding: var(--ea-spacing-sm) var(--ea-spacing-xs) !important;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 17. CUSTOM SCROLLBAR (Zen style)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ea-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ea-secondary);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--ea-border-color);
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 18. UTILITY CLASSES
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.text-muted {
+  color: var(--ea-text-muted) !important;
+}
+
+.border-none {
+  border: none !important;
+}
+
+.shadow-zen {
+  box-shadow: var(--ea-box-shadow) !important;
+}
+
+.shadow-zen-hover:hover {
+  box-shadow: var(--ea-box-shadow-hover) !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// END OF MINIMALIST ZEN THEME
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP

@@ -15,7 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -47,32 +46,37 @@ class DailyMenuCrudController extends AbstractCrudController
         yield TextField::new('titre', 'Nom du menu')
             ->setHelp('Saisissez la date du menu au format : "samedi 22 Novembre"');
 
-        yield BooleanField::new('status', 'Publié')
-            ->setHelp('Cochez pour rendre ce menu visible publiquement');
+            yield NumberField::new('price_epd', 'Prix E+P+D')
+                ->setNumDecimals(2)
+                ->setHelp('Prix de la formule Entrée + Plat + Dessert (ex: 15.50)')
+                ->setColumns(4);
 
-        yield TextareaField::new('daily_entree', 'Entrée')
-            ->setHelp('Décrivez l\'entrée du jour')
-            ->hideOnIndex();
+            yield NumberField::new('price_ep', 'Prix E+P')
+                ->setNumDecimals(2)
+                ->setHelp('Prix de la formule Entrée + Plat (ex: 12.50)')
+                ->setColumns(4);
 
-        yield TextareaField::new('daily_plat', 'Plat')
-            ->setHelp('Décrivez le plat du jour')
-            ->hideOnIndex();
+            yield NumberField::new('price_pd', 'Prix P+D')
+                ->setNumDecimals(2)
+                ->setHelp('Prix de la formule Plat + Dessert (ex: 10.50)')
+                ->setColumns(4);
 
-        yield TextareaField::new('daily_dessert', 'Dessert')
-            ->setHelp('Décrivez le dessert du jour')
-            ->hideOnIndex();
+                yield TextField::new('daily_entree', 'Entrée')
+                ->setHelp('Décrivez l\'entrée du jour')
+                ->hideOnIndex()
+                ->setColumns(6);
 
-        yield NumberField::new('price_epd', 'Prix E+P+D')
-            ->setNumDecimals(2)
-            ->setHelp('Prix de la formule Entrée + Plat + Dessert (ex: 15.50)');
+                yield TextField::new('daily_plat', 'Plat')
+                ->setHelp('Décrivez le plat du jour')
+                ->hideOnIndex()
+                ->setColumns(6);
 
-        yield NumberField::new('price_ep', 'Prix E+P')
-            ->setNumDecimals(2)
-            ->setHelp('Prix de la formule Entrée + Plat (ex: 12.50)');
+                yield TextField::new('daily_dessert', 'Dessert')
+                ->setHelp('Décrivez le dessert du jour')
+                ->hideOnIndex();
 
-        yield NumberField::new('price_pd', 'Prix P+D')
-            ->setNumDecimals(2)
-            ->setHelp('Prix de la formule Plat + Dessert (ex: 10.50)');
+                yield BooleanField::new('status', 'Publié')
+                    ->setHelp('Cochez pour rendre ce menu visible publiquement');
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder

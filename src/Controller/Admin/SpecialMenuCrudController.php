@@ -19,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class SpecialMenuCrudController extends AbstractCrudController
 {
@@ -45,18 +46,21 @@ class SpecialMenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('titre', 'Titre du menu')
-            ->setHelp('Ex: Menu de Noël 2024, Menu Saint-Valentin');
-
-        yield BooleanField::new('status', 'Publié')
-            ->setHelp('Cochez pour rendre ce menu visible publiquement');
-
-        yield NumberField::new('special_global_price', 'Prix global')
+        return [
+            FormField::addPanel('Tarifs et Informations Générales'),
+            TextField::new('titre', 'Titre du menu')
+            ->setHelp('Ex: Menu de Noël 2024, Menu Saint-Valentin'),
+            
+            BooleanField::new('status', 'Publié')
+            ->setHelp('Cochez pour rendre ce menu visible publiquement'),
+            
+            NumberField::new('special_global_price', 'Prix global')
             ->setNumDecimals(2)
             ->setHelp('Prix total du menu spécial (ex: 45.00) - Optionnel')
-            ->hideOnIndex();
-
-        yield CollectionField::new('items', 'Composition du menu')
+            ->hideOnIndex(),
+            
+            FormField::addPanel('Détails du Menu Spécial'),
+            CollectionField::new('items', 'Composition du menu')
             ->setEntryType(ArdoiseItemType::class)
             ->setFormTypeOptions([
                 'by_reference' => false,
@@ -65,7 +69,10 @@ class SpecialMenuCrudController extends AbstractCrudController
             ->allowDelete(true)
             ->setEntryIsComplex(true)
             ->hideOnIndex()
-            ->setHelp('Ajoutez les différents éléments de votre menu spécial');
+            ->setHelp('Ajoutez les différents éléments de votre menu spécial')
+
+        ];
+       
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
