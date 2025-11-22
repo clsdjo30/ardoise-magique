@@ -1,0 +1,1438 @@
+/**
+ * PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ * MINIMALIST ZEN THEME FOR EASYADMIN 4
+ * PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+ *
+ * A serene, high-legibility design system emphasizing negative space,
+ * subtle accents, and visual calm for the culinary administration interface.
+ *
+ * Features:
+ * - Light & Dark mode support
+ * - Clean typography (Inter font family)
+ * - Minimal borders and subtle shadows
+ * - Maximum whitespace for visual breathing room
+ * - Soft seafoam green accent colors
+ */
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 1. TYPOGRAPHY IMPORT
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 2. LIGHT THEME (Default)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+:root {
+  // --- Typography ---
+  --ea-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ea-font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ea-font-size-base: 15px;
+  --ea-line-height-base: 1.7;
+
+  // --- Colors: Light Zen Palette ---
+  --ea-bg-color: #F9F9F9;
+  --ea-bg-secondary: #FFFFFF;
+  --ea-text-color: #333333;
+  --ea-text-muted: #6B6B6B;
+  --ea-primary: #A5D6A7;
+  --ea-primary-hover: #8FCC92;
+  --ea-secondary: #E0E0E0;
+  --ea-border-color: #E8E8E8;
+
+  // --- Borders & Shadows ---
+  --ea-border-radius: 4px;
+  --ea-border-width: 1px;
+  --ea-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --ea-box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.08);
+
+  // --- Spacing (Increased for Zen aesthetic) ---
+  --ea-spacing-xs: 8px;
+  --ea-spacing-sm: 16px;
+  --ea-spacing-md: 24px;
+  --ea-spacing-lg: 32px;
+  --ea-spacing-xl: 48px;
+
+  // --- Sidebar ---
+  --ea-sidebar-bg: #FAFAFA;
+  --ea-sidebar-text: #555555;
+  --ea-sidebar-active-bg: #A5D6A7;
+  --ea-sidebar-active-text: #FFFFFF;
+
+  // --- Form Elements ---
+  --ea-input-bg: #FFFFFF;
+  --ea-input-border: #E0E0E0;
+  --ea-input-focus-border: #A5D6A7;
+
+  // --- Tables ---
+  --ea-table-header-bg: #F5F5F5;
+  --ea-table-row-border: #EFEFEF;
+  --ea-table-hover-bg: #F7F9F7;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 3. DARK THEME
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+[data-theme="dark"] {
+  // --- Colors: Dark Zen Palette ---
+  --ea-bg-color: #212121;
+  --ea-bg-secondary: #2A2A2A;
+  --ea-text-color: #E0E0E0;
+  --ea-text-muted: #A0A0A0;
+  --ea-primary: #BCE0BF;
+  --ea-primary-hover: #A8D4AB;
+  --ea-secondary: #3A3A3A;
+  --ea-border-color: #404040;
+
+  // --- Shadows (Lighter for dark mode) ---
+  --ea-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --ea-box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+  // --- Sidebar ---
+  --ea-sidebar-bg: #262626;
+  --ea-sidebar-text: #B0B0B0;
+  --ea-sidebar-active-bg: #BCE0BF;
+  --ea-sidebar-active-text: #212121;
+
+  // --- Form Elements ---
+  --ea-input-bg: #2A2A2A;
+  --ea-input-border: #404040;
+  --ea-input-focus-border: #BCE0BF;
+
+  // --- Tables ---
+  --ea-table-header-bg: #2A2A2A;
+  --ea-table-row-border: #353535;
+  --ea-table-hover-bg: #2D3A2E;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 4. GLOBAL BASE STYLES
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+body.ea {
+  font-family: var(--ea-font-family-base) !important;
+  font-size: var(--ea-font-size-base);
+  line-height: var(--ea-line-height-base);
+  color: var(--ea-text-color);
+  background-color: var(--ea-bg-color);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+// Headings: Clean and minimal weight
+h1, h2, h3, h4, h5, h6,
+.ea h1, .ea h2, .ea h3, .ea h4, .ea h5, .ea h6 {
+  font-family: var(--ea-font-family-heading) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em;
+  color: var(--ea-text-color);
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 5. SIDEBAR (Seamless, Minimal Separation)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+// Sidebar wrapper: Clean container with subtle gradient
+#sidebar,
+.sidebar-wrapper,
+.wrapper .sidebar {
+  background: linear-gradient(180deg, var(--ea-sidebar-bg) 0%, rgba(250, 250, 250, 0.98) 100%) !important;
+  border-right: 1px solid var(--ea-border-color) !important;
+  box-shadow: none !important;
+  padding: var(--ea-spacing-lg) 0;
+  min-height: 100vh;
+}
+
+[data-theme="dark"] {
+  #sidebar,
+  .sidebar-wrapper,
+  .wrapper .sidebar {
+    background: linear-gradient(180deg, var(--ea-sidebar-bg) 0%, rgba(38, 38, 38, 0.98) 100%) !important;
+  }
+}
+
+.ea-sidebar {
+  background-color: transparent !important;
+  border-right: none !important;
+  box-shadow: none !important;
+  padding: var(--ea-spacing-md) 0;
+}
+
+// Sidebar header/branding: Extra space
+.sidebar-header,
+.ea-sidebar-header {
+  padding: var(--ea-spacing-lg) var(--ea-spacing-md);
+  margin-bottom: var(--ea-spacing-md);
+  border-bottom: 1px solid var(--ea-border-color);
+
+  .logo {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ea-text-color);
+    letter-spacing: -0.01em;
+  }
+}
+
+// Menu sections: Visual separation
+.menu-section,
+.ea-menu-section {
+  margin-bottom: var(--ea-spacing-lg);
+
+  .menu-section-title {
+    padding: var(--ea-spacing-xs) var(--ea-spacing-md);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ea-text-muted);
+    font-weight: 600;
+    margin-bottom: var(--ea-spacing-xs);
+  }
+}
+
+// Menu items: Clean and spacious with culinary accent
+.ea-menu-item a,
+.ea-sidebar .menu-item a,
+.menu-item a {
+  color: var(--ea-sidebar-text) !important;
+  padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+  margin: 4px var(--ea-spacing-sm);
+  border-radius: var(--ea-border-radius);
+  font-weight: 400;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  border: none !important;
+  position: relative;
+  overflow: hidden;
+
+  // Subtle left accent on hover
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: var(--ea-primary);
+    transform: translateX(-3px);
+    transition: transform 0.25s ease;
+  }
+
+  &:hover {
+    background-color: rgba(165, 214, 167, 0.08) !important;
+    color: var(--ea-text-color) !important;
+    transform: translateX(2px);
+    padding-left: calc(var(--ea-spacing-md) + 6px) !important;
+
+    &::before {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Active menu item: Zen accent highlight with border
+.ea-menu-item.active a,
+.ea-sidebar .menu-item.active a,
+.ea-menu-item a.active,
+.menu-item.active a {
+  background-color: var(--ea-sidebar-active-bg) !important;
+  color: var(--ea-sidebar-active-text) !important;
+  font-weight: 500;
+  box-shadow: var(--ea-box-shadow);
+  border-left: 3px solid rgba(255, 255, 255, 0.5) !important;
+  padding-left: calc(var(--ea-spacing-md) + 6px) !important;
+
+  &::before {
+    display: none;
+  }
+}
+
+// Menu icons: Subtle and aligned with breathing room
+.ea-menu-item i,
+.ea-sidebar .menu-item i,
+.menu-item i {
+  opacity: 0.7;
+  margin-right: var(--ea-spacing-sm);
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+// Sidebar footer: Extra info section
+.sidebar-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--ea-spacing-md);
+  border-top: 1px solid var(--ea-border-color);
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+
+  .user-info {
+    font-size: 13px;
+    color: var(--ea-text-muted);
+
+    strong {
+      color: var(--ea-text-color);
+      font-weight: 500;
+    }
+  }
+}
+
+[data-theme="dark"] .sidebar-footer {
+  background-color: rgba(38, 38, 38, 0.8);
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 6. MAIN CONTENT AREA
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.ea-content,
+.content-wrapper {
+  background-color: var(--ea-bg-color) !important;
+  padding: var(--ea-spacing-lg) !important;
+}
+
+.content-header-wrapper {
+  margin-bottom: var(--ea-spacing-lg);
+
+  .content-header-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ea-text-color);
+    letter-spacing: -0.02em;
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 7. CARDS & PANELS (Airy, Minimal)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.ea-card,
+.card {
+  background-color: var(--ea-bg-secondary) !important;
+  border: none !important;
+  box-shadow: var(--ea-box-shadow) !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-lg) !important;
+  margin-bottom: var(--ea-spacing-md);
+
+  &:hover {
+    box-shadow: var(--ea-box-shadow-hover) !important;
+  }
+}
+
+.card-header {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--ea-border-color) !important;
+  padding-bottom: var(--ea-spacing-md) !important;
+  margin-bottom: var(--ea-spacing-md) !important;
+  font-weight: 500;
+}
+
+.card-body {
+  padding: var(--ea-spacing-md) 0 !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 8. DATAGRIDS / TABLES (Ultra-Clean, Horizontal Lines Only)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+// Datagrid container: Extra breathing room
+.datagrid-container,
+.content-panel-body {
+  padding: var(--ea-spacing-lg) !important;
+}
+
+.datagrid {
+  background-color: var(--ea-bg-secondary);
+  border-radius: var(--ea-border-radius);
+  overflow: hidden;
+  box-shadow: var(--ea-box-shadow);
+  border: none !important;
+}
+
+.datagrid-header {
+  background-color: transparent !important;
+  border-bottom: 2px solid var(--ea-border-color) !important;
+  padding: var(--ea-spacing-lg) var(--ea-spacing-lg) var(--ea-spacing-md) !important;
+
+  .datagrid-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ea-text-color);
+    letter-spacing: -0.01em;
+  }
+}
+
+// Table styling: Maximum negative space
+.datagrid table,
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 0;
+
+  thead {
+    background-color: transparent;
+    border-bottom: 2px solid var(--ea-border-color);
+
+    th {
+      padding: var(--ea-spacing-lg) var(--ea-spacing-md) !important;
+      font-weight: 600 !important;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ea-text-muted) !important;
+      border: none !important;
+      background-color: transparent !important;
+      vertical-align: middle;
+
+      // Sort indicators: Subtle
+      .fa-sort,
+      .fa-sort-up,
+      .fa-sort-down {
+        opacity: 0.4;
+        margin-left: 6px;
+        font-size: 11px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-left: none !important;
+      border-right: none !important;
+      border-top: none !important;
+      border-bottom: 1px solid var(--ea-table-row-border) !important;
+      transition: all 0.2s ease;
+      background-color: transparent !important;
+
+      &:hover {
+        background-color: var(--ea-table-hover-bg) !important;
+        box-shadow: inset 3px 0 0 var(--ea-primary);
+      }
+
+      &:last-child {
+        border-bottom: none !important;
+      }
+
+      td {
+        padding: var(--ea-spacing-lg) var(--ea-spacing-md) !important;
+        border-left: none !important;
+        border-right: none !important;
+        color: var(--ea-text-color);
+        vertical-align: middle;
+        font-size: 14px;
+
+        // Action buttons in tables
+        .btn-sm {
+          padding: 6px 12px !important;
+          font-size: 12px !important;
+          margin: 0 2px;
+        }
+
+        // Status badges
+        .badge {
+          font-size: 12px;
+          padding: 5px 12px;
+        }
+      }
+    }
+  }
+}
+
+// Remove all vertical borders from table cells
+.datagrid table th,
+.datagrid table td,
+.table th,
+.table td {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+// Table actions row: Clean spacing
+.datagrid-row-actions,
+td.actions {
+  display: flex;
+  gap: var(--ea-spacing-xs);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+// Batch actions bar: Elevated and clean
+.datagrid-batch-actions,
+.content-panel-batch {
+  background-color: var(--ea-bg-secondary) !important;
+  border: 1px solid var(--ea-border-color) !important;
+  border-radius: var(--ea-border-radius);
+  padding: var(--ea-spacing-md) var(--ea-spacing-lg) !important;
+  margin-bottom: var(--ea-spacing-md);
+  box-shadow: var(--ea-box-shadow);
+
+  .batch-action-button {
+    margin-right: var(--ea-spacing-xs);
+  }
+}
+
+// Empty state: Friendly and minimal
+.datagrid-empty,
+.no-results {
+  padding: var(--ea-spacing-xl) !important;
+  text-align: center;
+  color: var(--ea-text-muted);
+  font-size: 15px;
+
+  i {
+    font-size: 48px;
+    color: var(--ea-secondary);
+    margin-bottom: var(--ea-spacing-md);
+    display: block;
+    opacity: 0.5;
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 9. FORMS (Minimal Borders, Maximum Spacing)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+// Form container: Maximum breathing room
+.ea-form-panel,
+.form-panel,
+.content-form {
+  background-color: var(--ea-bg-secondary);
+  border: none !important;
+  box-shadow: var(--ea-box-shadow);
+  border-radius: var(--ea-border-radius);
+  padding: var(--ea-spacing-xl);
+  margin-bottom: var(--ea-spacing-md);
+}
+
+// Form sections: Visual grouping with subtle dividers
+.form-section,
+.ea-form-section {
+  margin-bottom: var(--ea-spacing-xl);
+  padding-bottom: var(--ea-spacing-xl);
+  border-bottom: 1px solid var(--ea-border-color);
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .form-section-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ea-text-color);
+    margin-bottom: var(--ea-spacing-lg);
+    padding-bottom: var(--ea-spacing-sm);
+    letter-spacing: -0.01em;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 2px;
+      background-color: var(--ea-primary);
+      margin-top: var(--ea-spacing-sm);
+    }
+  }
+}
+
+// Field groups: Extra vertical spacing for zen aesthetic
+.field-group,
+.form-group,
+.ea-form-group,
+.form-widget {
+  margin-bottom: var(--ea-spacing-xl) !important;
+
+  &:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+// Form rows: Clean multi-column layout
+.form-row,
+.ea-form-row {
+  display: flex;
+  gap: var(--ea-spacing-lg);
+  margin-bottom: var(--ea-spacing-xl);
+
+  > .field-group,
+  > .form-group {
+    flex: 1;
+    margin-bottom: 0 !important;
+  }
+}
+
+// Labels: Clean, spaced, and clear
+.form-label,
+label {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ea-text-color);
+  margin-bottom: var(--ea-spacing-sm) !important;
+  letter-spacing: 0.02em;
+  display: block;
+
+  // Required indicator
+  .required {
+    color: #EF9A9A;
+    margin-left: 4px;
+  }
+}
+
+// Input fields: Clean with subtle focus state
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="url"],
+textarea,
+select {
+  background-color: var(--ea-input-bg) !important;
+  border: 1px solid var(--ea-input-border) !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-md) var(--ea-spacing-sm) !important;
+  font-family: var(--ea-font-family-base);
+  font-size: 14px;
+  color: var(--ea-text-color) !important;
+  transition: all 0.25s ease;
+  width: 100%;
+  line-height: 1.5;
+
+  &:focus {
+    border-color: var(--ea-input-focus-border) !important;
+    box-shadow: 0 0 0 4px rgba(165, 214, 167, 0.12) !important;
+    outline: none !important;
+    background-color: var(--ea-bg-secondary) !important;
+  }
+
+  &:hover:not(:focus) {
+    border-color: rgba(165, 214, 167, 0.4) !important;
+  }
+
+  &::placeholder {
+    color: var(--ea-text-muted);
+    opacity: 0.5;
+  }
+
+  &:disabled {
+    background-color: var(--ea-secondary) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Textareas: Generous vertical space
+textarea.form-control {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.7;
+  padding: var(--ea-spacing-md) !important;
+}
+
+// Select dropdowns: Clean arrow indicator
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A5D6A7' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px !important;
+  cursor: pointer;
+}
+
+[data-theme="dark"] select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23BCE0BF' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+// Checkboxes and radios: Clean and aligned
+.form-check,
+.checkbox,
+.radio {
+  padding: var(--ea-spacing-sm) 0;
+  margin-bottom: var(--ea-spacing-sm);
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin-right: var(--ea-spacing-sm);
+    cursor: pointer;
+    accent-color: var(--ea-primary);
+  }
+
+  label {
+    margin-bottom: 0 !important;
+    cursor: pointer;
+    font-weight: 400;
+  }
+}
+
+// Help text: Subtle guidance
+.form-help,
+.help-text,
+.form-text,
+small.form-text {
+  color: var(--ea-text-muted);
+  font-size: 12px;
+  margin-top: var(--ea-spacing-sm);
+  line-height: 1.6;
+  display: block;
+  font-weight: 400;
+
+  i {
+    margin-right: 4px;
+    opacity: 0.7;
+  }
+}
+
+// Form errors: Soft red accent
+.form-error,
+.invalid-feedback,
+.error {
+  color: #E57373;
+  font-size: 12px;
+  margin-top: var(--ea-spacing-xs);
+  display: block;
+  font-weight: 500;
+
+  &::before {
+    content: '⚠ ';
+    margin-right: 4px;
+  }
+}
+
+.is-invalid,
+.has-error {
+  .form-control {
+    border-color: #EF9A9A !important;
+
+    &:focus {
+      box-shadow: 0 0 0 4px rgba(239, 154, 154, 0.15) !important;
+    }
+  }
+}
+
+// Form actions: Clean button layout
+.form-actions,
+.ea-form-actions,
+.form-footer {
+  display: flex;
+  gap: var(--ea-spacing-sm);
+  padding-top: var(--ea-spacing-xl);
+  margin-top: var(--ea-spacing-xl);
+  border-top: 1px solid var(--ea-border-color);
+  justify-content: flex-end;
+
+  .btn {
+    min-width: 120px;
+  }
+}
+
+// Collection fields: Clean list of items
+.form-collection {
+  .collection-item {
+    background-color: rgba(165, 214, 167, 0.04);
+    border: 1px solid var(--ea-border-color);
+    border-radius: var(--ea-border-radius);
+    padding: var(--ea-spacing-lg);
+    margin-bottom: var(--ea-spacing-md);
+    position: relative;
+
+    .collection-item-delete {
+      position: absolute;
+      top: var(--ea-spacing-sm);
+      right: var(--ea-spacing-sm);
+    }
+  }
+
+  .collection-add {
+    margin-top: var(--ea-spacing-md);
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 10. BUTTONS (Flat, Zen Accent)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.btn {
+  font-family: var(--ea-font-family-base);
+  font-weight: 500 !important;
+  font-size: 14px;
+  padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+  border-radius: var(--ea-border-radius) !important;
+  border: none !important;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+  box-shadow: none !important;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--ea-box-shadow-hover) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Primary button: Zen seafoam green
+.btn-primary {
+  background-color: var(--ea-primary) !important;
+  color: #FFFFFF !important;
+
+  &:hover {
+    background-color: var(--ea-primary-hover) !important;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(165, 214, 167, 0.25) !important;
+  }
+}
+
+// Secondary button: Subtle gray
+.btn-secondary {
+  background-color: var(--ea-secondary) !important;
+  color: var(--ea-text-color) !important;
+
+  &:hover {
+    background-color: var(--ea-border-color) !important;
+  }
+}
+
+// Danger button: Soft red (not aggressive)
+.btn-danger {
+  background-color: #EF9A9A !important;
+  color: #FFFFFF !important;
+
+  &:hover {
+    background-color: #E57373 !important;
+  }
+}
+
+// Link buttons: Minimal
+.btn-link {
+  color: var(--ea-primary) !important;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--ea-primary-hover) !important;
+    text-decoration: underline;
+  }
+}
+
+// Button groups
+.btn-group {
+  .btn {
+    margin-left: var(--ea-spacing-xs);
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 11. ACTIONS & DROPDOWNS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.global-actions,
+.batch-actions {
+  margin-bottom: var(--ea-spacing-md);
+  display: flex;
+  gap: var(--ea-spacing-xs);
+  align-items: center;
+}
+
+.dropdown-menu {
+  background-color: var(--ea-bg-secondary) !important;
+  border: 1px solid var(--ea-border-color) !important;
+  box-shadow: var(--ea-box-shadow-hover) !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-xs) !important;
+
+  .dropdown-item {
+    padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+    color: var(--ea-text-color) !important;
+    border-radius: var(--ea-border-radius);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--ea-table-hover-bg) !important;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 12. PAGINATION (Clean & Minimal)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.pagination {
+  margin-top: var(--ea-spacing-lg);
+
+  .page-item {
+    margin: 0 4px;
+
+    .page-link {
+      background-color: var(--ea-bg-secondary) !important;
+      border: 1px solid var(--ea-border-color) !important;
+      color: var(--ea-text-color) !important;
+      padding: var(--ea-spacing-xs) var(--ea-spacing-sm) !important;
+      border-radius: var(--ea-border-radius) !important;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--ea-primary) !important;
+        color: #FFFFFF !important;
+        border-color: var(--ea-primary) !important;
+      }
+    }
+
+    &.active .page-link {
+      background-color: var(--ea-primary) !important;
+      border-color: var(--ea-primary) !important;
+      color: #FFFFFF !important;
+    }
+
+    &.disabled .page-link {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 13. BADGES & LABELS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.badge {
+  font-weight: 500;
+  font-size: 12px;
+  padding: 4px 12px !important;
+  border-radius: 12px !important;
+  letter-spacing: 0.03em;
+}
+
+.badge-primary {
+  background-color: var(--ea-primary) !important;
+  color: #FFFFFF !important;
+}
+
+.badge-secondary {
+  background-color: var(--ea-secondary) !important;
+  color: var(--ea-text-color) !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 14. ALERTS & FLASH MESSAGES
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.alert {
+  border: none !important;
+  border-radius: var(--ea-border-radius) !important;
+  padding: var(--ea-spacing-md) !important;
+  margin-bottom: var(--ea-spacing-md);
+  box-shadow: var(--ea-box-shadow);
+}
+
+.alert-success {
+  background-color: #E8F5E9 !important;
+  color: #2E7D32 !important;
+}
+
+[data-theme="dark"] .alert-success {
+  background-color: #1B5E20 !important;
+  color: #C8E6C9 !important;
+}
+
+.alert-danger {
+  background-color: #FFEBEE !important;
+  color: #C62828 !important;
+}
+
+[data-theme="dark"] .alert-danger {
+  background-color: #B71C1C !important;
+  color: #FFCDD2 !important;
+}
+
+.alert-warning {
+  background-color: #FFF3E0 !important;
+  color: #E65100 !important;
+}
+
+[data-theme="dark"] .alert-warning {
+  background-color: #E65100 !important;
+  color: #FFE0B2 !important;
+}
+
+.alert-info {
+  background-color: #E3F2FD !important;
+  color: #1565C0 !important;
+}
+
+[data-theme="dark"] .alert-info {
+  background-color: #0D47A1 !important;
+  color: #BBDEFB !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 15. SEARCH & FILTERS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.datagrid-filters {
+  background-color: var(--ea-bg-secondary);
+  padding: var(--ea-spacing-md);
+  border-radius: var(--ea-border-radius);
+  margin-bottom: var(--ea-spacing-md);
+  box-shadow: var(--ea-box-shadow);
+}
+
+.form-action-search {
+  input[type="search"] {
+    background-color: var(--ea-input-bg) !important;
+    border: 1px solid var(--ea-input-border) !important;
+    border-radius: var(--ea-border-radius) !important;
+    padding: var(--ea-spacing-sm) var(--ea-spacing-md) !important;
+
+    &:focus {
+      border-color: var(--ea-input-focus-border) !important;
+      box-shadow: 0 0 0 3px rgba(165, 214, 167, 0.15) !important;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 16. RESPONSIVE TWEAKS
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+@media (max-width: 768px) {
+  .ea-content,
+  .content-wrapper {
+    padding: var(--ea-spacing-md) !important;
+  }
+
+  .ea-card,
+  .card {
+    padding: var(--ea-spacing-md) !important;
+  }
+
+  .datagrid table {
+    font-size: 14px;
+
+    th, td {
+      padding: var(--ea-spacing-sm) var(--ea-spacing-xs) !important;
+    }
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 17. CUSTOM SCROLLBAR (Zen style)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ea-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ea-secondary);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--ea-border-color);
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 18. UTILITY CLASSES
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+.text-muted {
+  color: var(--ea-text-muted) !important;
+}
+
+.border-none {
+  border: none !important;
+}
+
+.shadow-zen {
+  box-shadow: var(--ea-box-shadow) !important;
+}
+
+.shadow-zen-hover:hover {
+  box-shadow: var(--ea-box-shadow-hover) !important;
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// 19. CUSTOM DASHBOARD STYLES (Minimaliste Culinaire)
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+
+// Dashboard container: Extra breathing room
+#main {
+  .container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--ea-spacing-xl) var(--ea-spacing-lg);
+  }
+}
+
+// Header cards with subtle ingredient backgrounds
+header.row {
+  margin-bottom: var(--ea-spacing-xl);
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    padding: var(--ea-spacing-xl) !important;
+    background: linear-gradient(135deg, var(--ea-bg-secondary) 0%, rgba(165, 214, 167, 0.03) 100%) !important;
+
+    // Subtle ingredient pattern overlay
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23A5D6A7' fill-opacity='0.03'%3E%3Cpath d='M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm0 90c-22.1 0-40-17.9-40-40s17.9-40 40-40 40 17.9 40 40-17.9 40-40 40z'/%3E%3Ccircle cx='50' cy='30' r='8'/%3E%3Ccircle cx='35' cy='50' r='6'/%3E%3Ccircle cx='65' cy='50' r='6'/%3E%3C/g%3E%3C/svg%3E");
+      background-size: 100px 100px;
+      background-repeat: repeat;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    h1 {
+      font-size: 36px !important;
+      font-weight: 300 !important;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--ea-spacing-md);
+      color: var(--ea-text-color);
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--ea-text-muted);
+      margin-bottom: var(--ea-spacing-lg);
+    }
+
+    > div:first-child {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ea-primary);
+      font-weight: 600;
+      margin-bottom: var(--ea-spacing-sm);
+    }
+  }
+}
+
+// Stats cards: Clean and minimal with accent touches
+section .card {
+  text-align: center;
+  padding: var(--ea-spacing-xl) var(--ea-spacing-lg) !important;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+
+  &:hover {
+    border-left-color: var(--ea-primary);
+    transform: translateY(-4px);
+  }
+
+  .fs-5:first-child {
+    font-size: 13px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ea-text-muted);
+    font-weight: 500;
+    margin-bottom: var(--ea-spacing-md);
+  }
+
+  .fs-1 {
+    font-size: 48px !important;
+    font-weight: 300 !important;
+    color: var(--ea-text-color);
+    margin: var(--ea-spacing-md) 0;
+    letter-spacing: -0.02em;
+  }
+
+  .fs-5:last-child {
+    font-size: 14px !important;
+    color: var(--ea-text-muted);
+    font-weight: 400;
+
+    i {
+      margin-right: var(--ea-spacing-xs);
+      opacity: 0.7;
+    }
+  }
+}
+
+// Pills/Badges: Soft and subtle
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+
+  i {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  &.daily {
+    background-color: rgba(255, 193, 7, 0.12);
+    color: #F57F17;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+  }
+
+  &.special {
+    background-color: rgba(165, 214, 167, 0.15);
+    color: #2E7D32;
+    border: 1px solid rgba(165, 214, 167, 0.3);
+  }
+
+  &.success {
+    background-color: rgba(165, 214, 167, 0.15);
+    color: #2E7D32;
+    border: 1px solid rgba(165, 214, 167, 0.3);
+  }
+
+  &.draft {
+    background-color: rgba(158, 158, 158, 0.1);
+    color: #616161;
+    border: 1px solid rgba(158, 158, 158, 0.2);
+  }
+}
+
+// Status labels
+.label-muted {
+  font-size: 13px;
+  color: var(--ea-text-muted);
+  font-weight: 400;
+}
+
+// CTA rows: Clean button grouping
+.cta-row {
+  display: flex;
+  gap: var(--ea-spacing-sm);
+  flex-wrap: wrap;
+  margin-top: var(--ea-spacing-md);
+
+  .btn {
+    flex: 1;
+    min-width: 160px;
+  }
+}
+
+// Action cards with culinary touch
+.card {
+  h4 {
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    color: var(--ea-text-color);
+    margin-bottom: var(--ea-spacing-md);
+    display: flex;
+    align-items: center;
+
+    i {
+      color: var(--ea-primary);
+      margin-right: var(--ea-spacing-sm);
+    }
+  }
+
+  .steps {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: var(--ea-spacing-sm);
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ea-text-color);
+
+      &::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: var(--ea-primary);
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Modern table styling for dashboard
+.table-modern {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background-color: transparent;
+    border-bottom: 2px solid var(--ea-border-color);
+
+    th {
+      padding: var(--ea-spacing-md) var(--ea-spacing-sm);
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ea-text-muted);
+      font-weight: 600;
+      border: none;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--ea-table-row-border);
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: var(--ea-table-hover-bg);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: var(--ea-spacing-md) var(--ea-spacing-sm);
+        vertical-align: middle;
+        color: var(--ea-text-color);
+        font-size: 14px;
+
+        strong {
+          font-weight: 500;
+        }
+
+        small {
+          font-size: 13px;
+          color: var(--ea-text-muted);
+        }
+      }
+    }
+  }
+}
+
+// Input groups: Clean and minimal
+.input-group {
+  box-shadow: var(--ea-box-shadow);
+  border-radius: var(--ea-border-radius);
+  overflow: hidden;
+
+  .form-control {
+    border: 1px solid var(--ea-input-border) !important;
+    border-right: none !important;
+    box-shadow: none !important;
+
+    &:focus {
+      border-color: var(--ea-input-focus-border) !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .btn {
+    border: 1px solid var(--ea-input-border) !important;
+    border-left: none !important;
+
+    &:hover {
+      background-color: var(--ea-primary) !important;
+      color: #FFFFFF !important;
+      border-color: var(--ea-primary) !important;
+    }
+
+    &.btn-outline-primary {
+      &:hover {
+        background-color: var(--ea-primary) !important;
+        border-color: var(--ea-primary) !important;
+      }
+    }
+
+    &.btn-outline-success {
+      &:hover {
+        background-color: #66BB6A !important;
+        border-color: #66BB6A !important;
+      }
+    }
+  }
+}
+
+// Enhanced spacing for sections
+section {
+  margin-bottom: var(--ea-spacing-xl);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Card with list ID
+.card[id="menus-list"],
+#menus-list {
+  margin-top: var(--ea-spacing-xl);
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--ea-spacing-md) var(--ea-spacing-lg) !important;
+
+    span:first-child {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ea-text-color);
+
+      i {
+        margin-right: var(--ea-spacing-xs);
+        color: var(--ea-primary);
+      }
+    }
+  }
+}
+
+// Button variations for dashboard
+.btn-ghost {
+  background-color: transparent !important;
+  color: var(--ea-text-color) !important;
+  border: 1px solid var(--ea-border-color) !important;
+
+  &:hover {
+    background-color: var(--ea-secondary) !important;
+    border-color: var(--ea-border-color) !important;
+  }
+}
+
+.btn-cta-danger {
+  background-color: rgba(239, 154, 154, 0.15) !important;
+  color: #E57373 !important;
+  border: 1px solid rgba(239, 154, 154, 0.3) !important;
+
+  &:hover {
+    background-color: #EF9A9A !important;
+    color: #FFFFFF !important;
+    border-color: #EF9A9A !important;
+  }
+}
+
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+// END OF MINIMALIST ZEN THEME
+// PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
