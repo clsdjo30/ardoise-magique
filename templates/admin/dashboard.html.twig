@@ -1,10 +1,14 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
+{# {% block content_title %}
+    <span class="am-header-title">
+        <i class="fa fa-fire"></i>
+        Mode StreetFood actif
+    </span>
+{% endblock %} #}
 
-{% block page_title %}
-	<span class="mb-5">
-		<i class="fa fa-fire"></i>
-		Mode StreetFood actif
-	</span>
+{% block configured_head_contents %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('admin-theme.css') }}">
 {% endblock %}
 
 {% block main %}
@@ -16,182 +20,248 @@
         }) %}
 	{% endif %}
 
-	<div class="container-fluid my-5">
-		<header class="row align-items-center justify-content-around mb-4">
-			<div class="card col-6">
-				<div class="">
-					<i class="fa fa-truck-fast"></i>
-					Ligne de feu pour les chefs
+	<div class="container-fluid am-dashboard py-4">
+		<header class="am-hero card border-0 shadow-sm mb-4">
+			<div class="card-body">
+				<div class="d-flex justify-content-end mb-2">
+					<button class="btn btn-sm btn-outline-secondary" id="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+						<i class="fa fa-circle-half-stroke" id="theme-icon"></i>
+						<span class="d-none d-md-inline ms-1">Thème</span>
+					</button>
 				</div>
-				<h1 class="">Ardoise & Menus en mode street</h1>
-				<p class="">
-					Tableaux prêts a partager, liens publics immediats et actions rapides pour garder votre carte a jour sans effort.
-				</p>
-				<div class="">
-					<span class="">
-						<i class="fa fa-location-dot"></i>
-						{{ app.user.nomRestaurant }}</span>
-					<span class="">
-						<i class="fa fa-link"></i>
-						/m/{{ app.user.slug }}/[slug-menu]</span>
-					<span class="">
-						<i class="fa fa-bullhorn"></i>
-						{{ menusPublies }}
-						publie{{ menusPublies > 1 ? 's' : '' }}</span>
-				</div>
-				<div class="">
-					<a class="btn btn-primary" href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}">
-						<i class="fa fa-plus"></i>
-						Menu du jour
-					</a>
-					<a class="btn btn-secondary" href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}">
-						<i class="fa fa-star"></i>
-						Menu special
-					</a>
-					<a class="btn btn-ghost" href="#menus-list">
-						<i class="fa fa-list"></i>
-						Voir mes menus
-					</a>
-				</div>
-			</div>
-			<div class="card col-4">
-				<div class="">
-					<span>Lien public actif</span>
-					<span class=" {{ publishedMenu ? 'success' : 'draft' }}">
-						<i class="fa {{ publishedMenu ? 'fa-check' : 'fa-eye-slash' }}"></i>
-						{{ publishedMenu ? 'Publie' : 'En attente' }}
-					</span>
-				</div>
-				{% if publishedMenu %}
-					<div class=" mb-2">
-						<div class=" mb-2">Menu :
-							{{ publishedMenu.titre }}</div>
-						<div class="input-group input-group-sm">
-							<input type="text" class="form-control" id="published-url" value="{{ publishedUrl }}" readonly>
-							<button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('published-url')" title="Copier le lien">
-								<i class="fa fa-copy"></i>
-							</button>
-							<a class="btn btn-outline-success" href="{{ publishedUrl }}" target="_blank" title="Voir le menu">
-								<i class="fa fa-external-link-alt"></i>
+				<div class="row align-items-center g-4">
+					<div class="col-xl-7">
+						<div class="d-flex align-items-center gap-2 text-uppercase small fw-semibold text-muted mb-2">
+							<i class="fa fa-truck-fast text-primary"></i>
+							<span>Ligne de feu pour les chefs</span>
+						</div>
+						<h1 class="mb-2">Ardoise & Menus en mode street</h1>
+						<p class="text-muted mb-3">
+							Tableaux prêts à partager, liens publics immédiats et actions rapides pour garder votre carte à jour sans effort.
+						</p>
+						<div class="d-flex flex-wrap gap-2 mb-3">
+							<span class="am-chip">
+								<i class="fa fa-location-dot me-2 text-primary"></i>
+								{{ app.user.nomRestaurant }}
+							</span>
+							<span class="am-chip">
+								<i class="fa fa-link me-2 text-primary"></i>
+								/m/{{ app.user.slug }}/[slug-menu]
+							</span>
+							<span class="am-chip">
+								<i class="fa fa-bullhorn me-2 text-primary"></i>
+								{{ menusPublies }} publié{{ menusPublies > 1 ? 's' : '' }}
+							</span>
+						</div>
+						<div class="d-flex flex-wrap gap-2">
+							<a class="btn btn-primary" href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}">
+								<i class="fa fa-plus me-2"></i>
+								Menu du jour
+							</a>
+							<a class="btn btn-outline-primary" href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}">
+								<i class="fa fa-star me-2"></i>
+								Menu spécial
+							</a>
+							<a class="btn btn-link text-decoration-none" href="#menus-list">
+								<i class="fa fa-list me-2"></i>
+								Voir mes menus
 							</a>
 						</div>
 					</div>
-					<div class="">
-						<span class="btn">
-							<i class="fa fa-qrcode"></i>
-							Imprimez ou collez ce lien dans un QR code pour vos tables.
-						</span>
-						<span class="btn">
-							<i class="fa fa-bolt"></i>
-							Republiez apres chaque service pour rester en tete des feeds.
-						</span>
+					<div class="col-xl-5">
+						<div class="am-card am-status-panel h-100">
+							<div class="d-flex justify-content-between align-items-center mb-2">
+								<div class="text-muted fw-semibold">Lien public</div>
+								<span class="am-status-chip {{ publishedMenu ? 'is-online' : 'is-offline' }}">
+									<i class="fa {{ publishedMenu ? 'fa-check' : 'fa-eye-slash' }} me-1"></i>
+									{{ publishedMenu ? 'Publié' : 'En attente' }}
+								</span>
+							</div>
+							{% if publishedMenu %}
+								<div class="mb-3">
+									<div class="small text-muted mb-2">
+										Menu : <span class="fw-semibold">{{ publishedMenu.titre }}</span>
+									</div>
+									<div class="input-group input-group-sm">
+										<input type="text" class="form-control" id="published-url" value="{{ publishedUrl }}" readonly>
+										<button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('published-url')" title="Copier le lien">
+											<i class="fa fa-copy"></i>
+										</button>
+										<a class="btn btn-outline-success" href="{{ publishedUrl }}" target="_blank" title="Voir le menu">
+											<i class="fa fa-external-link-alt"></i>
+										</a>
+									</div>
+								</div>
+								<div class="d-flex flex-column gap-1 small text-muted">
+									<span><i class="fa fa-qrcode me-2 text-primary"></i>Imprimez ou placez ce lien dans un QR code pour vos tables.</span>
+									<span><i class="fa fa-bolt me-2 text-warning"></i>Republiez après chaque service pour rester en tête des feeds.</span>
+								</div>
+							{% else %}
+								<div class="p-3 bg-light rounded-3 text-center">
+									<p class="mb-1 fw-semibold">Aucun menu publié</p>
+									<p class="mb-0 text-muted small">Publiez un menu pour activer un lien public partageable.</p>
+								</div>
+							{% endif %}
+						</div>
 					</div>
-				{% else %}
-					<div class="">
-						<p class="mb-2">Aucun menu publie pour l'instant.</p>
-						<p class=" mb-0">Publiez un menu pour activer un lien public partageable.</p>
-					</div>
-				{% endif %}
+				</div>
 			</div>
 		</header>
 
-		<section class="container-fluid">
-			<div class="row align-items-center justify-content-around g-5">
-				<div class="col-3 card">
-					<span class="fs-5">Total menus</span>
-					<span class="fs-1">{{ totalMenus }}</span>
-					<span class="fs-5">
-						<i class="fa fa-fire"></i>
-						Ardoises pretes</span>
+		<section class="am-section mb-4">
+			<div class="d-flex align-items-center justify-content-between mb-3">
+				<div class="am-section-title">
+					<i class="fa fa-gauge-high me-2 text-primary"></i>
+					Vue rapide
 				</div>
-				<div class="col-3 card">
-					<span class="fs-5">Publies</span>
-					<span class="fs-1">{{ menusPublies }}</span>
-					<span class="fs-5 text-success">
-						<i class="fa fa-check"></i>
-						Visible par vos clients</span>
+			</div>
+			<div class="row g-3">
+				<div class="col-12 col-md-4">
+					<div class="am-card am-kpi h-100">
+						<div class="d-flex align-items-center gap-3">
+							<div class="am-kpi-icon bg-primary-subtle text-primary">
+								<i class="fa fa-fire"></i>
+							</div>
+							<div class="flex-grow-1">
+								<div class="am-kpi-label">Total menus</div>
+								<div class="am-kpi-value">{{ totalMenus }}</div>
+								<small class="text-muted">Ardoises prêtes</small>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="col-3 card">
-					<span class="fs-5">Brouillons</span>
-					<span class="fs-1">{{ totalMenus - menusPublies }}</span>
-					<span class="fs-5 text-warning">
-						<i class="fa fa-hourglass-half"></i>
-						En cuisine</span>
+				<div class="col-12 col-md-4">
+					<div class="am-card am-kpi h-100">
+						<div class="d-flex align-items-center gap-3">
+							<div class="am-kpi-icon bg-success-subtle text-success">
+								<i class="fa fa-check"></i>
+							</div>
+							<div class="flex-grow-1">
+								<div class="am-kpi-label">Publiés</div>
+								<div class="am-kpi-value">{{ menusPublies }}</div>
+								<small class="text-muted">Visible par vos clients</small>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-md-4">
+					<div class="am-card am-kpi h-100">
+						<div class="d-flex align-items-center gap-3">
+							<div class="am-kpi-icon bg-warning-subtle text-warning">
+								<i class="fa fa-hourglass-half"></i>
+							</div>
+							<div class="flex-grow-1">
+								<div class="am-kpi-label">Brouillons</div>
+								<div class="am-kpi-value">{{ totalMenus - menusPublies }}</div>
+								<small class="text-muted">En cuisine</small>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
 
-		<section class="container-fluid mt-4">
-			<div class="row row-cols-3  justify-content-evenly gx-5">
-				<div class="card col-4">
-					<h4>
-						<i class="fa fa-wand-magic-sparkles pe-1"></i>
-						Raccourcis de service</h4>
-					<p class="mb-4 fs-6">Creer, dupliquer ou ajuster vos ardoises en quelques secondes.</p>
-					<div class="cta-row">
-						<a class="btn btn-secondary  px-2" href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}">
-							<i class="fa fa-plus"></i>
-							Nouveau menu du jour
-						</a>
-						<a class="btn btn-cta-danger px-2" href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}">
-							<i class="fa fa-star"></i>
-							Nouveau special
-						</a>
-					</div>
-				</div>
-                <div class="card col-3">
-					<h4>
-						<i class="fa fa-lightbulb pe-1"></i>
-						Plan de tir</h4>
-					<ul class="steps ps-3 mb-0 ">
-						<li>Nommer le menu (date ou evenement) de facon claire.</li>
-						<li>Renseigner prix et items, puis cocher "Publie".</li>
-						<li>Copier le lien public et coller en story ou QR code.</li>
-						<li>Mettre a jour chaque jour pour booster la fidelite.</li>
-					</ul>
-				</div>
-				<div class="card col-4">
-					<h4>
-						<i class="fa fa-bullhorn pe-1"></i>
-						Partage express</h4>
-					<p class="mb-3 fs-6">Diffusez votre carte sur vos canaux en un clic. Copiez le lien et balancez-le dans vos stories.</p>
-					<div class="cta-row">
-						<button class="btn btn-outline-primary btn-lg px-3" type="button" onclick="copyFirstPublicUrl()" {% if not publishedMenu %} disabled {% endif %}>
-							<i class="fa fa-copy"></i>
-							Copier le lien actif
-						</button>
-						{% if publishedMenu %}
-							<a class="btn btn-outline-success btn-lg px-3" href="{{ publishedUrl }}" target="_blank">
-								<i class="fa fa-external-link-alt"></i>
-								Voir le rendu client
+		<section class="am-section mb-4">
+			<div class="row g-3">
+				<div class="col-lg-4">
+					<div class="am-card h-100">
+						<div class="d-flex align-items-start justify-content-between mb-2">
+							<h4 class="am-card-title mb-0">
+								<i class="fa fa-wand-magic-sparkles me-2 text-primary"></i>
+								Raccourcis de service
+							</h4>
+						</div>
+						<p class="text-muted small">
+							Créez, dupliquez ou ajustez vos ardoises en quelques secondes.
+						</p>
+						<div class="d-flex flex-wrap gap-2">
+							<a class="btn btn-outline-primary btn-sm" href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}">
+								<i class="fa fa-plus me-2"></i>
+								Nouveau menu du jour
 							</a>
-						{% endif %}
+							<a class="btn btn-outline-primary btn-sm" href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}">
+								<i class="fa fa-star me-2"></i>
+								Nouveau spécial
+							</a>
+						</div>
 					</div>
-					<small class="label-muted d-block mt-3">Astuce : ajoutez le lien dans la bio Instagram ou Google Business.</small>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="am-card h-100">
+						<h4 class="am-card-title mb-2">
+							<i class="fa fa-lightbulb me-2 text-warning"></i>
+							Plan de tir
+						</h4>
+						<ul class="am-list mb-0">
+							<li>Nommer le menu (date ou événement) de façon claire.</li>
+							<li>Renseigner prix et items, puis cocher "Publié".</li>
+							<li>Copier le lien public et coller en story ou QR code.</li>
+							<li>Mettre à jour chaque jour pour booster la fidélité.</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="am-card h-100">
+						<h4 class="am-card-title mb-2">
+							<i class="fa fa-bullhorn me-2 text-success"></i>
+							Partage express
+						</h4>
+						<p class="text-muted small">
+							Diffusez votre carte sur vos canaux en un clic. Copiez le lien et balancez-le dans vos stories.
+						</p>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="btn btn-outline-success btn-sm" type="button" onclick="copyFirstPublicUrl()" {% if not publishedMenu %} disabled {% endif %}>
+								<i class="fa fa-copy me-2"></i>
+								Copier le lien actif
+							</button>
+							{% if publishedMenu %}
+								<a class="btn btn-success btn-sm" href="{{ publishedUrl }}" target="_blank">
+									<i class="fa fa-external-link-alt me-2"></i>
+									Voir le rendu client
+								</a>
+							{% endif %}
+						</div>
+						<small class="text-muted d-block mt-2">
+							Astuce : ajoutez le lien dans la bio Instagram ou Google Business.
+						</small>
+					</div>
 				</div>
 			</div>
 		</section>
 
-		<div class="card" >
-			<div class="card-header d-flex justify-content-between align-items-center">
-				<span>
-					<i class="fa fa-clipboard-list"></i>
-					Mes ardoises</span>
-				<span class="label-muted">Lien public uniquement si "Publie" est actif.</span>
-			</div>
-			<div class="card-body">
+		<div class="am-section" id="menus-list">
+			<div class="am-card">
+				<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+					<div>
+						<div class="am-section-title mb-1">
+							<i class="fa fa-clipboard-list me-2 text-primary"></i>
+							Mes ardoises
+						</div>
+						<div class="text-muted small">Lien public uniquement si "Publié" est actif.</div>
+					</div>
+					<div class="d-flex gap-2">
+						<a class="btn btn-primary btn-sm" href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}">
+							<i class="fa fa-plus me-2"></i>Menu du jour
+						</a>
+						<a class="btn btn-outline-primary btn-sm" href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}">
+							<i class="fa fa-star me-2"></i>Menu spécial
+						</a>
+					</div>
+				</div>
 				{% if menus is defined and menus|length > 0 %}
 					<div class="table-responsive">
-						<table class="table-modern align-middle">
-							<thead>
+						<table class="table table-hover align-middle mb-0">
+							<thead class="table-light">
 								<tr>
-									<th>Type</th>
-									<th>Titre</th>
+									<th class="text-uppercase small text-muted">Type</th>
+									<th class="text-uppercase small text-muted">Titre</th>
 									{% if is_granted('ROLE_SUPER_ADMIN') %}
-										<th>Restaurant</th>
+										<th class="text-uppercase small text-muted">Restaurant</th>
 									{% endif %}
-									<th>Statut</th>
-									<th>Lien</th>
+									<th class="text-uppercase small text-muted">Statut</th>
+									<th class="text-uppercase small text-muted">Lien</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -203,34 +273,30 @@
 									<tr>
 										<td>
 											{% if menu.type == 'DAILY' %}
-												<span class="pill daily">
-													<i class="fa fa-sun"></i>
+												<span class="am-pill daily">
+													<i class="fa fa-sun me-1"></i>
 													Jour
 												</span>
 											{% else %}
-												<span class="pill special">
-													<i class="fa fa-star"></i>
-													Special
+												<span class="am-pill special">
+													<i class="fa fa-star me-1"></i>
+													Spécial
 												</span>
 											{% endif %}
 										</td>
-										<td>
-											<strong>{{ menu.titre }}</strong>
-										</td>
+										<td class="fw-semibold">{{ menu.titre }}</td>
 										{% if is_granted('ROLE_SUPER_ADMIN') %}
-											<td>
-												<small class="text-muted">{{ menu.owner.nomRestaurant }}</small>
-											</td>
+											<td><small class="text-muted">{{ menu.owner.nomRestaurant }}</small></td>
 										{% endif %}
 										<td>
 											{% if menu.status %}
-												<span class="pill success">
-													<i class="fa fa-check"></i>
-													Publie
+												<span class="am-pill success">
+													<i class="fa fa-check me-1"></i>
+													Publié
 												</span>
 											{% else %}
-												<span class="pill draft">
-													<i class="fa fa-moon"></i>
+												<span class="am-pill draft">
+													<i class="fa fa-moon me-1"></i>
 													Brouillon
 												</span>
 											{% endif %}
@@ -257,4 +323,104 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		/**
+		 * Copy text to clipboard from input element
+		 */
+		function copyToClipboard(elementId) {
+			const input = document.getElementById(elementId);
+			if (!input) return;
+
+			input.select();
+			input.setSelectionRange(0, 99999); // For mobile devices
+
+			try {
+				navigator.clipboard.writeText(input.value).then(() => {
+					// Visual feedback
+					const btn = event.target.closest('button');
+					if (btn) {
+						const originalHTML = btn.innerHTML;
+						btn.innerHTML = '<i class="fa fa-check"></i>';
+						btn.classList.add('btn-success');
+						btn.classList.remove('btn-outline-primary');
+
+						setTimeout(() => {
+							btn.innerHTML = originalHTML;
+							btn.classList.remove('btn-success');
+							btn.classList.add('btn-outline-primary');
+						}, 1500);
+					}
+				}).catch(err => {
+					// Fallback for older browsers
+					document.execCommand('copy');
+					console.log('Lien copié (fallback)');
+				});
+			} catch (err) {
+				console.error('Erreur lors de la copie:', err);
+			}
+		}
+
+		/**
+		 * Copy the first published menu URL
+		 */
+		function copyFirstPublicUrl() {
+			const publishedUrlInput = document.getElementById('published-url');
+			if (publishedUrlInput) {
+				copyToClipboard('published-url');
+			}
+		}
+
+		/**
+		 * Initialize theme from user preference or system preference
+		 */
+		function initTheme() {
+			const savedTheme = localStorage.getItem('am-theme');
+			const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			const theme = savedTheme || systemTheme;
+
+			document.documentElement.setAttribute('data-bs-theme', theme);
+		}
+
+		/**
+		 * Update theme toggle button icon
+		 */
+		function updateThemeIcon() {
+			const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+			const icon = document.getElementById('theme-icon');
+
+			if (icon) {
+				icon.className = currentTheme === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+			}
+		}
+
+		/**
+		 * Toggle between light and dark theme
+		 */
+		function toggleTheme() {
+			const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+			document.documentElement.setAttribute('data-bs-theme', newTheme);
+			localStorage.setItem('am-theme', newTheme);
+			updateThemeIcon();
+		}
+
+		// Initialize theme on page load
+		document.addEventListener('DOMContentLoaded', () => {
+			initTheme();
+			updateThemeIcon();
+
+			// Listen for system theme changes
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+				if (!localStorage.getItem('am-theme')) {
+					document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+					updateThemeIcon();
+				}
+			});
+		});
+	</script>
 {% endblock %}

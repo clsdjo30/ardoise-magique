@@ -12,9 +12,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 class DashboardController extends AbstractDashboardController
 {
@@ -25,7 +24,9 @@ class DashboardController extends AbstractDashboardController
 
     public function configureAssets(): Assets
     {
-        return Assets::new()->addCssFile('styles/admin.scss');
+        return Assets::new()
+        ->addJsFile('js/form.js')
+        ->addCssFile('styles/admin.css');
     }
 
     /**
@@ -101,6 +102,21 @@ class DashboardController extends AbstractDashboardController
             ->setFaviconPath('favicon.ico');
     }
 
+
+    /**
+     * Configure CRUD defaults
+     */
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            ->setPaginatorPageSize(30)
+            ->setPaginatorRangeSize(4)
+            ->setDateFormat('dd/MM/yyyy')
+            ->setTimeFormat('HH:mm')
+            ->setDateTimeFormat('dd/MM/yyyy HH:mm')
+            ->setTimezone('Europe/Paris');
+    }
+
     public function configureMenuItems(): iterable
     {
         /** @var User $user */
@@ -113,17 +129,17 @@ class DashboardController extends AbstractDashboardController
 
         // Section Menus du Jour
         yield MenuItem::section('Menus du Jour');
-        yield MenuItem::linkToCrud('Tous les Menus du Jour', 'fa fa-sun', Ardoise::class)
+        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-sun', Ardoise::class)
             ->setController(DailyMenuCrudController::class);
-        yield MenuItem::linkToCrud('Creer un Menu du Jour', 'fa fa-plus', Ardoise::class)
+        yield MenuItem::linkToCrud('Creer un Menu', 'fa fa-plus', Ardoise::class)
             ->setController(DailyMenuCrudController::class)
             ->setAction('new');
 
         // Section Menus Speciaux
         yield MenuItem::section('Menus Speciaux');
-        yield MenuItem::linkToCrud('Tous les Menus Speciaux', 'fa fa-star', Ardoise::class)
+        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-star', Ardoise::class)
             ->setController(SpecialMenuCrudController::class);
-        yield MenuItem::linkToCrud('Creer un Menu Special', 'fa fa-plus', Ardoise::class)
+        yield MenuItem::linkToCrud('Creer un Menu', 'fa fa-plus', Ardoise::class)
             ->setController(SpecialMenuCrudController::class)
             ->setAction('new');
 

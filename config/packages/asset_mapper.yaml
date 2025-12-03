@@ -6,6 +6,8 @@ framework:
         missing_import_mode: strict
         excluded_patterns:
             - '**/assets/styles/**/_*.scss'
+            - '**/assets/vendor/bootstrap/scss/**'
+            - '**/*.scss'
 
 when@prod:
     framework:

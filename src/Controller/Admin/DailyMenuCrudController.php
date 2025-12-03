@@ -17,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 
 class DailyMenuCrudController extends AbstractCrudController
 {
@@ -36,43 +37,65 @@ class DailyMenuCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Menu du Jour')
             ->setEntityLabelInPlural('Menus du Jour')
             ->setPageTitle('index', 'Menus du Jour')
-            ->setPageTitle('new', 'Nouveau Menu du Jour')
-            ->setPageTitle('edit', 'Edition Menu du Jour')
+            ->setPageTitle('new', 'Composer votre Menu du Jour')
+            ->setPageTitle('edit', 'Modifier Menu du Jour')
             ->setDefaultSort(['id' => 'DESC']);
     }
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('titre', 'Nom du menu')
-            ->setHelp('Saisissez la date du menu au format : "samedi 22 Novembre"');
+            yield FormField::addPanel('Détails du Menu du Jour')
+                ->setIcon('fas fa-utensils')
+                ->setRequired(true)
+                ->setCssClass('panel-classy bg-rose-400 p-3 mb-4 mt-4');
+            yield TextField::new('titre', 'Nom du menu')
+                ->setRequired(true)
+                ->setCssClass('placeholder-gastro')
+                ->setHtmlAttribute('placeholder', 'samedi 22 Novembre');
 
-            yield NumberField::new('price_epd', 'Prix E+P+D')
+            yield NumberField::new('price_epd', 'Tarif de votre formule Entrée + Plat + Dessert')
+                ->setCssClass('placeholder-gastro')
+                ->setRequired(true)
                 ->setNumDecimals(2)
-                ->setHelp('Prix de la formule Entrée + Plat + Dessert (ex: 15.50)')
+                ->setCssClass('placeholder-gastro')
+                ->setHtmlAttribute('placeholder', 'ex: 15.50')
                 ->setColumns(4);
 
-            yield NumberField::new('price_ep', 'Prix E+P')
+            yield NumberField::new('price_ep', 'Tarif de votre formule Entrée + Plat')
+                ->setRequired(true)
                 ->setNumDecimals(2)
-                ->setHelp('Prix de la formule Entrée + Plat (ex: 12.50)')
+                ->setCssClass('placeholder-gastro')
+                ->setHtmlAttribute('placeholder', 'ex: 12.50')
                 ->setColumns(4);
 
-            yield NumberField::new('price_pd', 'Prix P+D')
+            yield NumberField::new('price_pd', 'Tarif de votre formule Plat + Dessert')
+                ->setRequired(true)
                 ->setNumDecimals(2)
-                ->setHelp('Prix de la formule Plat + Dessert (ex: 10.50)')
+                ->setCssClass('placeholder-gastro')
+                ->setHtmlAttribute('placeholder', 'ex: 10.50')
                 ->setColumns(4);
 
+            yield FormField::addPanel('Composition du Menu')
+                ->setIcon('fas fa-list')
+                ->setCssClass('panel-classy bg-accent-200 p-3 mb-4 mt-4');
                 yield TextField::new('daily_entree', 'Entrée')
-                ->setHelp('Décrivez l\'entrée du jour')
+                ->setRequired(true)
+                ->setCssClass('placeholder-gastro')
+                ->setHtmlAttribute('placeholder', 'ex: Salade de chèvre chaud')
                 ->hideOnIndex()
                 ->setColumns(6);
 
                 yield TextField::new('daily_plat', 'Plat')
-                ->setHelp('Décrivez le plat du jour')
+                ->setRequired(true)
+                ->setCssClass('placeholder-gastro')
+                ->setHtmlAttribute('placeholder', 'ex: Filet de poulet à la crème et aux champignons')
                 ->hideOnIndex()
                 ->setColumns(6);
 
                 yield TextField::new('daily_dessert', 'Dessert')
-                ->setHelp('Décrivez le dessert du jour')
+                ->setRequired(true)
+                ->setCssClass('placeholder-gastro')
+                ->setHtmlAttribute('placeholder', 'ex: Tarte aux pommes maison')
                 ->hideOnIndex();
 
                 yield BooleanField::new('status', 'Publié')

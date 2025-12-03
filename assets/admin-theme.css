@@ -1,6 +1,7 @@
 /* ========================================
    L'Ardoise Magique - Minimal Admin Theme
    Support: Light/Dark modes
+   Dashboard Only
    ======================================== */
 
 /* =====================================
@@ -75,7 +76,7 @@
     --am-border-color: #404040;
     --am-border-subtle: #333333;
 
-    /* Accent colors remain similar but adjusted for dark mode */
+    /* Accent colors */
     --am-primary: #7c8ff0;
     --am-primary-hover: #8fa1f3;
     --am-primary-light: #2a2d4a;
@@ -498,33 +499,6 @@ a,
 
 #theme-toggle:hover #theme-icon {
     transform: rotate(20deg);
-}
-
-/* ==================
-   EasyAdmin Overrides
-   ================== */
-[data-bs-theme="dark"] .content-panel-body {
-    background-color: var(--am-bg-primary);
-}
-
-[data-bs-theme="dark"] .ea-sidebar {
-    background-color: var(--am-bg-secondary);
-    border-right: 1px solid var(--am-border-color);
-}
-
-[data-bs-theme="dark"] .content-header-title {
-    color: var(--am-text-primary);
-}
-
-/* Override Bootstrap default bg in dark mode */
-[data-bs-theme="dark"] .bg-light {
-    background-color: var(--am-bg-tertiary) !important;
-}
-
-/* Override table light background in dark mode */
-[data-bs-theme="dark"] .table-light {
-    background-color: var(--am-bg-tertiary);
-    color: var(--am-text-primary);
 }
 
 /* ==================
