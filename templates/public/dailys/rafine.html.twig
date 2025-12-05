@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Menu Gastronomique du Jour - L'Élégance de la Table</title>
+
+		<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+		<style>
+		/* --- VARIABLES CSS (PALETTE RAFFINÉE) --- */:root
+		{
+			--bg-color: #ffffff; /* Fond Blanc Épuré */
+			--text-color: #1a1a1a; /* Texte Noir Profond */
+			--accent-color: #8B7355; /* Bronze/Doré Pâle pour l'accentuation */
+			--subtle-line: #e0e0e0; /* Ligne de séparation très fine */
+			--pad: 30px;
+		}
+
+		/* --- BASE RESET & FOND --- */
+		body {
+			font-family: 'Cormorant Garamond', serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+		}
+
+		/* --- HEADER (ENTÊTE) --- */
+		.header {
+			width: 100%;
+			text-align: center;
+			padding: calc(var(--pad) * 1.5) 0;
+			border-bottom: 1px solid var(--subtle-line);
+		}
+
+		.header h1 {
+			font-family: 'Cinzel', serif;
+			font-size: 3.5em;
+			margin: 0;
+			letter-spacing: 5px;
+			color: var(--text-color);
+		}
+
+		.tagline {
+			margin: 10px 0 0;
+			font-style: italic;
+			font-size: 1.3em;
+			color: var(--accent-color);
+		}
+
+		/* --- CONTENEUR PRINCIPAL & CARTE --- */
+		.menu-container {
+			padding: 60px var(--pad);
+			width: 100%;
+			max-width: 900px; /* Plus large pour l'élégance */
+			box-sizing: border-box;
+		}
+
+		.menu-board {
+			padding: 0;
+			/* Le "cadre" est maintenant défini par la structure et l'espacement */
+		}
+
+		.board-title {
+			font-family: 'Cinzel', serif;
+			text-align: center;
+			font-size: 2.8em;
+			color: var(--text-color);
+			margin-bottom: 50px;
+			position: relative;
+		}
+
+		/* Ligne décorative subtile pour le titre */
+		.board-title::after {
+			content: '';
+			display: block;
+			width: 80px;
+			height: 2px;
+			background-color: var(--accent-color);
+			margin: 15px auto 0;
+		}
+
+		/* --- CATÉGORIES DE PLATS --- */
+
+		.dish-category {
+			padding: 30px 0;
+			border-bottom: 1px solid var(--subtle-line);
+			text-align: center;
+		}
+
+		.dish-category:last-of-type {
+			border-bottom: none;
+		}
+
+		.category-name {
+			font-family: 'Cinzel', serif;
+			font-size: 1.1em;
+			letter-spacing: 3px;
+			font-weight: bold;
+			color: var(--accent-color);
+			margin: 0 0 10px;
+		}
+
+		/* --- L'ÉNONCÉ DU PLAT (MISE EN AVANT) --- */
+		.dish-name {
+			font-size: 2.2em;
+			font-weight: 700; /* Gras pour l'impact visuel */
+			font-style: normal;
+			margin: 0;
+			line-height: 1.2;
+			color: var(--text-color);
+		}
+
+		/* --- TARIFS ET FORMULES --- */
+
+		.prices {
+			margin-top: 60px;
+			padding-top: 30px;
+			border-top: 1px solid var(--subtle-line);
+		}
+
+		.prices h3 {
+			font-family: 'Cinzel', serif;
+			font-size: 1.8em;
+			text-align: center;
+			margin-top: 0;
+			margin-bottom: 20px;
+			color: var(--accent-color);
+			letter-spacing: 2px;
+		}
+
+		.prices table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+		}
+
+		.prices td {
+			padding: 15px 0;
+			font-size: 1.3em;
+			font-style: italic;
+			border-bottom: 1px solid var(--subtle-line);
+		}
+
+		.prices tr:last-child td {
+			border-bottom: none;
+		}
+
+		.price {
+			font-family: 'Cinzel', serif;
+			font-weight: bold;
+			color: var(--accent-color);
+			text-align: right;
+			width: 25%; /* Plus d'espace pour le prix */
+			letter-spacing: 1px;
+		}
+
+		.note {
+			text-align: center;
+			font-size: 1em;
+			font-style: italic;
+			color: #666;
+			margin-top: 30px;
+		}
+
+		/* --- FOOTER --- */
+		.footer {
+			width: 100%;
+			text-align: center;
+			padding: 20px 0;
+			background-color: #f8f8f8; /* Légèrement grisé */
+			color: #666;
+			font-size: 0.9em;
+			margin-top: auto;
+			border-top: 1px solid var(--subtle-line);
+		}
+
+		/* --- RESPONSIVE --- */
+		@media(max-width: 700px) {
+			.header h1 {
+				font-size: 2.5em;
+				letter-spacing: 3px;
+			}
+			.board-title {
+				font-size: 2em;
+			}
+			.dish-name {
+				font-size: 1.8em;
+			}
+			.prices td,
+			.price {
+				font-size: 1.1em;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<header class="header">
+		<h1>{{ restaurant.nomRestaurant }}</h1>
+		<p class="tagline">{{ ardoise.titre }}</p>
+	</header>
+
+	<main class="menu-container">
+		<section class="menu-board">
+			<h2 class="board-title">Le Menu de Saison</h2>
+
+			<div class="dish-category entree">
+				{% if ardoise.dailyEntree %}
+					<p class="category-name">PRÉLUDE</p>
+					<h3 class="dish-name">
+						{{ ardoise.dailyEntree|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="dish-category plat">
+				{% if ardoise.dailyPlat %}
+					<p class="category-name">LE PLAT MAÎTRE</p>
+					<h3 class="dish-name">{{ ardoise.dailyPlat|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="dish-category dessert">
+				{% if ardoise.dailyDessert %}
+					<p class="category-name">LA DOUCEUR FINALE</p>
+					<h3 class="dish-name">{{ ardoise.dailyDessert|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="prices">
+				<h3>Nos Formules Dégustation</h3>
+				<table>
+					{% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+						<tr>
+							{% if ardoise.pricePj %}
+								<td>Le Plat Maître Uniquement</td>
+								<td class="price">{{ ardoise.pricePj|number_format(2, ',', ' ') }}
+									€</td>
+							{% endif %}
+						</tr>
+						<tr>
+							{% if ardoise.pricePd %}
+								<td>Prélude + Plat Maître ou Plat Maître + Douceur Finale</td>
+								<td class="price">{{ ardoise.pricePd|number_format(2, ',', ' ') }}
+									€</td>
+							{% endif %}
+						</tr>
+						<tr>
+							{% if ardoise.priceEpd %}
+								<td>Formule Complète (Prélude, Plat Maître et Douceur Finale)</td>
+								<td class="price">{{ ardoise.priceEpd|number_format(2, ',', ' ') }}
+									€</td>
+							{% endif %}
+						</tr>
+					{% endif %}
+				</table>
+				<p class="note">Service du midi et du soir. Nos plats sont sublimés par des produits locaux et de saison.</p>
+			</div>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<p>&copy; 2025 La Table d'Or. Réservation Fortement Conseillée.</p>
+	</footer>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+console.log("Le menu gastronomique est prêt. Laissez-vous guider par les saveurs.");
+});
+	</script>
+</body></html>

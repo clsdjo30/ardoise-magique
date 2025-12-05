@@ -18,6 +18,26 @@ class Ardoise
     public const TYPE_DAILY = 'DAILY';
     public const TYPE_SPECIAL = 'SPECIAL';
 
+    public const TEMPLATE_BISTROT = 'bistrot';
+    public const TEMPLATE_BRUT = 'brut';
+    public const TEMPLATE_CLASSE = 'classe';
+    public const TEMPLATE_DIGITAL = 'digital';
+    public const TEMPLATE_MAGAZINE = 'magazine';
+    public const TEMPLATE_MARCHE = 'marche';
+    public const TEMPLATE_RAFINE = 'rafine';
+    public const TEMPLATE_TRADITIONNEL = 'traditionnel';
+
+    public const TEMPLATES = [
+        self::TEMPLATE_BISTROT,
+        self::TEMPLATE_BRUT,
+        self::TEMPLATE_CLASSE,
+        self::TEMPLATE_DIGITAL,
+        self::TEMPLATE_MAGAZINE,
+        self::TEMPLATE_MARCHE,
+        self::TEMPLATE_RAFINE,
+        self::TEMPLATE_TRADITIONNEL,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,6 +54,9 @@ class Ardoise
 
     #[ORM\Column]
     private bool $status = false;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $template = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ardoises')]
     #[ORM\JoinColumn(nullable: false)]
@@ -56,10 +79,10 @@ class Ardoise
     private ?string $price_epd = null; // Prix Entrée + Plat + Dessert
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $price_ep = null; // Prix Entrée + Plat
+    private ?string $price_pj = null; // Prix Plat du jour
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
-    private ?string $price_pd = null; // Prix Plat + Dessert
+    private ?string $price_pd = null; // Prix Plat + Dessert ou Entree plat
 
     // ==========================================
     // CHAMPS MENU SPÉCIAL (type=SPECIAL)
@@ -152,6 +175,26 @@ class Ardoise
         return $this;
     }
 
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?string $template): static
+    {
+        if ($template !== null && !in_array($template, self::TEMPLATES, true)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid template "%s". Allowed templates are: %s',
+                $template,
+                implode(', ', self::TEMPLATES)
+            ));
+        }
+
+        $this->template = $template;
+
+        return $this;
+    }
+
     public function getOwner(): ?User
     {
         return $this->owner;
@@ -216,14 +259,14 @@ class Ardoise
         return $this;
     }
 
-    public function getPriceEp(): ?string
+    public function getPricePj(): ?string
     {
-        return $this->price_ep;
+        return $this->price_pj;
     }
 
-    public function setPriceEp(?string $price_ep): static
+    public function setPricePj(?string $price_pj): static
     {
-        $this->price_ep = $price_ep;
+        $this->price_pj = $price_pj;
 
         return $this;
     }

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Menu Digital Moderne - L'Innovation Culinaire</title>
+
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+		<link rel="stylesheet" href="{{ asset('styles/digital.css') }}">
+	</head>
+	<body>
+
+		<header class="header">
+			<h1>[CODE]
+				{{ restaurant.nomRestaurant}}</h1>
+			<p class="tagline">{{ardoise.titre}}</p>
+		</header>
+
+		<main class="menu-container">
+			<h2 class="board-title">Le
+				<span>Byte</span>
+				du Jour</h2>
+
+			<div class="menu-card dish-category">
+            <div class="category-header">
+				<i class="fas fa-utensils category-icon"></i>
+				<p class="category-name">STARTER PACKAGE</p>
+            </div>
+				{% if ardoise.dailyEntree %}
+					<h3 class="dish-name">{{ ardoise.dailyEntree|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="menu-card dish-category">
+            <div class="category-header">
+				<i class="fas fa-burger category-icon"></i>
+				<p class="category-name">MAIN PROCESS</p>
+            </div>
+				{% if ardoise.dailyPlat %}
+					<h3 class="dish-name">{{ ardoise.dailyPlat|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="menu-card dish-category">
+            <div class="category-header">
+				<i class="fas fa-ice-cream category-icon"></i>
+				<p class="category-name">FINAL COMPILE</p>
+            </div>
+				{% if ardoise.dailyDessert %}
+					<h3 class="dish-name">{{ ardoise.dailyDessert|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="prices-section">
+				<h3>Nos Configurations Standard</h3>
+				<table class="prices-table">
+					{% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+						<tr>
+							<td>Main Process Seul</td>
+							{% if ardoise.pricePj %}
+								<td class="price-value">{{ ardoise.pricePj|nl2br }}</td>
+							{% endif %}
+						</tr>
+						<tr>
+							<td>Starter + Main Process ou Main Process + Final Compile</td>
+							{% if ardoise.pricePd %}
+								<td class="price-value">{{ ardoise.pricePd }}
+									€</td>
+							{% endif %}
+						</tr>
+						<tr>
+							<td>Configuration Complète (Starter, Main Process, Final Compile)</td>
+							{% if ardoise.priceEpd %}
+								<td class="price-value">{{ ardoise.priceEpd|nl2br }}€</td>
+							{% endif %}
+						</tr>
+					{% endif %}
+				</table>
+				<p class="note">Tous nos plats sont assemblés avec des ingrédients de première qualité et optimisés pour votre plaisir.</p>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2025 [CODE] CUISINE. Optimisation Gourmande.</p>
+		</footer>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+console.log("Interface du menu chargée. Prêt pour l'expérience digitale.");
+
+// Animation simple au chargement
+const menuCards = document.querySelectorAll('.menu-card');
+menuCards.forEach((card, index) => {
+card.style.opacity = 0;
+card.style.transform = 'translateY(20px)';
+setTimeout(() => {
+card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+card.style.opacity = 1;
+card.style.transform = 'translateY(0)';
+}, 100 * index); // Délai progressif
+});
+});
+		</script>
+	</body>
+</html>

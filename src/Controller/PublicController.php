@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Ardoise;
 use App\Repository\ArdoiseRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,8 +16,7 @@ class PublicController extends AbstractController
     public function __construct(
         private UserRepository $userRepository,
         private ArdoiseRepository $ardoiseRepository
-    ) {
-    }
+    ) {}
 
     #[Route('/', name: 'app_landing', methods: ['GET'])]
     public function landing(): Response
@@ -53,7 +53,24 @@ class PublicController extends AbstractController
 
         // Rediriger vers le template approprié selon le type de menu
         if ($ardoise->getType() === 'DAILY') {
-            return $this->render('public/daily_menu.html.twig', [
+            // Déterminer le template à utiliser
+            $template = $ardoise->getTemplate();
+
+            // Si un template est défini et valide, l'utiliser
+            if ($template && in_array($template, Ardoise::TEMPLATES, true)) {
+                $templatePath = sprintf('public/dailys/%s.html.twig', $template);
+            } else {
+                // Template par défaut si aucun template n'est défini
+                $templatePath = 'public/daily_menu.html.twig';
+            }
+            // dd([
+            //     'templatePath' => $templatePath,
+            //     'template' => $template,
+            //     'ardoiseSlug' => $ardoise->getSlug(),
+            //     'restaurantSlug' => $user->getSlug(),
+            // ]);
+
+            return $this->render($templatePath, [
                 'ardoise' => $ardoise,
                 'restaurant' => $user,
             ]);

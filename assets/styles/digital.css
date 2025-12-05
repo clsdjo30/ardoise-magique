@@ -1,0 +1,228 @@
+/* --- VARIABLES CSS (PALETTE MODERNE ET VIVE) --- */
+:root {
+    --bg-color: #f5f8fa; /* Fond Clair et Moderne */
+    --text-color: #2c3e50; /* Gris Anthracite */
+    --primary-accent: #2ecc71; /* Vert Éclatant (UX Friendly) */
+    --secondary-accent: #3498db; /* Bleu Vif */
+    --card-bg: #ffffff; /* Fond des cartes/sections */
+    --border-light: #e0e6ed; /* Bordure très légère */
+    --shadow-light: rgba(0, 0, 0, 0.05); /* Ombre douce */
+    --pad-section: 30px;
+    --pad-content: 10px;
+}
+
+/* --- BASE RESET & FOND --- */
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    line-height: 1.4;
+}
+
+/* --- HEADER (ENTÊTE) --- */
+.header {
+    width: 100%;
+    text-align: center;
+    padding: var(--pad-section) 0 calc(var(--pad-section) / 2);
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: 0 2px 4px var(--shadow-light);
+}
+
+.header h1 {
+    font-weight: 700;
+    font-size: 3.5em;
+    margin: 0;
+    letter-spacing: -1px;
+    color: var(--primary-accent);
+}
+
+.tagline {
+    margin: 10px 0 0;
+    font-size: 1.2em;
+    color: var(--secondary-accent);
+    font-weight: 300;
+}
+
+/* --- CONTENEUR PRINCIPAL & CARTE --- */
+.menu-container {
+    /* padding: var(--pad-section) var(--pad-content); */
+    width: 100%;
+    max-width: 1200px; /* Plus large pour la grille */
+    box-sizing: border-box;
+    display: grid; /* Utilisation de CSS Grid */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px; /* Espacement entre les éléments de la grille */
+}
+
+.menu-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    padding: var(--pad-content);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation au survol */
+    height: 200px;
+
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.board-title {
+    grid-column: 1 / -1; /* Le titre prend toute la largeur */
+    font-weight: 700;
+    font-size: 2.8em;
+    color: var(--text-color);
+    margin-bottom: calc(var(--pad-content) / 2);
+    text-align: center;
+}
+
+.board-title span {
+    color: var(--primary-accent);
+}
+
+/* --- CATÉGORIES DE PLATS --- */
+.dish-category {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.category-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 20px;
+    padding-top: 10px;
+    margin-bottom: 30px;
+}
+
+.category-icon {
+    font-size: 1.5em;
+    color: var(--secondary-accent);
+    margin-bottom: 15px;
+}
+
+.category-name {
+    font-weight: 600;
+    font-size: 1.3em;
+    letter-spacing: 0.5px;
+    color: var(--primary-accent);
+    margin: 0 0 10px;
+    text-transform: uppercase;
+}
+
+/* --- L'ÉNONCÉ DU PLAT (MISE EN AVANT) --- */
+.dish-name {
+    font-size: 1.6em;
+    font-weight: 600;
+    margin: 0 0 20px;
+    line-height: 1.3;
+    color: var(--text-color);
+}
+
+/* --- TARIFS ET FORMULES --- */
+.prices-section {
+    grid-column: 1 / -1; /* Prend toute la largeur */
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    padding: var(--pad-content);
+    margin-top: calc(var(--pad-content) * 0.5);
+}
+
+.prices-section h3 {
+    font-weight: 700;
+    font-size: 1.8em;
+    text-align: center;
+    color: var(--secondary-accent);
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.prices-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.prices-table td {
+    padding: 15px 0;
+    font-size: 1.2em;
+    border-bottom: 1px solid var(--border-light);
+    text-align: left;
+}
+
+.prices-table tr:last-child td {
+    border-bottom: none;
+}
+
+.price-value {
+    font-weight: 700;
+    color: var(--primary-accent);
+    text-align: right;
+    width: 25%;
+}
+
+.note {
+    text-align: center;
+    font-size: 1em;
+    color: #7f8c8d; /* Gris doux */
+    margin-top: 20px;
+    font-weight: 300;
+}
+
+/* --- FOOTER --- */
+.footer {
+    width: 100%;
+    text-align: center;
+    padding: var(--pad-content);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-size: 0.9em;
+    margin-top: var(--pad-section);
+    border-top: 1px solid var(--border-light);
+    box-shadow: 0 -2px 4px var(--shadow-light);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2.5em;
+    }
+    .board-title {
+        font-size: 2em;
+    }
+    .dish-name {
+        font-size: 1.4em;
+    }
+    .category-icon {
+        font-size: 1.5em;
+    }
+    .prices-section h3 {
+        font-size: 1.5em;
+        margin-horizontal: 30px;
+    }
+    .prices-table td,
+    .price-value {
+        font-size: 1em;
+    }
+    .menu-container {
+        grid-template-columns: 1fr; /* Une seule colonne sur mobile */
+    }
+    .menu-card {
+        height: auto;
+        margin: 10px;
+    }
+}

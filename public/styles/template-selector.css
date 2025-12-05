@@ -1,0 +1,306 @@
+/* ===========================
+   TEMPLATE SELECTOR - CAROUSEL
+   =========================== */
+
+.template-carousel-container {
+    position: relative;
+    padding: 0 60px;
+    margin: 1.5rem 0;
+}
+
+.template-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: #1f4f7a #f0f0f0;
+}
+
+.template-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.template-grid::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+.template-grid::-webkit-scrollbar-thumb {
+    background: #1f4f7a;
+    border-radius: 4px;
+}
+
+.template-grid::-webkit-scrollbar-thumb:hover {
+    background: #1c456a;
+}
+
+.template-option {
+    position: relative;
+    cursor: pointer;
+    border: 3px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: #fff;
+    flex: 0 0 200px;
+    min-width: 200px;
+}
+
+.template-option:hover {
+    border-color: #1f4f7a;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+    transform: translateY(-5px) scale(1.02);
+}
+
+.template-option.selected {
+    border-color: #1f4f7a;
+    box-shadow: 0 0 0 4px rgba(31, 79, 122, 0.2);
+    transform: scale(1.05);
+}
+
+.template-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.template-option label {
+    margin: 0;
+    cursor: pointer;
+    display: block;
+    position: relative;
+}
+
+.template-content {
+    display: block;
+    position: relative;
+}
+
+.template-thumbnail {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.template-option:hover .template-thumbnail {
+    transform: scale(1.05);
+}
+
+.template-label {
+    display: block;
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    text-transform: capitalize;
+    transition: all 0.3s ease;
+}
+
+.template-option.selected .template-label {
+    background: #1f4f7a;
+    color: #fff;
+}
+
+/* Bouton loupe */
+.template-zoom-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #1f4f7a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.template-zoom-btn:hover {
+    background: #1f4f7a;
+    transform: scale(1.1);
+}
+
+.template-zoom-btn:hover::before {
+    color: white;
+}
+
+.template-zoom-btn::before {
+    content: '🔍';
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.template-option:hover .template-zoom-btn {
+    opacity: 1;
+}
+
+/* Boutons de navigation du carousel */
+.carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    background: #1f4f7a;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 20;
+}
+
+.carousel-nav-btn:hover {
+    background: #1c456a;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.carousel-nav-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-nav-btn.prev {
+    left: 10px;
+}
+
+.carousel-nav-btn.next {
+    right: 10px;
+}
+
+.carousel-nav-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.carousel-nav-btn:disabled:hover {
+    transform: translateY(-50%);
+}
+
+/* Modal de zoom */
+.template-zoom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.template-zoom-modal.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.template-zoom-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.template-zoom-image {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.template-zoom-close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    background: #1f4f7a;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.template-zoom-close:hover {
+    background: #c41e3a;
+    transform: rotate(90deg);
+}
+
+.template-zoom-title {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .template-carousel-container {
+        padding: 0 45px;
+    }
+
+    .template-option {
+        flex: 0 0 160px;
+        min-width: 160px;
+    }
+
+    .carousel-nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Ardoise Typographique Brutale</title>
+
+		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+		<style>
+		/* --- VARIABLES CSS --- */:root
+		{
+			--bg-color: #ffffff; /* Fond Blanc Pur */
+			--text-color: #000000; /* Texte Noir Profond */
+			--line-weight: 3px; /* Épaisseur des lignes de séparation */
+			--spacing-large: 60px;
+			--spacing-medium: 30px;
+			--spacing-small: 15px;
+		}
+
+		/* --- BASE RESET & FOND --- */
+		body {
+			font-family: 'IBM Plex Mono', monospace;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+			line-height: 1.4;
+		}
+
+		/* --- HEADER (ENTÊTE) --- */
+		.header {
+			width: 100%;
+			text-align: center;
+			padding: var(--spacing-large) 0;
+			border-bottom: var(--line-weight) solid var(--text-color); /* Ligne épaisse et brutale */
+		}
+
+		.header h1 {
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 5em; /* Très grand titre */
+			margin: 0;
+			letter-spacing: 10px;
+			line-height: 1;
+		}
+
+		.tagline {
+			margin: 0;
+			font-size: 1.2em;
+			font-weight: 600;
+			letter-spacing: 5px;
+			text-transform: uppercase;
+		}
+
+		/* --- CONTENEUR PRINCIPAL & ARDOISE --- */
+		.menu-container {
+			padding: var(--spacing-large) var(--spacing-medium);
+			width: 100%;
+			max-width: 800px;
+			box-sizing: border-box;
+		}
+
+		.board-title {
+			font-family: 'Bebas Neue', sans-serif;
+			text-align: center;
+			font-size: 3.5em;
+			margin-bottom: var(--spacing-large);
+			padding-bottom: var(--spacing-small);
+			border-bottom: var(--line-weight) solid var(--text-color);
+		}
+
+		/* --- CATÉGORIES DE PLATS --- */
+		.dish-category {
+			padding: var(--spacing-medium) 0;
+			border-bottom: 1px solid var(--text-color); /* Ligne fine pour séparer les plats */
+		}
+
+		.dish-category:last-of-type {
+			border-bottom: none;
+		}
+
+		.category-name {
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 1.5em;
+			letter-spacing: 5px;
+			font-weight: 400;
+			margin: 0 0 var(--spacing-small);
+			text-transform: uppercase;
+		}
+
+		/* --- L'ÉNONCÉ DU PLAT (MISE EN AVANT) --- */
+		.dish-name {
+			font-size: 2.2em;
+			font-weight: 700; /* Très gras pour l'impact */
+			margin: 0;
+			line-height: 1.1;
+			text-transform: uppercase;
+		}
+
+		/* --- DESCRIPTION (Sous le plat si besoin de contexte) --- */
+		.dish-details {
+			font-size: 1em;
+			font-weight: 400;
+			margin-top: 5px;
+			opacity: 0.7; /* Légèrement moins visible pour la hiérarchie */
+		}
+
+		/* --- TARIFS ET FORMULES --- */
+
+		.prices-section {
+			margin-top: var(--spacing-large);
+			padding-top: var(--spacing-medium);
+			/* border-top: var(--line-weight) solid var(--text-color); */
+		}
+
+		.prices-section h3 {
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 2em;
+			text-align: center;
+			margin-top: 0;
+			margin-bottom: var(--spacing-medium);
+			letter-spacing: 3px;
+		}
+
+		.prices-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: var(--spacing-medium);
+		}
+
+		.prices-table td {
+			padding: var(--spacing-small) 0;
+			font-size: 1.1em;
+			border-bottom: 1px dashed var(--text-color); /* Ligne pointillée */
+		}
+
+		.prices-table tr:last-child td {
+			border-bottom: none;
+		}
+
+		.price-value {
+			font-family: 'Bebas Neue', sans-serif;
+			font-size: 1.5em;
+			font-weight: 700;
+			text-align: right;
+			width: 25%;
+			letter-spacing: 2px;
+		}
+
+		.note {
+			text-align: center;
+			font-size: 0.9em;
+			color: var(--text-color);
+			margin-top: 20px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		/* --- FOOTER --- */
+		.footer {
+			width: 100%;
+			text-align: center;
+			padding: var(--spacing-small);
+			font-size: 0.8em;
+			margin-top: auto;
+			border-top: 1px solid var(--text-color);
+			background-color: var(--bg-color); /* Maintien du noir et blanc */
+		}
+
+		/* --- RESPONSIVE --- */
+		@media(max-width: 600px) {
+			.header h1 {
+				font-size: 3em;
+				letter-spacing: 5px;
+			}
+			.tagline {
+				font-size: 1em;
+			}
+			.board-title {
+				font-size: 2.5em;
+			}
+			.dish-name {
+				font-size: 1.8em;
+			}
+			.category-name {
+				font-size: 1.2em;
+			}
+			.prices-section h3 {
+				font-size: 1.6em;
+			}
+			.prices-table td,
+			.price-value {
+				font-size: 1em;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<header class="header">
+		<h1>{{ restaurant.nomRestaurant}}</h1>
+		<p class="tagline">{{ardoise.titre}}</p>
+	</header>
+
+	<main class="menu-container">
+		<h2 class="board-title">L'ARDOISE</h2>
+
+		<div class="dish-category entree">
+			<p class="category-name">ENTRÉE | COLD START</p>
+			{% if ardoise.dailyEntree %}
+				<h3 class="dish-name">{{ ardoise.dailyEntree|nl2br }}</h3>
+			{% endif %}
+		</div>
+
+		<div class="dish-category plat">
+			<p class="category-name">PLAT | MAIN EVENT</p>
+			{% if ardoise.dailyPlat %}
+				<h3 class="dish-name">{{ ardoise.dailyPlat|nl2br }}</h3>
+			{% endif %}
+		</div>
+		<div class="dish-category dessert">
+			<p class="category-name">DESSERT | FINAL SHOT</p>
+			{% if ardoise.dailyDessert %}
+				<h3 class="dish-name">{{ ardoise.dailyDessert|nl2br }}</h3>
+			{% endif %}
+		</div>
+
+		<div class="prices-section">
+			<h3>PRIX ET FORMULES</h3>
+			<table class="prices-table">
+				{% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+					<tr>
+						<td>PLAT SEUL</td>
+						{% if ardoise.pricePj %}
+							<td class="price-value">{{ ardoise.pricePj|nl2br }}</td>
+						{% endif %}
+					</tr>
+					<tr>
+						<td>ENTRÉE + PLAT ou PLAT + DESSERT</td>
+						{% if ardoise.pricePd %}
+							<td class="price-value">{{ ardoise.pricePd }}
+								€</td>
+						{% endif %}
+					</tr>
+					<tr>
+						<td>FORMULE COMPLÈTE</td>
+						{% if ardoise.priceEpd %}
+							<td class="price-value">{{ ardoise.priceEpd|nl2br }}€</td>
+						{% endif %}
+					</tr>
+				{% endif %}
+			</table>
+			<p class="note">LE PRIX EST LE PRIX. FAIT MAISON, FAIT ICI.</p>
+		</div>
+	</main>
+
+	<footer class="footer">
+		<p>CETTE PAGE EST ENTIÈREMENT TYPOGRAPHIQUE. COPYRIGHT 2025.</p>
+	</footer>
+</body></html>

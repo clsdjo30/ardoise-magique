@@ -1,0 +1,30 @@
+{# Bloc spécifique pour le champ template de l'entité Ardoise #}
+{% block _Ardoise_template_widget %}
+    <div class="template-carousel-container">
+        <button type="button" class="carousel-nav-btn prev" aria-label="Précédent">&lsaquo;</button>
+
+        <div class="template-grid">
+            {%- for child in form %}
+                <div class="template-option {% if child.vars.checked %}selected{% endif %}"
+                     data-template-value="{{ child.vars.value }}"
+                     data-template-label="{{ child.vars.label }}"
+                     data-template-image="{{ child.vars.attr['data-template-image']|default('') }}">
+                    {{- form_widget(child) -}}
+                    <label for="{{ child.vars.id }}">
+                        <div class="template-content">
+                            <img src="{{ child.vars.attr['data-template-image']|default('') }}"
+                                 alt="{{ child.vars.label }}"
+                                 class="template-thumbnail">
+                        </div>
+                        <div class="template-zoom-btn"
+                             data-template-name="{{ child.vars.label }}"
+                             data-template-image="{{ child.vars.attr['data-template-image']|default('') }}"></div>
+                    </label>
+                </div>
+            {% endfor -%}
+        </div>
+
+        <button type="button" class="carousel-nav-btn next" aria-label="Suivant">&rsaquo;</button>
+        <div class="carousel-dots" aria-label="Navigation des templates"></div>
+    </div>
+{% endblock %}

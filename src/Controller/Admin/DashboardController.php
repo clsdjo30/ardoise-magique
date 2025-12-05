@@ -26,7 +26,10 @@ class DashboardController extends AbstractDashboardController
     {
         return Assets::new()
         ->addJsFile('js/form.js')
-        ->addCssFile('styles/admin.css');
+        ->addJsFile('js/template-selector.js')
+        ->addCssFile('styles/admin.css')
+        ->addCssFile('styles/template-selector.css');
+
     }
 
     /**

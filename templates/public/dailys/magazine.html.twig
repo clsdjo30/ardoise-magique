@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Le Gourmand Magazine - Édition du Jour</title>
+
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+
+		<style>
+		/* --- VARIABLES CSS (PALETTE MAGAZINE) --- */:root
+		{
+			--bg-color: #f7f7f7; /* Fond de page léger */
+			--text-color: #333333; /* Texte gris foncé */
+			--headline-color: #0a0a0a; /* Noir profond pour les titres */
+			--accent-red: #d9534f; /* Rouge cerise/framboise */
+			--accent-gold: #b39b5b; /* Doré subtil */
+			--border-light: #e0e0e0; /* Ligne de séparation */
+			--section-spacing: 80px;
+			--padding-base: 25px;
+		}
+
+		/* --- BASE RESET & FOND --- */
+		body {
+			font-family: 'Montserrat', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+			line-height: 1.6;
+		}
+
+		/* --- HEADER (ENTÊTE / BANDEAU MAGAZINE) --- */
+		.header {
+			width: 100%;
+			text-align: center;
+			padding: var(--padding-base) 0;
+			background-color: var(--headline-color); /* Bandeau noir */
+			color: white;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+			position: relative;
+			z-index: 10;
+		}
+
+		.header h1 {
+			font-family: 'Playfair Display', serif;
+			font-size: 3.8em;
+			margin: 0;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			color: white;
+		}
+
+		.tagline {
+			margin: 5px 0 0;
+			font-size: 1.1em;
+			font-weight: 400;
+			color: var(--accent-gold);
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		/* --- CONTENEUR PRINCIPAL --- */
+		.magazine-layout {
+			width: 100%;
+			max-width: 1200px; /* Plus large pour la mise en page magazine */
+			margin-top: var(--section-spacing);
+			padding: 0 var(--padding-base);
+			box-sizing: border-box;
+			display: grid;
+			grid-template-columns: 1fr; /* Par défaut, une colonne */
+			gap: var(--section-spacing);
+		}
+
+		@media(min-width: 992px) {
+			/* Sur écrans plus grands, mise en page en colonnes */
+			.magazine-layout {
+				grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
+				gap: var(--padding-base) calc(var(--padding-base) * 2); /* Espacement plus large entre les colonnes */
+			}
+		}
+
+		/* --- SECTION DU JOUR (PLAT PRINCIPAL) --- */
+		.main-feature {
+			grid-column: 1 / -1; /* Prend toute la largeur sur toutes les tailles */
+			background-color: white;
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+			padding-bottom: var(--padding-base);
+		}
+
+		.feature-image {
+			width: 100%;
+			height: 500px; /* Grande photo d'impact */
+			background-image: url('https://source.unsplash.com/random/1200x500/?gourmet-dish,fine-dining'); /* Image aléatoire */
+			background-size: cover;
+			background-position: center;
+			margin-bottom: var(--padding-base);
+		}
+
+		.feature-content {
+			padding: 0 var(--padding-base);
+		}
+
+		.feature-category {
+			font-family: 'Playfair Display', serif;
+			font-size: 1.2em;
+			font-style: italic;
+			color: var(--accent-red);
+			margin-bottom: 10px;
+		}
+
+		.feature-dish-title {
+			font-family: 'Playfair Display', serif;
+			font-size: 3.5em; /* Titre très impactant */
+			font-weight: 700;
+			line-height: 1.1;
+			color: var(--headline-color);
+			margin-top: 0;
+			margin-bottom: 20px;
+			letter-spacing: -1px;
+		}
+
+		.feature-description {
+			font-family: 'Montserrat', sans-serif;
+			font-size: 1.1em;
+			color: var(--text-color);
+			margin-bottom: 30px;
+			columns: 1; /* Par défaut une colonne pour la description */
+			column-gap: 30px;
+		}
+		@media(min-width: 768px) {
+			.feature-description {
+				columns: 2; /* Deux colonnes sur les écrans plus larges */
+			}
+		}
+
+		.feature-price {
+			font-family: 'Playfair Display', serif;
+			font-size: 1.8em;
+			font-weight: 700;
+			color: var(--accent-gold);
+			text-align: right;
+		}
+
+		/* --- AUTRES SECTIONS DE PLATS --- */
+		.dish-section {
+			background-color: white;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+			padding: var(--padding-base);
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between; /* Pousse le prix vers le bas */
+		}
+
+		.dish-image {
+			width: 100%;
+			height: 250px;
+			background-size: cover;
+			background-position: center;
+			margin-bottom: var(--padding-base);
+			border-bottom: 3px solid var(--accent-red);
+		}
+
+		.dish-category-small {
+			font-family: 'Montserrat', sans-serif;
+			font-size: 0.9em;
+			font-weight: 600;
+			color: #666;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-bottom: 5px;
+		}
+
+		.dish-title-small {
+			font-family: 'Playfair Display', serif;
+			font-size: 1.8em;
+			font-weight: 700;
+			line-height: 1.2;
+			color: var(--headline-color);
+			margin-top: 0;
+			margin-bottom: 15px;
+		}
+
+		.dish-description-small {
+			font-size: 0.95em;
+			color: #555;
+			margin-bottom: 20px;
+		}
+
+		.dish-price-small {
+			font-family: 'Playfair Display', serif;
+			font-size: 1.5em;
+			font-weight: 700;
+			color: var(--accent-red);
+			text-align: right;
+			margin-top: auto; /* Pousse le prix vers le bas */
+		}
+
+		/* --- SECTION FORMULES --- */
+		.formula-section {
+			grid-column: 1 / -1; /* Prend toute la largeur */
+			background-color: var(--headline-color);
+			color: white;
+			padding: var(--padding-base);
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+			margin-top: calc(var(--section-spacing) / 2);
+		}
+
+		.formula-section h3 {
+			font-family: 'Playfair Display', serif;
+			font-size: 2.5em;
+			text-align: center;
+			color: var(--accent-gold);
+			margin-top: 0;
+			margin-bottom: 40px;
+			letter-spacing: 1px;
+		}
+
+		.formula-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 30px;
+		}
+
+		.formula-table td {
+			padding: 18px 0;
+			font-size: 1.3em;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+			text-align: left;
+			font-family: 'Montserrat', sans-serif;
+		}
+
+		.formula-table tr:last-child td {
+			border-bottom: none;
+		}
+
+		.formula-price {
+			font-family: 'Playfair Display', serif;
+			font-weight: 700;
+			color: var(--accent-gold);
+			text-align: right;
+			width: 25%;
+		}
+
+		.formula-note {
+			text-align: center;
+			font-size: 1em;
+			color: rgba(255, 255, 255, 0.7);
+			margin-top: 30px;
+			font-style: italic;
+		}
+
+		/* --- FOOTER --- */
+		.footer {
+			width: 100%;
+			text-align: center;
+			padding: var(--padding-base);
+			background-color: var(--headline-color);
+			color: white;
+			font-size: 0.9em;
+			margin-top: var(--section-spacing);
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		/* --- RESPONSIVE --- */
+		@media(max-width: 768px) {
+			.header h1 {
+				font-size: 2.5em;
+			}
+			.feature-image {
+				height: 300px;
+			}
+			.feature-dish-title {
+				font-size: 2.5em;
+			}
+			.feature-description {
+				columns: 1;
+			}
+			.dish-title-small {
+				font-size: 1.5em;
+			}
+			.formula-section h3 {
+				font-size: 2em;
+			}
+			.formula-table td,
+			.formula-price {
+				font-size: 1.1em;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<header class="header">
+		<h1>{{ restaurant.nomRestaurant }}</h1>
+		<p class="tagline">{{ ardoise.titre }}</p>
+	</header>
+
+	<main class="magazine-layout">
+
+		<section class="main-feature">
+			{% if ardoise.dailyEntree %}
+				<div class="feature-content">
+					<p class="feature-category">EN UNE : L'INCONTOURNABLE</p>
+					<h2 class="feature-dish-title">
+						{{ ardoise.dailyEntree|nl2br }}</h2>
+				</div>
+			{% endif %}
+		</section>
+
+		<section class="dish-section">
+			{% if ardoise.dailyPlat %}
+				<div>
+					<p class="dish-category-small">ENTRÉE SIGNATURE</p>
+					<h3 class="dish-title-small">
+						{{ ardoise.dailyPlat|nl2br }}
+					</h3>
+				</div>
+			{% endif %}
+		</section>
+
+		<section class="dish-section">
+			{% if ardoise.dailyDessert %}
+				<div>
+					<p class="dish-category-small">LA NOTE SUCRÉE</p>
+					<h3 class="dish-title-small">
+						{{ ardoise.dailyDessert|nl2br }}
+					</h3>
+				</div>
+			{% endif %}
+		</section>
+
+		<section class="formula-section">
+			<h3>Nos Formules Éditoriales</h3>
+			<table class="formula-table">
+				{% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+					<tr>
+						<td>Le Plat Signature (Plat Principal Seul)</td>
+						{% if ardoise.pricePj %}
+							<td class="formula-price">{{ ardoise.pricePj|number_format(2, ',', ' ') }}€</td>
+						{% endif %}
+					</tr>
+					<tr>
+						<td>L'Édition Duo (Entrée + Plat ou Plat + Dessert)</td>
+						{% if ardoise.pricePd %}
+							<td class="formula-price">{{ ardoise.pricePd|number_format(2, ',', ' ') }}€</td>
+						{% endif %}
+					</tr>
+					<tr>
+						<td>La Grande Dégustation (Entrée, Plat et Dessert)</td>
+						{% if ardoise.priceEpd %}
+							<td class="formula-price">{{ ardoise.priceEpd|number_format(2, ',', ' ') }}€</td>
+						{% endif %}
+					</tr>
+				{% endif %}
+			</table>
+			<p class="formula-note">Nos pages sont rédigées avec passion, nos plats composés avec des ingrédients d'exception.</p>
+		</section>
+
+	</main>
+
+	<footer class="footer">
+		<p>&copy; 2025 Le Gourmand Magazine. Tous droits réservés.</p>
+	</footer>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+console.log("Le Gourmand Magazine est prêt pour la lecture. Bonne dégustation visuelle !");
+
+// Animation simple des sections au chargement pour un effet de "publication"
+const sections = document.querySelectorAll('.main-feature, .dish-section, .formula-section');
+sections.forEach((section, index) => {
+section.style.opacity = 0;
+section.style.transform = 'translateY(30px)';
+setTimeout(() => {
+section.style.transition = 'opacity 0.7s ease-out, transform 0.7s ease-out';
+section.style.opacity = 1;
+section.style.transform = 'translateY(0)';
+}, 150 * index); // Délai progressif
+});
+});
+	</script>
+</body></html>

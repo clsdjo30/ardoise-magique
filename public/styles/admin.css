@@ -728,11 +728,11 @@
         margin-top: 1rem;
     }
 
-    /* .template-carousel-container {
+    .template-carousel-container {
         position: relative;
         padding: 0 60px;
         margin: 1.5rem 0;
-    } */
+    }
 
     .template-selector-wrapper .template-grid {
         display: flex;
@@ -891,7 +891,7 @@
         border: none;
         border-radius: 50%;
         color: white;
-        font-size: px;
+        font-size: 24px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -899,7 +899,6 @@
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         z-index: 20;
-        padding-bottom: 10px;
     }
 
     .carousel-nav-btn:hover {
@@ -1032,7 +1031,7 @@
     /* Responsive */
     @media (max-width: 768px) {
         .template-carousel-container {
-            padding: 0 0;
+            padding: 0 45px;
         }
 
         .template-selector-wrapper .template-option {
@@ -1043,7 +1042,7 @@
         .carousel-nav-btn {
             width: 35px;
             height: 35px;
-            font-size: px;
+            font-size: 18px;
         }
     }
 }

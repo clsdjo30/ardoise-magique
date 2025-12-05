@@ -5,7 +5,8 @@
       "Bash(php bin/console:*)",
       "Bash(mkdir:*)",
       "Bash(symfony server:status:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(copy-assets.bat)"
     ],
     "deny": [],
     "ask": []

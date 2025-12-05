@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>L'Ardoise du Jour - Saveurs Rustiques</title>
+		<link rel="stylesheet" href="styles.css">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+		<style>
+		/* Importation de polices - Voir le HTML pour l'inclusion des liens Google Fonts */
+		/* 'Roboto Slab' pour les titres (gras, comme écrit à la craie) */
+		/* 'Playfair Display' pour les descriptions/menus (plus élégant, manuscrit) */:root
+		{
+			--ardoise-bg: #2d2d2d; /* Fond Ardoise très sombre */
+			--ardoise-text: #f0f0f0; /* Texte comme de la craie blanche */
+			--accent-color: #a0522d; /* Couleur terre cuite/bois (Sienna) pour l'accent */
+			--border-color: #5a3d2b; /* Couleur bois sombre pour les bordures */
+			--pad: 20px;
+		}
+
+		body {
+			font-family: 'Playfair Display', serif;
+			background-color: #d1c1a9; /* Fond de page beige clair/papier vieilli */
+			color: var(--ardoise-text);
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		/* --- HEADER --- */
+		.header {
+			background-color: var(--border-color);
+			width: 100%;
+			text-align: center;
+			padding: var(--pad) 0;
+			color: white;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+		}
+
+		.header h1 {
+			font-family: 'Roboto Slab', serif;
+			font-size: 3em;
+			margin: 0;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+		}
+
+		.tagline {
+			margin: 5px 0 0;
+			font-style: italic;
+			font-size: 1.1em;
+		}
+
+		/* --- CONTENEUR PRINCIPAL & L'ARDOISE --- */
+
+		.menu-container {
+			padding: 40px var(--pad);
+			width: 100%;
+			max-width: 800px;
+		}
+
+		.menu-board {
+			background-color: var(--ardoise-bg);
+			border: 15px solid var(--border-color); /* Bordure épaisse comme un cadre en bois */
+			padding: 30px;
+			box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.4); /* Ombre pour donner du relief */
+		}
+
+		.board-title {
+			font-family: 'Roboto Slab', serif;
+			text-align: center;
+			font-size: 2.5em;
+			color: var(--accent-color); /* Titre en couleur d'accent */
+			margin-bottom: 30px;
+			padding-bottom: 15px;
+			border-bottom: 3px solid var(--accent-color);
+		}
+
+		/* --- CATÉGORIES DE PLATS --- */
+
+		.dish-category {
+			padding: 20px 0;
+			border-bottom: 1px dashed var(--ardoise-text); /* Lignes en pointillé */
+		}
+
+		.dish-category:last-of-type {
+			border-bottom: none; /* Pas de ligne sous le dernier plat */
+		}
+
+		.category-name {
+			font-family: 'Roboto Slab', serif;
+			font-size: 1.2em;
+			font-weight: bold;
+			color: var(--accent-color);
+			margin: 0 0 5px;
+		}
+
+		/* --- L'ÉNONCÉ DU PLAT (MISE EN AVANT) --- */
+		.dish-name {
+			font-size: 1.8em;
+			font-weight: normal; /* Playfair Display est déjà élégant, pas besoin de gras */
+			font-style: italic;
+			margin: 0;
+			line-height: 1.3;
+			color: var(--ardoise-text); /* S'assurer qu'il est bien en blanc "craie" */
+		}
+
+		/* --- TARIFS ET FORMULES --- */
+
+		.prices {
+			margin-top: 40px;
+			padding-top: 20px;
+			border-top: 3px solid var(--border-color);
+		}
+
+		.prices h3 {
+			font-family: 'Roboto Slab', serif;
+			font-size: 1.5em;
+			text-align: center;
+			margin-top: 0;
+			color: var(--accent-color);
+		}
+
+		.prices table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 15px;
+		}
+
+		.prices td {
+			padding: 10px 0;
+			font-size: 1.2em;
+			border-bottom: 1px dotted rgba(240, 240, 240, 0.5);
+		}
+
+		.prices tr:last-child td {
+			border-bottom: none;
+		}
+
+		.price {
+			font-family: 'Roboto Slab', serif;
+			font-weight: bold;
+			color: var(--accent-color);
+			text-align: right;
+			width: 20%;
+		}
+
+		.note {
+			text-align: center;
+			font-size: 0.9em;
+			font-style: italic;
+			color: rgba(240, 240, 240, 0.7);
+		}
+
+		/* --- FOOTER --- */
+		.footer {
+			width: 100%;
+			text-align: center;
+			padding: 10px 0;
+			background-color: var(--border-color);
+			color: white;
+			font-size: 0.9em;
+			margin-top: auto; /* Pousse le pied de page en bas */
+		}
+
+		/* --- RESPONSIVE (Simple) --- */
+		@media(max-width: 600px) {
+			.header h1 {
+				font-size: 2.2em;
+			}
+			.board-title {
+				font-size: 2em;
+			}
+			.dish-name {
+				font-size: 1.5em;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<header class="header">
+		<h1>{{ restaurant.nomRestaurant }}</h1>
+		<p class="tagline">{{ ardoise.titre }}</p>
+	</header>
+
+	<main class="menu-container">
+		<section class="menu-board">
+			<h2 class="board-title">📜 L'Ardoise du Jour</h2>
+
+			<div class="dish-category entree">
+				{% if ardoise.dailyEntree %}
+					<p class="category-name">ENTRÉE</p>
+					<h3 class="dish-name">{{ ardoise.dailyEntree|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="dish-category plat">
+				{% if ardoise.dailyPlat %}
+					<p class="category-name">PLAT DU JOUR</p>
+					<h3 class="dish-name">
+						{{ ardoise.dailyPlat|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="dish-category dessert">
+				{% if ardoise.dailyDessert %}
+					<p class="category-name">DESSERT</p>
+					<h3 class="dish-name">{{ ardoise.dailyDessert|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="prices">
+				<h3>Formules du Midi</h3>
+				<table>
+					{% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+						<tr>
+							{% if ardoise.pricePj %}
+								<td>Plat du Jour</td>
+								<td class="price">{{ ardoise.pricePj|number_format(2, ',', ' ') }}
+									€</td>
+							{% endif %}
+						</tr>
+						<tr>
+							{% if ardoise.pricePd %}
+								<td>Entrée + Plat ou Plat + Dessert</td>
+								<td class="price">{{ ardoise.pricePd|number_format(2, ',', ' ') }}
+									€</td>
+							{% endif %}
+						</tr>
+						<tr>
+							{% if ardoise.priceEpd %}
+								<td>Formule Complète (E + P + D)</td>
+								<td class="price">{{ ardoise.priceEpd|number_format(2, ',', ' ') }}
+									€</td>
+							{% endif %}
+						</tr>
+					{% endif %}
+				</table>
+				<p class="note">Service du midi uniquement. Tous nos plats sont faits maison.</p>
+			</div>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<p>&copy; 2025 Bistro de Campagne. Ouvert 7j/7.</p>
+	</footer>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+console.log("L'Ardoise du Jour est chargée. Bon appétit !");
+
+// Ici, vous pourriez ajouter des fonctionnalités plus complexes :
+// 1. Charger les plats du jour depuis une API ou un objet JS.
+// 2. Un système de "mode sombre" si le client n'aime pas l'ardoise par défaut (peu probable ici).
+// 3. Animation subtile des plats au chargement.
+
+// Exemple de chargement dynamique des plats (à remplacer dans le HTML) :
+/*
+    const todayMenu = {
+        entree: "Velouté de Potimarron Fumé et ses Croûtons à l'Ail des Ours",
+        plat: "Joue de Bœuf Confite au Vin Rouge, Purée de Céleri Rave",
+        dessert: "Tarte Tatin Maison Caramel Beurre Salé"
+    };
+
+    document.querySelector('.dish-category.entree .dish-name').textContent = todayMenu.entree;
+    document.querySelector('.dish-category.plat .dish-name').textContent = todayMenu.plat;
+    document.querySelector('.dish-category.dessert .dish-name').textContent = todayMenu.dessert;
+    */
+});
+	</script>
+</body></html>

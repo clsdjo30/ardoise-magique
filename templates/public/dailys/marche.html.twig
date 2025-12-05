@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Le Menu du Marché - Fraîcheur et Saisons</title>
+
+		<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,700;1,6..12,400&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+
+		<style>
+		/* --- VARIABLES CSS (PALETTE NATURELLE) --- */:root
+		{
+			--bg-color: #fcfcf5; /* Fond Blanc Cassé/Crème (Papier Naturel) */
+			--text-color: #333333; /* Gris/Noir Doux */
+			--accent-green: #689f38; /* Vert Végétal (Feuille) */
+			--accent-terre: #a1887f; /* Ton Argile/Terre Cuit */
+			--subtle-line: #ccc; /* Ligne de séparation douce */
+			--pad: 25px;
+		}
+
+		/* --- BASE RESET & FOND --- */
+		body {
+			font-family: 'Nunito Sans', sans-serif;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			min-height: 100vh;
+		}
+
+		/* --- HEADER (ENTÊTE) --- */
+		.header {
+			width: 100%;
+			text-align: center;
+			padding: calc(var(--pad) * 1.5) 0;
+			/* Pas de bordure, on utilise l'espacement et la couleur */
+		}
+
+		.header h1 {
+			font-family: 'Merriweather', serif;
+			font-size: 3em;
+			margin: 0;
+			letter-spacing: 2px;
+			color: var(--accent-terre);
+		}
+
+		.tagline {
+			margin: 5px 0 0;
+			font-style: italic;
+			font-size: 1.1em;
+			color: var(--accent-green);
+		}
+
+		/* --- CONTENEUR PRINCIPAL & CARTE --- */
+		.menu-container {
+			padding: 50px var(--pad);
+			width: 100%;
+			max-width: 750px; /* Taille modérée */
+			box-sizing: border-box;
+		}
+
+		.menu-board {
+			background: #fff;
+			padding: 30px;
+			border: 1px solid var(--subtle-line);
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Ombre très légère */
+		}
+
+		.board-title {
+			font-family: 'Merriweather', serif;
+			text-align: center;
+			font-size: 2.2em;
+			color: var(--text-color);
+			margin-bottom: 40px;
+			position: relative;
+		}
+
+		/* Ligne décorative simple et naturelle */
+		.board-title::after {
+			content: '';
+			display: block;
+			width: 60px;
+			height: 4px;
+			background-color: var(--accent-green);
+			margin: 10px auto 0;
+			border-radius: 2px;
+		}
+
+		/* --- CATÉGORIES DE PLATS --- */
+
+		.dish-category {
+			padding: 25px 0;
+			border-bottom: 1px dashed var(--subtle-line); /* Ligne en pointillé pour un effet "cahier" */
+		}
+
+		.dish-category:last-of-type {
+			border-bottom: none;
+		}
+
+		.category-name {
+			font-family: 'Nunito Sans', sans-serif;
+			font-size: 1em;
+			letter-spacing: 1px;
+			font-weight: 700;
+			color: var(--accent-terre);
+			margin: 0 0 5px;
+			text-transform: uppercase;
+		}
+
+		/* --- L'ÉNONCÉ DU PLAT (MISE EN AVANT) --- */
+		.dish-name {
+			font-size: 1.8em;
+			font-weight: 700;
+			font-style: italic; /* Garder l'italique pour une touche fraîche */
+			margin: 0;
+			line-height: 1.3;
+			color: var(--text-color);
+		}
+
+		/* --- TARIFS ET FORMULES --- */
+
+		.prices {
+			margin-top: 40px;
+			padding-top: 20px;
+			border-top: 2px solid var(--accent-terre);
+		}
+
+		.prices h3 {
+			font-family: 'Merriweather', serif;
+			font-size: 1.4em;
+			text-align: center;
+			margin-top: 0;
+			margin-bottom: 20px;
+			color: var(--accent-green);
+		}
+
+		.prices table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 15px;
+		}
+
+		.prices td {
+			padding: 10px 0;
+			font-size: 1.1em;
+			border-bottom: 1px dotted var(--subtle-line);
+		}
+
+		.prices tr:last-child td {
+			border-bottom: none;
+		}
+
+		.price {
+			font-family: 'Merriweather', serif;
+			font-weight: 700;
+			color: var(--accent-terre);
+			text-align: right;
+			width: 20%;
+		}
+
+		.note {
+			text-align: center;
+			font-size: 0.9em;
+			font-style: italic;
+			color: #777;
+			margin-top: 20px;
+		}
+
+		/* --- FOOTER --- */
+		.footer {
+			width: 100%;
+			text-align: center;
+			padding: 15px 0;
+			background-color: #e8e8e0; /* Couleur terre très pâle */
+			color: #666;
+			font-size: 0.9em;
+			margin-top: auto;
+			border-top: 1px solid var(--subtle-line);
+		}
+
+		/* --- RESPONSIVE --- */
+		@media(max-width: 600px) {
+			.header h1 {
+				font-size: 2.5em;
+			}
+			.board-title {
+				font-size: 1.8em;
+			}
+			.dish-name {
+				font-size: 1.5em;
+			}
+			.prices td,
+			.price {
+				font-size: 1em;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<header class="header">
+		<h1>{{ restaurant.nomRestaurant }}</h1>
+		<p class="tagline">Le meilleur du marché à votre table</p>
+	</header>
+
+	<main class="menu-container">
+		<section class="menu-board">
+			<h2 class="board-title">🍃
+				{{ ardoise.titre }}</h2>
+
+			<div class="dish-category entree">
+				{% if ardoise.dailyEntree %}
+					<p class="category-name">🥬 CUEILLETTE DU JOUR</p>
+					<h3 class="dish-name">{{ ardoise.dailyEntree|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="dish-category plat">
+				{% if ardoise.dailyEntree %}
+					<p class="category-name">🍅 PLAT SAISONNIER</p>
+					<h3 class="dish-name">{{ ardoise.dailyPlat|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="dish-category dessert">
+				{% if ardoise.dailyDessert %}
+					<p class="category-name">🍓 DOUCEUR DE LA TERRE</p>
+					<h3 class="dish-name">{{ ardoise.dailyDessert|nl2br }}</h3>
+				{% endif %}
+			</div>
+
+			<div class="prices">
+				<h3>Formules Simples et Gourmandes</h3>
+				<table>
+					{% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+						<tr>
+							{% if ardoise.pricePj %}
+								<td>Plat Saisonier Uniquement</td>
+								<td class="price">{{ ardoise.pricePj|number_format(2, ',', ' ') }}€</td>
+							{% endif %}
+						</tr>
+						<tr>
+							{% if ardoise.pricePd %}
+								<td>Cueillette + Plat ou Plat + Douceur</td>
+								<td class="price">{{ ardoise.pricePd|number_format(2, ',', ' ') }}€</td>
+							{% endif %}
+						</tr>
+						<tr>
+							{% if ardoise.priceEpd %}
+								<td>Formule Complète (E + P + D)</td>
+								<td class="price">{{ ardoise.priceEpd|number_format(2, ',', ' ') }}€</td>
+							{% endif %}
+						</tr>
+					{% endif %}
+				</table>
+				<p class="note">Nos plats changent au gré des arrivages du marché. Mangez local, mangez de saison !</p>
+			</div>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<p>&copy; 2025 Le Jardin des Saveurs. Cuisine Éco-responsable.</p>
+	</footer>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+console.log("Le menu du marché est prêt. Savourez la simplicité.");
+});
+	</script>
+</body></html>
