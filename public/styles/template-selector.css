@@ -6,6 +6,11 @@
     position: relative;
     padding: 0 60px;
     margin: 1.5rem 0;
+    width: 100%;
+    max-width: 1400px;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .template-grid {
@@ -13,9 +18,13 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     gap: 1.5rem;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     scrollbar-width: thin;
     scrollbar-color: #1f4f7a #f0f0f0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .template-grid::-webkit-scrollbar {
@@ -160,7 +169,7 @@
     border: none;
     border-radius: 50%;
     color: white;
-    font-size: 24px;
+    font-size: 36px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -196,6 +205,30 @@
 
 .carousel-nav-btn:disabled:hover {
     transform: translateY(-50%);
+}
+
+.carousel-dots {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0.75rem;
+}
+
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #1f4f7a;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.carousel-dot.active {
+    background: #1f4f7a;
+    transform: scale(1.05);
 }
 
 /* Modal de zoom */
@@ -290,7 +323,10 @@
 /* Responsive */
 @media (max-width: 768px) {
     .template-carousel-container {
-        padding: 0 45px;
+        padding: 0 0;
+    }
+    .template-grid {
+        overflow-x: scroll;
     }
 
     .template-option {
@@ -301,6 +337,17 @@
     .carousel-nav-btn {
         width: 35px;
         height: 35px;
-        font-size: 18px;
+        font-size: 24px;
+    }
+
+    .carousel-nav-btn.prev {
+        display: none;
+    }
+    .carousel-nav-btn.next {
+        display: none;
+    }
+
+    .carousel-dots {
+        display: flex;
     }
 }

@@ -63,21 +63,41 @@ class PublicController extends AbstractController
                 // Template par défaut si aucun template n'est défini
                 $templatePath = 'public/daily_menu.html.twig';
             }
-            // dd([
-            //     'templatePath' => $templatePath,
-            //     'template' => $template,
-            //     'ardoiseSlug' => $ardoise->getSlug(),
-            //     'restaurantSlug' => $user->getSlug(),
-            // ]);
 
             return $this->render($templatePath, [
                 'ardoise' => $ardoise,
                 'restaurant' => $user,
             ]);
         } else {
-            return $this->render('public/special_menu.html.twig', [
+             $template = $ardoise->getTemplate();
+            // Menu SPECIAL - récupérer et trier les collections par position
+            $entrees = $ardoise->getEntree()->toArray();
+            usort($entrees, fn($a, $b) => ($a->getPosition() ?? 0) <=> ($b->getPosition() ?? 0));
+
+            $plats = $ardoise->getPlat()->toArray();
+            usort($plats, fn($a, $b) => ($a->getPosition() ?? 0) <=> ($b->getPosition() ?? 0));
+
+            $desserts = $ardoise->getDessert()->toArray();
+            usort($desserts, fn($a, $b) => ($a->getPosition() ?? 0) <=> ($b->getPosition() ?? 0));
+
+            $supplements = $ardoise->getItem()->toArray();
+            usort($supplements, fn($a, $b) => ($a->getPosition() ?? 0) <=> ($b->getPosition() ?? 0));
+
+            // Si un template est défini et valide, l'utiliser
+            if ($template && in_array($template, Ardoise::TEMPLATES, true)) {
+                $templatePath = sprintf('public/specials/%s.html.twig', $template);
+            } else {
+                // Template par défaut si aucun template n'est défini
+                $templatePath = 'public/special_menu.html.twig';
+            }
+
+            return $this->render($templatePath, [
                 'ardoise' => $ardoise,
                 'restaurant' => $user,
+                'entrees' => $entrees,
+                'plats' => $plats,
+                'desserts' => $desserts,
+                'supplements' => $supplements,
             ]);
         }
     }

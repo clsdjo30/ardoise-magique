@@ -9,8 +9,9 @@
         const templateOptions = carouselContainer.querySelectorAll('.template-option');
         const prevBtn = carouselContainer.querySelector('.carousel-nav-btn.prev');
         const nextBtn = carouselContainer.querySelector('.carousel-nav-btn.next');
+        const dotsContainer = carouselContainer.querySelector('.carousel-dots');
 
-        if (templateOptions.length === 0) return;
+        if (templateOptions.length === 0 || !templateGrid) return;
 
         // Gestion de la sélection
         templateOptions.forEach(option => {
@@ -35,31 +36,79 @@
         // Gestion du carrousel
         const scrollAmount = 250;
 
-        function updateNavButtons() {
-            if (!prevBtn || !nextBtn || !templateGrid) return;
-            const scrollLeft = templateGrid.scrollLeft;
-            const maxScroll = templateGrid.scrollWidth - templateGrid.clientWidth;
-            prevBtn.disabled = scrollLeft <= 0;
-            nextBtn.disabled = scrollLeft >= maxScroll - 1;
+        function updateActiveDot() {
+            if (!dotsContainer) return;
+            const dots = dotsContainer.querySelectorAll('.carousel-dot');
+            if (!dots.length) return;
+            const viewWidth = templateGrid.clientWidth || 1;
+            const activeIndex = Math.min(dots.length - 1, Math.round(templateGrid.scrollLeft / viewWidth));
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === activeIndex);
+            });
         }
 
-        if (prevBtn && templateGrid) {
+        function updateNavButtons() {
+            if (prevBtn && nextBtn) {
+                const scrollLeft = templateGrid.scrollLeft;
+                const maxScroll = templateGrid.scrollWidth - templateGrid.clientWidth;
+                prevBtn.disabled = scrollLeft <= 0;
+                nextBtn.disabled = scrollLeft >= maxScroll - 1;
+            }
+            updateActiveDot();
+        }
+
+        if (prevBtn) {
             prevBtn.addEventListener('click', () => {
                 templateGrid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             });
         }
 
-        if (nextBtn && templateGrid) {
+        if (nextBtn) {
             nextBtn.addEventListener('click', () => {
                 templateGrid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             });
         }
 
-        if (templateGrid) {
-            templateGrid.addEventListener('scroll', updateNavButtons);
-            window.addEventListener('resize', updateNavButtons);
-            updateNavButtons();
+        function getPageCount() {
+            const viewWidth = templateGrid.clientWidth || 1;
+            return Math.max(1, Math.ceil(templateGrid.scrollWidth / viewWidth));
         }
+
+        function renderDots() {
+            if (!dotsContainer) return;
+
+            const pages = getPageCount();
+            dotsContainer.innerHTML = '';
+
+            if (pages <= 1) {
+                dotsContainer.style.display = 'none';
+                return;
+            }
+
+            dotsContainer.style.display = '';
+
+            for (let i = 0; i < pages; i++) {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'carousel-dot';
+                dot.setAttribute('aria-label', `Aller au slide ${i + 1}`);
+                dot.addEventListener('click', () => {
+                    const targetLeft = templateGrid.clientWidth * i;
+                    templateGrid.scrollTo({ left: targetLeft, behavior: 'smooth' });
+                });
+                dotsContainer.appendChild(dot);
+            }
+
+            updateActiveDot();
+        }
+
+        templateGrid.addEventListener('scroll', updateNavButtons);
+        window.addEventListener('resize', () => {
+            renderDots();
+            updateNavButtons();
+        });
+        updateNavButtons();
+        renderDots();
 
         // Gestion du zoom
         const zoomButtons = carouselContainer.querySelectorAll('.template-zoom-btn');
@@ -92,8 +141,8 @@
 
                 if (imageSrc && zoomImage && zoomModal) {
                     zoomImage.src = imageSrc;
-                    zoomImage.alt = templateName;
-                    zoomTitle.textContent = templateName;
+                    zoomImage.alt = templateName || '';
+                    zoomTitle.textContent = templateName || '';
                     zoomModal.classList.add('active');
                     document.body.style.overflow = 'hidden';
                 }

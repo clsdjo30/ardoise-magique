@@ -7,6 +7,9 @@ namespace App\Controller\Admin;
 use App\Entity\Ardoise;
 use App\Entity\User;
 use App\Form\ArdoiseItemType;
+use App\Form\EntreeType;
+use App\Form\PlatType;
+use App\Form\DessertType;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -20,13 +23,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 
 class SpecialMenuCrudController extends AbstractCrudController
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator
-    ) {
-    }
+    ) {}
 
     public static function getEntityFqcn(): string
     {
@@ -41,38 +44,126 @@ class SpecialMenuCrudController extends AbstractCrudController
             ->setPageTitle('index', 'Menus Spéciaux')
             ->setPageTitle('new', 'Nouveau Menu Spécial')
             ->setPageTitle('edit', 'Edition Menu Spécial')
-            ->setDefaultSort(['id' => 'DESC']);
+            ->setDefaultSort(['id' => 'DESC'])
+            ->setFormThemes([
+                'admin/form/template_choice.html.twig',
+                '@EasyAdmin/crud/form_theme.html.twig',
+            ]);
     }
 
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Tarifs et Informations Générales'),
+
+            //MENU SPECIAL
+            FormField::addTab('Généralités du Menu Spécial'),
+            FormField::addPanel('Tarifs et Informations Générales')->addCssClass('panel-classy bg-secondary-500 p-3 mb-4 mt-4'),
+
             TextField::new('titre', 'Titre du menu')
-            ->setHelp('Ex: Menu de Noël 2024, Menu Saint-Valentin'),
-            
-            BooleanField::new('status', 'Publié')
-            ->setHelp('Cochez pour rendre ce menu visible publiquement'),
-            
+                ->setHelp('Ex: Menu de Noël 2024, Menu Saint-Valentin')
+                ->setColumns(6),
             NumberField::new('special_global_price', 'Prix global')
-            ->setNumDecimals(2)
-            ->setHelp('Prix total du menu spécial (ex: 45.00) - Optionnel')
-            ->hideOnIndex(),
-            
-            FormField::addPanel('Détails du Menu Spécial'),
-            CollectionField::new('items', 'Composition du menu')
-            ->setEntryType(ArdoiseItemType::class)
-            ->setFormTypeOptions([
-                'by_reference' => false,
-            ])
-            ->allowAdd(true)
-            ->allowDelete(true)
-            ->setEntryIsComplex(true)
-            ->hideOnIndex()
-            ->setHelp('Ajoutez les différents éléments de votre menu spécial')
+                ->setNumDecimals(2)
+                ->setHelp('Prix total du menu spécial (ex: 45.00) - Optionnel')
+                ->hideOnIndex()
+                ->setColumns(6),
+
+            BooleanField::new('status', 'Publié')
+                ->setHelp('Cochez pour rendre ce menu visible publiquement'),
+
+
+            FormField::addFieldset("Personnalisez l'affichage de votre menu")
+                ->setCssClass('panel-classy bg-sidebar-200 p-3 mb-4 mt-4e'),
+            ChoiceField::new('template', 'Choisissez votre template')
+                ->setChoices([
+                    'Bistrot' => Ardoise::TEMPLATE_BISTROT,
+                    'Tradition' => Ardoise::TEMPLATE_TRADITIONNEL,
+                    'Brut' => Ardoise::TEMPLATE_BRUT,
+                    'Classe' => Ardoise::TEMPLATE_CLASSE,
+                    'Digital' => Ardoise::TEMPLATE_DIGITAL,
+                    'Magazine' => Ardoise::TEMPLATE_MAGAZINE,
+                    'Marché' => Ardoise::TEMPLATE_MARCHE,
+                    'Raffiné' => Ardoise::TEMPLATE_RAFINE,
+                ])
+                ->setColumns(12)
+                ->setRequired(true)
+                ->setFormTypeOption('expanded', true)
+                ->setFormTypeOption('attr', ['class' => 'template-grid'])
+                ->setFormTypeOption('choice_attr', function ($choice, $key, $value) {
+                    return [
+                        'class' => 'template-radio-option',
+                        'data-template-value' => $value,
+                        'data-template-label' => $key,
+                        'data-template-image' => '/images/vignette_jour/' . $value . '.webp'
+                    ];
+                })
+                ->setFormTypeOption('row_attr', ['class' => 'template-field-row'])
+                ->renderAsNativeWidget(false),
+
+            // Deuxieme Tab - MLes Entrées
+            FormField::addTab('Vos Entrées'),
+            FormField::addPanel('Ajouter ici vos entrées au menu spécial')->addCssClass('panel-classy bg-success-200 p-3 mb-4 mt-4'),
+            CollectionField::new('entree', 'Composition du menu')
+                ->setColumns(12)
+                ->setEntryIsComplex(true)
+                ->showEntryLabel(true)
+                ->setEntryType(EntreeType::class)
+                ->setFormTypeOptions([
+                    'by_reference' => false,
+                ])
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->hideOnIndex()
+                ->setHelp('Ajoutez les différents éléments de votre menu spécial')
+                ->setCssClass('collection-custom collection-entree'),
+
+            // Troisieme Tab - Les Plats
+            FormField::addTab('Vos Plats'),
+            FormField::addPanel('Ajouter ici vos plats au menu spécial')->addCssClass('panel-classy bg-danger-200 p-3 mb-4 mt-4'),
+            CollectionField::new('plat', 'Plats de la composition du menu')
+                ->setColumns(12)
+                ->setEntryType(PlatType::class)
+                ->setFormTypeOptions([
+                    'by_reference' => false,
+                ])
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->setEntryIsComplex(true)
+                ->hideOnIndex()
+                ->setHelp('Ajoutez les différents éléments de votre menu spécial')
+                ->setCssClass('collection-custom collection-plat'),
+
+            // Quatrieme Tab - Les Desserts
+            FormField::addTab('Vos Dessert'),
+            FormField::addPanel('Ajouter ici vos desserts au menu spécial')->addCssClass('panel-classy bg-rose-400 p-3 mb-4 mt-4'),
+            CollectionField::new('dessert', 'Desserts de la composition du menu')
+                ->setColumns(12)
+                ->setEntryType(DessertType::class)
+                ->setFormTypeOptions([
+                    'by_reference' => false,
+                ])
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->hideOnIndex()
+                ->setHelp('Ajoutez les différents éléments de votre menu spécial')
+                ->setCssClass('collection-custom collection-dessert'),
+
+            // Cinquieme Tab - Les supplements
+            FormField::addTab('Supplement'),
+            FormField::addPanel('Ajouter ici les supplements au menu spécial')->addCssClass('panel-classy bg-accent-300 p-3 mb-4 mt-4'),
+            CollectionField::new('item', 'Suppléments de la composition du menu')
+                ->setColumns(12)
+                ->setEntryType(ArdoiseItemType::class)
+                ->setFormTypeOptions([
+                    'by_reference' => false,
+                ])
+                ->allowAdd(true)
+                ->allowDelete(true)
+                ->hideOnIndex()
+                ->setHelp('Ajoutez les différents éléments de votre menu spécial')
+                ->setCssClass('collection-custom collection-supplement'),
 
         ];
-       
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
@@ -105,7 +196,19 @@ class SpecialMenuCrudController extends AbstractCrudController
 
         // Mise a jour automatique de la position des items
         $position = 0;
-        foreach ($entityInstance->getItems() as $item) {
+        foreach ($entityInstance->getEntree() as $entree) {
+            $entree->setPosition($position++);
+        }
+        $position = 0;
+        foreach ($entityInstance->getPlat() as $plat) {
+            $plat->setPosition($position++);
+        }
+        $position = 0;
+        foreach ($entityInstance->getDessert() as $dessert) {
+            $dessert->setPosition($position++);
+        }
+        $position = 0;
+        foreach ($entityInstance->getItem() as $item) {
             $item->setPosition($position++);
         }
 
@@ -120,7 +223,19 @@ class SpecialMenuCrudController extends AbstractCrudController
         /** @var Ardoise $entityInstance */
         // Mise a jour automatique de la position des items
         $position = 0;
-        foreach ($entityInstance->getItems() as $item) {
+        foreach ($entityInstance->getEntree() as $entree) {
+            $entree->setPosition($position++);
+        }
+        $position = 0;
+        foreach ($entityInstance->getPlat() as $plat) {
+            $plat->setPosition($position++);
+        }
+        $position = 0;
+        foreach ($entityInstance->getDessert() as $dessert) {
+            $dessert->setPosition($position++);
+        }
+        $position = 0;
+        foreach ($entityInstance->getItem() as $item) {
             $item->setPosition($position++);
         }
 

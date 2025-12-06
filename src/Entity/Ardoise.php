@@ -96,11 +96,36 @@ class Ardoise
      */
     #[ORM\OneToMany(targetEntity: ArdoiseItem::class, mappedBy: 'parent', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    private Collection $items;
+    private Collection $item;
+
+    /**
+     * @var Collection<int, ArdoiseItem>
+     */
+    #[ORM\OneToMany(targetEntity: Entree::class, mappedBy: 'parent', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $entree;
+
+    /**
+     * @var Collection<int, ArdoiseItem>
+     */
+    #[ORM\OneToMany(targetEntity: Plat::class, mappedBy: 'parent', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $plat;
+    /**
+     * @var Collection<int, ArdoiseItem>
+     */
+    #[ORM\OneToMany(targetEntity: Dessert::class, mappedBy: 'parent', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $dessert;
+
+
 
     public function __construct()
     {
-        $this->items = new ArrayCollection();
+        $this->item = new ArrayCollection();
+        $this->entree = new ArrayCollection();
+        $this->plat = new ArrayCollection();
+        $this->dessert = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -302,15 +327,15 @@ class Ardoise
     /**
      * @return Collection<int, ArdoiseItem>
      */
-    public function getItems(): Collection
+    public function getItem(): Collection
     {
-        return $this->items;
+        return $this->item;
     }
 
     public function addItem(ArdoiseItem $item): static
     {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
+        if (!$this->item->contains($item)) {
+            $this->item->add($item);
             $item->setParent($this);
         }
 
@@ -319,10 +344,101 @@ class Ardoise
 
     public function removeItem(ArdoiseItem $item): static
     {
-        if ($this->items->removeElement($item)) {
+        if ($this->item->removeElement($item)) {
             // set the owning side to null (unless already changed)
             if ($item->getParent() === $this) {
                 $item->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Entree>
+     */
+    public function getEntree(): Collection
+    {
+        return $this->entree;
+    }
+
+    public function addEntree(Entree $entree): static
+    {
+        if (!$this->entree->contains($entree)) {
+            $this->entree->add($entree);
+            $entree->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEntree(Entree $entree): static
+    {
+        if ($this->entree->removeElement($entree)) {
+            // set the owning side to null (unless already changed)
+            if ($entree->getParent() === $this) {
+                $entree->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Plat>
+     */
+    public function getPlat(): Collection
+    {
+        return $this->plat;
+    }
+
+    public function addPlat(Plat $plat): static
+    {
+        if (!$this->plat->contains($plat)) {
+            $this->plat->add($plat);
+            $plat->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlat(Plat $plat): static
+    {
+        if ($this->plat->removeElement($plat)) {
+            // set the owning side to null (unless already changed)
+            if ($plat->getParent() === $this) {
+                $plat->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Dessert>
+     */
+    public function getDessert(): Collection
+    {
+        return $this->dessert;
+    }
+
+    public function addDessert(Dessert $dessert): static
+    {
+        if (!$this->dessert->contains($dessert)) {
+            $this->dessert->add($dessert);
+            $dessert->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDessert(Dessert $dessert): static
+    {
+        if ($this->dessert->removeElement($dessert)) {
+            // set the owning side to null (unless already changed)
+            if ($dessert->getParent() === $this) {
+                $dessert->setParent(null);
             }
         }
 

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\ArdoiseItemRepository;
+use App\Repository\EntreeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ArdoiseItemRepository::class)]
-class ArdoiseItem
+#[ORM\Entity(repositoryClass: EntreeRepository::class)]
+class Entree
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Ardoise::class, inversedBy: 'item')]
+    #[ORM\ManyToOne(targetEntity: Ardoise::class, inversedBy: 'entree')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Ardoise $parent = null;
 
@@ -29,8 +29,8 @@ class ArdoiseItem
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $price = null;
 
-    #[ORM\Column]
-    private int $position = 0;
+    #[ORM\Column(nullable: true)]
+    private ?int $position = null;
 
     public function getId(): ?int
     {
@@ -85,12 +85,12 @@ class ArdoiseItem
         return $this;
     }
 
-    public function getPosition(): int
+    public function getPosition(): ?int
     {
         return $this->position;
     }
 
-    public function setPosition(int $position): static
+    public function setPosition(?int $position): static
     {
         $this->position = $position;
 
@@ -99,6 +99,6 @@ class ArdoiseItem
 
     public function __toString(): string
     {
-        return $this->name ?? 'Nouvel item';
+        return $this->name ?? 'Nouvelle entrée';
     }
 }

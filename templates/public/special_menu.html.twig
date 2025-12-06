@@ -16,20 +16,94 @@
         {% endif %}
     </div>
 
-    <div class="menu-items">
-        {% for item in ardoise.items %}
-        <div class="menu-item">
-            <div class="item-header">
-                <h3 class="item-name">{{ item.name }}</h3>
-                {% if item.price %}
-                <span class="item-price">{{ item.price|number_format(2, ',', ' ') }} €</span>
-                {% endif %}
+    <div class="menu-content">
+        {# Section Entrées #}
+        {% if entrees is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Entrées</h3>
+            <div class="menu-items">
+                {% for entree in entrees %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ entree.name }}</h4>
+                        {% if entree.price %}
+                        <span class="item-price">{{ entree.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if entree.description %}
+                    <p class="item-description">{{ entree.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
             </div>
-            {% if item.description %}
-            <p class="item-description">{{ item.description }}</p>
-            {% endif %}
         </div>
-        {% endfor %}
+        {% endif %}
+
+        {# Section Plats #}
+        {% if plats is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Plats</h3>
+            <div class="menu-items">
+                {% for plat in plats %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ plat.name }}</h4>
+                        {% if plat.price %}
+                        <span class="item-price">{{ plat.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if plat.description %}
+                    <p class="item-description">{{ plat.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {# Section Desserts #}
+        {% if desserts is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Desserts</h3>
+            <div class="menu-items">
+                {% for dessert in desserts %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ dessert.name }}</h4>
+                        {% if dessert.price %}
+                        <span class="item-price">{{ dessert.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if dessert.description %}
+                    <p class="item-description">{{ dessert.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {# Section Suppléments #}
+        {% if supplements is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Suppléments</h3>
+            <div class="menu-items">
+                {% for supplement in supplements %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ supplement.name }}</h4>
+                        {% if supplement.price %}
+                        <span class="item-price">{{ supplement.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if supplement.description %}
+                    <p class="item-description">{{ supplement.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -100,6 +174,39 @@
         display: inline-block;
     }
 
+    .menu-content {
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .menu-section {
+        position: relative;
+    }
+
+    .section-title {
+        font-size: 2.5em;
+        color: #d4af37;
+        text-align: center;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 600;
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #d4af37, transparent);
+    }
+
     .menu-items {
         display: grid;
         gap: 30px;
@@ -156,6 +263,14 @@
         }
         .menu-title {
             font-size: 1.5em;
+        }
+        .menu-content {
+            gap: 40px;
+        }
+        .section-title {
+            font-size: 1.8em;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
         }
         .item-header {
             flex-direction: column;

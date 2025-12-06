@@ -728,11 +728,11 @@
         margin-top: 1rem;
     }
 
-    .template-carousel-container {
+    /* .template-carousel-container {
         position: relative;
         padding: 0 60px;
         margin: 1.5rem 0;
-    }
+    } */
 
     .template-selector-wrapper .template-grid {
         display: flex;
@@ -891,7 +891,7 @@
         border: none;
         border-radius: 50%;
         color: white;
-        font-size: 24px;
+        font-size: px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -899,6 +899,7 @@
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         z-index: 20;
+        padding-bottom: 10px;
     }
 
     .carousel-nav-btn:hover {
@@ -1031,7 +1032,7 @@
     /* Responsive */
     @media (max-width: 768px) {
         .template-carousel-container {
-            padding: 0 45px;
+            padding: 0 0;
         }
 
         .template-selector-wrapper .template-option {
@@ -1042,7 +1043,7 @@
         .carousel-nav-btn {
             width: 35px;
             height: 35px;
-            font-size: 18px;
+            font-size: px;
         }
     }
 }
@@ -1149,4 +1150,558 @@
     --bs-tertiary-bg: var(--tertiary-bg);
     --bs-tertiary-color: var(--text-tertiary-color);
     --bs-warning: var(--color-warning);
+}
+
+/* ===========================
+   COLLECTION FIELDS CUSTOM STYLES
+   =========================== */
+
+/* Masquer le message "Empty" quand la collection est vide */
+.collection-custom [data-empty-collection=""]:empty::before {
+    content: none !important;
+}
+
+.collection-custom div[data-empty-collection=""]::before {
+    display: none !important;
+}
+
+/* Cacher tout élément vide par défaut dans les collections */
+.collection-custom .ea-form-collection-items > div[data-empty-collection=""]:not(:has(.field-collection-item)) {
+    display: none !important;
+}
+
+/* Masquer le div avec class "empty collection-empty" */
+.collection-custom .ea-form-collection-items .empty.collection-empty {
+    display: none !important;
+}
+
+/* Masquer le badge "Empty" */
+.collection-custom .collection-empty .badge {
+    display: none !important;
+}
+
+/* Le conteneur accordion doit être flex pour la grille */
+.collection-custom .accordion {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Le wrapper form-widget-compound ne doit PAS utiliser display:contents */
+.collection-custom .accordion > .form-widget-compound {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Le conteneur data-empty-collection doit aussi être flex */
+.collection-custom div[data-empty-collection=""] {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Style de chaque item de la collection - carte avec ombrage */
+.collection-custom .field-collection-item {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    transition: all 0.3s ease;
+    flex: 1 1 calc(50% - 0.75rem);
+    max-width: calc(50% - 0.75rem);
+    min-width: 400px;
+    overflow: hidden;
+}
+
+/* Animation de suppression - DÉSACTIVÉE pour ne pas interférer avec EasyAdmin */
+/* .collection-custom .field-collection-item.removing {
+    opacity: 0;
+    transform: scale(0.9);
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+} */
+
+.collection-custom .field-collection-item:hover {
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+    transform: translateY(-2px);
+}
+
+/* Accordion item pour chaque carte */
+.collection-custom .field-collection-item .accordion-item {
+    border: none;
+    background: transparent;
+}
+
+/* Header de l'accordion */
+.collection-custom .accordion-header {
+    position: relative;
+    background: var(--secondary-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.collection-custom .accordion-button {
+    background: transparent;
+    padding: 1rem 3.5rem 1rem 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    border: none;
+    box-shadow: none !important;
+    position: relative;
+}
+
+.collection-custom .accordion-button:not(.collapsed) {
+    background: transparent;
+    color: var(--text-color);
+}
+
+.collection-custom .accordion-button::after {
+    display: none;
+}
+
+/* Icône de collapse */
+.collection-custom .form-collection-item-collapse-marker {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5rem;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.collection-custom .accordion-button:not(.collapsed) .form-collection-item-collapse-marker {
+    transform: rotate(90deg);
+}
+
+/* Titre dynamique dans l'en-tête de l'accordion */
+.collection-custom .accordion-button .item-title {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-left: 0.5rem;
+}
+
+.collection-custom .accordion-button .item-title:empty::before {
+    content: "Nouvel élément";
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Bouton de suppression */
+.collection-custom .field-collection-delete-button {
+    position: absolute !important;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    padding: 0 !important;
+    background: linear-gradient(to bottom, #fef2f2, #fecaca) !important;
+    color: #b91c1c !important;
+    border: 1px solid #dc2626 !important;
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    z-index: 10 !important;
+    pointer-events: auto !important;
+}
+
+.collection-custom .field-collection-delete-button .icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.collection-custom .field-collection-delete-button:hover {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+    border-color: #991b1b !important;
+    transform: translateY(-50%) scale(1.1);
+    z-index: 11 !important;
+}
+
+/* Corps de l'accordion - contenu du formulaire */
+.collection-custom .accordion-body {
+    padding: 1.5rem;
+}
+
+/* Supprimer la structure row par défaut */
+.collection-custom .accordion-body .row {
+    margin: 0;
+}
+
+/* Champs du formulaire - labels au-dessus */
+.collection-custom .accordion-body .form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.collection-custom .accordion-body .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--form-label-color);
+    font-size: var(--font-size-base);
+}
+
+.collection-custom .accordion-body .form-widget {
+    width: 100%;
+}
+
+.collection-custom .accordion-body .form-control,
+.collection-custom .accordion-body .form-select,
+.collection-custom .accordion-body textarea {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: block;
+}
+
+/* Forcer le wrapper de formulaire à prendre toute la largeur */
+.collection-custom .accordion-body .form-widget-compound {
+    width: 100%;
+}
+
+.collection-custom .accordion-body .form-widget-compound > div {
+    width: 100%;
+}
+
+/* Masquer les flex-fill vides */
+.collection-custom .flex-fill:empty {
+    display: none;
+}
+
+/* Personnalisation du bouton "Ajouter" */
+.collection-custom .field-collection-add-button {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem !important;
+    background: linear-gradient(to bottom, #245784, #1f4f7a) !important;
+    color: #ffffff !important;
+    border: 1px solid #1f2937 !important;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+    text-decoration: none;
+    margin-top: 1rem;
+    font-size: 0; /* Masquer le texte original */
+}
+
+/* Afficher l'icône */
+.collection-custom .field-collection-add-button .icon {
+    font-size: var(--font-size-base);
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+}
+
+/* Masquer le texte "Add a new item" */
+.collection-custom .field-collection-add-button .icon ~ * {
+    display: none !important;
+}
+
+/* Texte personnalisé par type de collection */
+.collection-entree .field-collection-add-button::after {
+    content: "Ajouter une Entrée";
+    font-size: var(--font-size-base);
+    margin-left: 0.5rem;
+}
+
+.collection-plat .field-collection-add-button::after {
+    content: "Ajouter un Plat";
+    font-size: var(--font-size-base);
+    margin-left: 0.5rem;
+}
+
+.collection-dessert .field-collection-add-button::after {
+    content: "Ajouter un Dessert";
+    font-size: var(--font-size-base);
+    margin-left: 0.5rem;
+}
+
+.collection-supplement .field-collection-add-button::after {
+    content: "Ajouter un Supplément";
+    font-size: var(--font-size-base);
+    margin-left: 0.5rem;
+}
+
+.collection-custom .field-collection-add-button:hover {
+    background: linear-gradient(to bottom, #2c6da3, #245784) !important;
+    border-color: #111827 !important;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.24);
+    transform: translateY(-1px);
+}
+
+.collection-custom .field-collection-add-button:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* Ajustement pour les petits écrans */
+@media (max-width: 768px) {
+    .collection-custom .field-collection-item {
+        flex: 1 1 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+}
+
+/* Mode sombre */
+.ea-dark-scheme .collection-custom .field-collection-item {
+    background: #020617;
+    border-color: #111827;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ===========================
+   DRAG & DROP STYLES
+   =========================== */
+
+/* Curseur pour indiquer que l'item est draggable */
+.collection-custom .field-collection-item {
+    cursor: move;
+    cursor: grab;
+}
+
+/* Style pendant le drag */
+.collection-custom .field-collection-item.sortable-chosen {
+    cursor: grabbing;
+}
+
+/* Ghost element (élément fantôme qui suit la souris) */
+.collection-custom .sortable-ghost {
+    opacity: 0.4;
+    background: var(--color-primary-light) !important;
+    transform: rotate(2deg);
+}
+
+/* Élément choisi (celui qu'on est en train de drag) */
+.collection-custom .sortable-chosen {
+    opacity: 0.8;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.3) !important;
+    transform: scale(1.02);
+}
+
+/* Élément en cours de drag */
+.collection-custom .sortable-drag {
+    opacity: 0.9;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.4) !important;
+    z-index: 1000 !important;
+}
+
+/* Animation smooth pour le réarrangement */
+.collection-custom .field-collection-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Désactiver la transition pendant le drag */
+.collection-custom .sortable-chosen,
+.collection-custom .sortable-drag {
+    transition: none !important;
+}
+
+/* Indicateur visuel pour le drop */
+.collection-custom .field-collection-item:hover:not(.sortable-chosen) {
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+/* Mode sombre - drag & drop */
+.ea-dark-scheme .collection-custom .sortable-ghost {
+    background: #1e293b !important;
+}
+
+.ea-dark-scheme .collection-custom .sortable-chosen {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+.ea-dark-scheme .collection-custom .sortable-drag {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6) !important;
+}
+
+.ea-dark-scheme .collection-custom .field-collection-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.ea-dark-scheme .collection-custom .accordion-header {
+    background: #111827;
+    border-bottom-color: #1f2937;
+}
+
+/* ===========================
+   TABS NAVIGATION CUSTOM STYLES
+   =========================== */
+
+/* Container des tabs */
+.nav-tabs-custom {
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Navigation tabs list */
+.nav-tabs-custom .nav-tabs {
+    border-bottom: none;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) #f0f0f0;
+    padding: 0.5rem 1rem 0;
+    gap: 0.5rem;
+}
+
+/* Scrollbar pour webkit (Chrome, Safari) */
+.nav-tabs-custom .nav-tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.nav-tabs-custom .nav-tabs::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 2px;
+}
+
+.nav-tabs-custom .nav-tabs::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 2px;
+}
+
+.nav-tabs-custom .nav-tabs::-webkit-scrollbar-thumb:hover {
+    background: #1c456a;
+}
+
+/* Items de navigation */
+.nav-tabs-custom .nav-item {
+    flex-shrink: 0;
+    margin-bottom: -2px;
+}
+
+/* Liens des tabs */
+.nav-tabs-custom .nav-link {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: var(--font-size-base);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+/* Hover sur les tabs */
+.nav-tabs-custom .nav-link:hover {
+    background: var(--secondary-bg);
+    color: var(--text-color);
+    border-bottom-color: var(--color-primary);
+}
+
+/* Tab active */
+.nav-tabs-custom .nav-link.active {
+    background: linear-gradient(to bottom, var(--secondary-bg), #ffffff);
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+    box-shadow: 0 -2px 8px rgba(31, 79, 122, 0.1);
+}
+
+/* Indicateur visuel sous le tab actif */
+.nav-tabs-custom .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, #1f4f7a, #2c6da3);
+    box-shadow: 0 2px 4px rgba(31, 79, 122, 0.4);
+}
+
+/* Focus pour l'accessibilité */
+.nav-tabs-custom .nav-link:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Mobile - Optimisations spécifiques */
+@media (max-width: 768px) {
+    .nav-tabs-custom {
+        position: sticky;
+        top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .nav-tabs-custom .nav-tabs {
+        padding: 0.5rem 0.75rem 0;
+        gap: 0.25rem;
+    }
+
+    .nav-tabs-custom .nav-link {
+        padding: 0.65rem 1rem;
+        font-size: var(--font-size-sm);
+    }
+
+    /* Indicateur de scroll pour mobile */
+    .nav-tabs-custom .nav-tabs::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 4px;
+        width: 30px;
+        background: linear-gradient(to left, rgba(255, 255, 255, 0.9), transparent);
+        pointer-events: none;
+    }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+    .nav-tabs-custom .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 12px;
+    }
+}
+
+/* Mode sombre pour les tabs */
+.ea-dark-scheme .nav-tabs-custom {
+    background: #020617;
+    border-bottom-color: #1f2937;
+}
+
+.ea-dark-scheme .nav-tabs-custom .nav-link {
+    color: #9ca3af;
+}
+
+.ea-dark-scheme .nav-tabs-custom .nav-link:hover {
+    background: #111827;
+    color: #e5e7eb;
+}
+
+.ea-dark-scheme .nav-tabs-custom .nav-link.active {
+    background: linear-gradient(to bottom, #111827, #020617);
+    color: #38bdf8;
+    border-bottom-color: #38bdf8;
+}
+
+.ea-dark-scheme .nav-tabs-custom .nav-link.active::after {
+    background: linear-gradient(to right, #38bdf8, #7dd3fc);
 }
