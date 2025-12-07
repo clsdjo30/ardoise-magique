@@ -26,3 +26,5 @@
 ###< symfonycasts/sass-bundle ###
 
 .claude/
+AGENTS.md
+docs/
