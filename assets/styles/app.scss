@@ -1,6 +1,11 @@
-@use './tokens.colors';
-@use './tokens.typography';
+@use './tokens.colors' as colors;
+@use './tokens.typography' as type;
 @use './base';
 @use './layout';
 
-// Component styles will be added in Etape 3 to avoid missing import errors while scaffolding.
+@use './components/button';
+@use './components/card';
+@use './components/form';
+@use './components/badge';
+@use './components/navbar';
+@use './components/modal';

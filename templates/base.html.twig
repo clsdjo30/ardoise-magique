@@ -5,157 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}L'Ardoise Magique{% endblock %}</title>
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap">
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍽️</text></svg>">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* Animated background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-            z-index: -1;
-            animation: bgFloat 15s ease-in-out infinite;
-        }
-
-        @keyframes bgFloat {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
-        .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .btn-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-            color: white;
-        }
-
-        .btn-outline-gradient {
-            border: 2px solid #667eea;
-            color: #667eea;
-            background: transparent;
-            transition: all 0.3s;
-        }
-
-        .btn-outline-gradient:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: transparent;
-        }
-
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
         {% block extra_styles %}{% endblock %}
-    </style>
-
-    {% block stylesheets %}{% endblock %}
+    {% endblock %}
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_landing') }}">
-                <i class="fas fa-utensils me-2"></i>
-                L'Ardoise Magique
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    {% if app.user %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% if is_granted('ROLE_SUPER_ADMIN') %}{{ path('app_admin_dashboard') }}{% else %}{{ path('admin', {'restaurant': app.user.slug}) }}{% endif %}">
-                                <i class="fas fa-tachometer-alt me-1"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                <i class="fas fa-user me-1"></i> {{ app.user.firstname }}
-                            </span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" href="{{ path('app_logout') }}">
-                                <i class="fas fa-sign-out-alt me-1"></i> Deconnexion
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_login') }}">
-                                <i class="fas fa-sign-in-alt me-1"></i> Connexion
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn-gradient text-white px-3 rounded" href="{{ path('app_register') }}">
-                                <i class="fas fa-user-plus me-1"></i> Inscription
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% set nav_links = [
+        { label: 'Accueil', href: path('app_landing'), active: app.request.attributes.get('_route') == 'app_landing' },
+        { label: 'Menu', href: '#menu' },
+        { label: 'Réserver', href: '#booking' }
+    ] %}
 
-    <!-- Main Content -->
-    <main>
+    {% if app.user %}
+        {% set nav_actions = [
+            {
+                label: 'Dashboard',
+                href: is_granted('ROLE_SUPER_ADMIN') ? path('app_admin_dashboard') : path('admin', {'restaurant': app.user.slug}),
+                variant: 'ghost'
+            },
+            {
+                label: 'Déconnexion',
+                href: path('app_logout'),
+                variant: 'outline'
+            }
+        ] %}
+    {% else %}
+        {% set nav_actions = [
+            { label: 'Connexion', href: path('app_login'), variant: 'ghost' },
+            { label: 'Inscription', href: path('app_register'), variant: 'primary' }
+        ] %}
+    {% endif %}
+
+    {% include 'components/_navbar.html.twig' with {
+        brand_label: "L'Ardoise Magique",
+        brand_href: path('app_landing'),
+        links: nav_links,
+        actions: nav_actions
+    } %}
+
+    <main class="l-container" style="padding-block: 2rem;">
         {% block body %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="text-white text-center py-4 mt-5">
-        <div class="container">
-            <p class="mb-0">&copy; {{ "now"|date("Y") }} L'Ardoise Magique - Tous droits reserves</p>
+    <footer class="l-section" style="text-align: center;">
+        <div class="l-container">
+            <p class="c-card__meta">&copy; {{ "now"|date("Y") }} L'Ardoise Magique - Tous droits réservés</p>
         </div>
     </footer>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     {% block javascripts %}
         {# Entry name is "app" as defined in importmap.php #}
