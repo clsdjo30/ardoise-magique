@@ -1,0 +1,81 @@
+@use './tokens.colors' as colors;
+@use './tokens.typography' as type;
+
+$space-2xs: 0.25rem;
+$space-xs: 0.5rem;
+$space-sm: 0.75rem;
+$space-md: 1rem;
+$space-lg: 1.5rem;
+$space-xl: 2rem;
+$space-2xl: 3rem;
+
+.l-container {
+    width: min(1100px, 100% - 2rem);
+    margin-inline: auto;
+}
+
+.l-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--stack-gap, $space-md);
+}
+
+.l-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cluster-gap, $space-md);
+    align-items: center;
+}
+
+.l-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--grid-min, 240px), 1fr));
+    gap: var(--grid-gap, $space-lg);
+}
+
+.l-section {
+    padding-block: clamp($space-xl, 4vw, $space-2xl);
+    background-color: var(--section-bg, transparent);
+}
+
+.l-surface {
+    background-color: colors.$color-surface;
+    border: 1px solid colors.$color-border;
+    border-radius: 12px;
+    box-shadow: colors.$shadow-ambient;
+    padding: $space-lg;
+}
+
+.l-hero {
+    padding-block: clamp($space-2xl, 8vw, 4rem);
+    display: grid;
+    gap: $space-lg;
+    align-items: center;
+}
+
+.l-hero__title {
+    font-size: type.$font-size-hero;
+    line-height: type.$line-height-heading;
+    letter-spacing: type.$letter-spacing-tight;
+}
+
+.l-hero__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: type.$letter-spacing-wide;
+    font-weight: type.$font-weight-strong;
+    color: colors.$color-accent;
+    font-size: type.$font-size-xs;
+}
+
+.l-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-sm;
+    align-items: center;
+}
+
+.l-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, colors.$color-border, transparent);
+    margin-block: $space-lg;
+}
