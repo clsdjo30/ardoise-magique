@@ -1,0 +1,82 @@
+@use '../tokens.colors' as colors;
+@use '../tokens.typography' as type;
+
+.c-modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: colors.$overlay-strong;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 150ms ease, visibility 150ms ease;
+    padding: 1.5rem;
+    z-index: 50;
+}
+
+.c-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.c-modal__dialog {
+    width: min(620px, 100%);
+    background: colors.$color-surface;
+    border-radius: 16px;
+    border: 1px solid colors.$color-border;
+    box-shadow: colors.$shadow-soft;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.c-modal.is-open .c-modal__dialog {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.c-modal__header,
+.c-modal__footer {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid colors.$color-border;
+}
+
+.c-modal__footer {
+    border-bottom: 0;
+    border-top: 1px solid colors.$color-border;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.c-modal__title {
+    font-family: type.$font-family-heading;
+    font-size: type.$font-size-xl;
+    margin: 0;
+}
+
+.c-modal__body {
+    padding: 1.25rem;
+    color: colors.$color-text;
+    line-height: type.$line-height-body;
+}
+
+.c-modal__close {
+    background: transparent;
+    border: 1px solid colors.$color-border;
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.c-modal__close:hover {
+    background: rgba(colors.$color-primary, 0.08);
+    border-color: colors.$color-primary;
+}

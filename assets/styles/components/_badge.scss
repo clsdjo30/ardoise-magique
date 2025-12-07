@@ -1,0 +1,46 @@
+@use '../tokens.colors' as colors;
+@use '../tokens.typography' as type;
+
+.c-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    font-size: type.$font-size-sm;
+    font-weight: type.$font-weight-strong;
+    line-height: 1.2;
+    border: 1px solid transparent;
+    background: colors.$color-surface;
+    color: colors.$color-text;
+}
+
+.c-badge--primary {
+    background: rgba(colors.$color-primary, 0.12);
+    border-color: colors.$color-primary;
+    color: colors.$color-primary-strong;
+}
+
+.c-badge--accent {
+    background: rgba(colors.$color-accent, 0.14);
+    border-color: colors.$color-accent;
+    color: colors.$color-accent;
+}
+
+.c-badge--success {
+    background: rgba(colors.$color-success, 0.14);
+    border-color: colors.$color-success;
+    color: colors.$color-success;
+}
+
+.c-badge--warning {
+    background: rgba(colors.$color-warning, 0.16);
+    border-color: colors.$color-warning;
+    color: colors.$color-warning;
+}
+
+.c-badge--info {
+    background: rgba(colors.$color-info, 0.14);
+    border-color: colors.$color-info;
+    color: colors.$color-info;
+}
