@@ -6,7 +6,8 @@
       "Bash(mkdir:*)",
       "Bash(symfony server:status:*)",
       "Bash(cp:*)",
-      "Bash(copy-assets.bat)"
+      "Bash(copy-assets.bat)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []

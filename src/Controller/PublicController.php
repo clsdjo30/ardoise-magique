@@ -29,20 +29,22 @@ class PublicController extends AbstractController
     #[Route('/m/{restaurant}/{slug}', name: 'app_show_menu', methods: ['GET'])]
     public function showMenu(string $restaurant, string $slug): Response
     {
-        // Trouver le restaurant par son slug
+        // Trouver l'utilisateur par son slug (pour compatibilité URLs)
         $user = $this->userRepository->findOneBy(['slug' => $restaurant]);
 
         if (!$user) {
             throw $this->createNotFoundException('Restaurant non trouvé');
         }
 
-        // Trouver le menu par son slug et vérifier qu'il appartient bien au restaurant
-        $ardoise = $this->ardoiseRepository->findOneBy([
-            'slug' => $slug,
-            'owner' => $user,
-        ]);
+        // Trouver le menu par son slug
+        $ardoise = $this->ardoiseRepository->findOneBy(['slug' => $slug]);
 
         if (!$ardoise) {
+            throw $this->createNotFoundException('Menu non trouvé');
+        }
+
+        // Vérifier que le menu appartient bien à un restaurant de cet utilisateur
+        if (!$ardoise->getRestaurant() || $ardoise->getRestaurant()->getOwner() !== $user) {
             throw $this->createNotFoundException('Menu non trouvé');
         }
 
@@ -66,7 +68,8 @@ class PublicController extends AbstractController
 
             return $this->render($templatePath, [
                 'ardoise' => $ardoise,
-                'restaurant' => $user,
+                'restaurant' => $ardoise->getRestaurant(),
+                'user' => $user,
             ]);
         } else {
              $template = $ardoise->getTemplate();
@@ -93,7 +96,8 @@ class PublicController extends AbstractController
 
             return $this->render($templatePath, [
                 'ardoise' => $ardoise,
-                'restaurant' => $user,
+                'restaurant' => $ardoise->getRestaurant(),
+                'user' => $user,
                 'entrees' => $entrees,
                 'plats' => $plats,
                 'desserts' => $desserts,

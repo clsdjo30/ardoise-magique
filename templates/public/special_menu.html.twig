@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ ardoise.titre }} - {{ restaurant.nomRestaurant }}</title>
+    <title>{{ ardoise.titre }} - {{ restaurant.name }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="special-menu-container">
     <div class="menu-header">
-        <h1 class="restaurant-name">{{ restaurant.nomRestaurant }}</h1>
+        <h1 class="restaurant-name">{{ restaurant.name }}</h1>
         <h2 class="menu-title">{{ ardoise.titre }}</h2>
         {% if ardoise.specialGlobalPrice %}
         <div class="global-price">{{ ardoise.specialGlobalPrice|number_format(2, ',', ' ') }} €</div>

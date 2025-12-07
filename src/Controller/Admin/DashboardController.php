@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Ardoise;
+use App\Entity\Restaurant;
 use App\Entity\User;
 use App\Repository\ArdoiseRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -61,6 +62,7 @@ class DashboardController extends AbstractDashboardController
             'menusPublies' => $menusPublies,
             'menus' => $menus,
             'publishedMenu' => $publishedMenu,
+            'userRestaurants' => $user->getRestaurants(),
         ]);
     }
 
@@ -80,15 +82,26 @@ class DashboardController extends AbstractDashboardController
             return $this->redirectToRoute('admin', ['restaurant' => $user->getSlug()]);
         }
 
-        // Statistiques pour le dashboard du restaurateur
-        $totalMenus = $this->ardoiseRepository->count(['owner' => $user]);
-        $menusPublies = $this->ardoiseRepository->count(['owner' => $user, 'status' => true]);
+        // Statistiques pour le dashboard du restaurateur - compter tous les menus de ses restaurants
+        $restaurants = $user->getRestaurants();
+        $totalMenus = 0;
+        $menusPublies = 0;
+        $menus = [];
 
-        // Recuperer tous les menus du restaurateur pour afficher les liens publics
-        $menus = $this->ardoiseRepository->findBy(
-            ['owner' => $user],
-            ['id' => 'DESC']
-        );
+        foreach ($restaurants as $restaurant) {
+            $totalMenus += $this->ardoiseRepository->count(['restaurant' => $restaurant]);
+            $menusPublies += $this->ardoiseRepository->count(['restaurant' => $restaurant, 'status' => true]);
+
+            // Recuperer les menus de ce restaurant
+            $restaurantMenus = $this->ardoiseRepository->findBy(
+                ['restaurant' => $restaurant],
+                ['id' => 'DESC']
+            );
+            $menus = array_merge($menus, $restaurantMenus);
+        }
+
+        // Trier tous les menus par ID décroissant
+        usort($menus, fn($a, $b) => $b->getId() <=> $a->getId());
         $publishedMenu = $this->getFirstPublishedMenu($menus);
 
         return $this->render('admin/dashboard.html.twig', [
@@ -96,6 +109,7 @@ class DashboardController extends AbstractDashboardController
             'menusPublies' => $menusPublies,
             'menus' => $menus,
             'publishedMenu' => $publishedMenu,
+            'userRestaurants' => $restaurants,
         ]);
     }
 
@@ -130,6 +144,14 @@ class DashboardController extends AbstractDashboardController
             : ['routeName' => 'admin', 'routeParameters' => ['restaurant' => $user->getSlug()]];
 
         yield MenuItem::linkToRoute('Dashboard', 'fa fa-home', $dashboardRoute['routeName'], $dashboardRoute['routeParameters'] ?? []);
+
+        // Section Restaurants
+        yield MenuItem::section('Mon Etablissement');
+        yield MenuItem::linkToCrud('Mes Restaurants', 'fa fa-utensils', Restaurant::class)
+            ->setController(RestaurantCrudController::class);
+        yield MenuItem::linkToCrud('Ajouter un Restaurant', 'fa fa-plus', Restaurant::class)
+            ->setController(RestaurantCrudController::class)
+            ->setAction('new');
 
         // Section Menus du Jour
         yield MenuItem::section('Menus du Jour');

@@ -21,19 +21,19 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom_restaurant', TextType::class, [
-                'label' => 'Nom du Restaurant',
+            ->add('firstname', TextType::class, [
+                'label' => 'Prénom',
                 'attr' => [
-                    'placeholder' => 'Ex: Le Petit Niçois',
+                    'placeholder' => 'Ex: Jean',
                     'class' => 'form-control',
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez entrer le nom de votre restaurant',
+                        'message' => 'Veuillez entrer votre prénom',
                     ]),
                     new Length([
-                        'min' => 3,
-                        'minMessage' => 'Le nom du restaurant doit contenir au moins {{ limit }} caractères',
+                        'min' => 2,
+                        'minMessage' => 'Votre prénom doit contenir au moins {{ limit }} caractères',
                         'max' => 255,
                     ]),
                 ],

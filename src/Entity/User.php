@@ -17,7 +17,6 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 #[ORM\Table(name: '`user`')]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'], message: 'Un compte existe deja avec cet email')]
-#[UniqueEntity(fields: ['slug'], message: 'Ce nom de restaurant est deja utilise')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -41,20 +40,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom_restaurant = null;
+    private ?string $firstname = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
     private ?string $slug = null;
 
     /**
-     * @var Collection<int, Ardoise>
+     * @var Collection<int, Restaurant>
      */
-    #[ORM\OneToMany(targetEntity: Ardoise::class, mappedBy: 'owner', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $ardoises;
+    #[ORM\OneToMany(targetEntity: Restaurant::class, mappedBy: 'owner', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $restaurants;
 
     public function __construct()
     {
-        $this->ardoises = new ArrayCollection();
+        $this->restaurants = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
     }
 
@@ -62,9 +61,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\PreUpdate]
     public function generateSlug(): void
     {
-        if ($this->nom_restaurant && !$this->slug) {
+        // Le slug sera généré lors de la création du premier restaurant
+        // Pour compatibilité, utiliser l'email en attendant
+        if (!$this->slug && $this->email) {
             $slugger = new AsciiSlugger();
-            $this->slug = $slugger->slug($this->nom_restaurant)->lower()->toString();
+            $emailPart = explode('@', $this->email)[0];
+            $this->slug = $slugger->slug($emailPart)->lower()->toString() . '-' . uniqid();
         }
     }
 
@@ -143,20 +145,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getNomRestaurant(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->nom_restaurant;
+        return $this->firstname;
     }
 
+    public function setFirstname(string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated Use getFirstname() instead
+     */
+    public function getNomRestaurant(): ?string
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @deprecated Use setFirstname() instead
+     */
     public function setNomRestaurant(string $nom_restaurant): static
     {
-        $this->nom_restaurant = $nom_restaurant;
-
-        // Regenerer le slug si le nom du restaurant change
-        if ($this->nom_restaurant) {
-            $slugger = new AsciiSlugger();
-            $this->slug = $slugger->slug($this->nom_restaurant)->lower()->toString();
-        }
+        $this->firstname = $nom_restaurant;
 
         return $this;
     }
@@ -174,32 +188,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Ardoise>
+     * @return Collection<int, Restaurant>
      */
-    public function getArdoises(): Collection
+    public function getRestaurants(): Collection
     {
-        return $this->ardoises;
+        return $this->restaurants;
     }
 
-    public function addArdoise(Ardoise $ardoise): static
+    public function addRestaurant(Restaurant $restaurant): static
     {
-        if (!$this->ardoises->contains($ardoise)) {
-            $this->ardoises->add($ardoise);
-            $ardoise->setOwner($this);
+        if (!$this->restaurants->contains($restaurant)) {
+            $this->restaurants->add($restaurant);
+            $restaurant->setOwner($this);
         }
 
         return $this;
     }
 
-    public function removeArdoise(Ardoise $ardoise): static
+    public function removeRestaurant(Restaurant $restaurant): static
     {
-        if ($this->ardoises->removeElement($ardoise)) {
-            // set the owning side to null (unless already changed)
-            if ($ardoise->getOwner() === $this) {
-                $ardoise->setOwner(null);
+        if ($this->restaurants->removeElement($restaurant)) {
+            if ($restaurant->getOwner() === $this) {
+                $restaurant->setOwner(null);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * Retourne le premier restaurant de l'utilisateur (pour compatibilité)
+     */
+    public function getFirstRestaurant(): ?Restaurant
+    {
+        return $this->restaurants->first() ?: null;
     }
 }

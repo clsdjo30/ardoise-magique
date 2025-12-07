@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Ardoise;
+use App\Entity\Restaurant;
 use App\Entity\User;
 use App\Form\ArdoiseItemType;
 use App\Form\EntreeType;
@@ -24,11 +25,15 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use Symfony\Component\HttpFoundation\RequestStack;
+use App\Repository\RestaurantRepository;
 
 class SpecialMenuCrudController extends AbstractCrudController
 {
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator
+        private UrlGeneratorInterface $urlGenerator,
+        private RequestStack $requestStack,
+        private RestaurantRepository $restaurantRepository
     ) {}
 
     public static function getEntityFqcn(): string
@@ -174,10 +179,14 @@ class SpecialMenuCrudController extends AbstractCrudController
         $qb->andWhere('entity.type = :type')
             ->setParameter('type', Ardoise::TYPE_SPECIAL);
 
-        // Multi-tenancy: ne montrer que les menus de l'utilisateur courant (sauf super admin)
+        // Multi-tenancy: ne montrer que les menus des restaurants de l'utilisateur courant (sauf super admin)
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-            $qb->andWhere('entity.owner = :user')
-                ->setParameter('user', $this->getUser());
+            /** @var User $user */
+            $user = $this->getUser();
+
+            $qb->join('entity.restaurant', 'r')
+                ->andWhere('r.owner = :user')
+                ->setParameter('user', $user);
         }
 
         return $qb;
@@ -186,12 +195,39 @@ class SpecialMenuCrudController extends AbstractCrudController
     public function persistEntity($entityManager, $entityInstance): void
     {
         /** @var Ardoise $entityInstance */
+        /** @var User $user */
+        $user = $this->getUser();
+
         if (!$entityInstance->getType()) {
             $entityInstance->setType(Ardoise::TYPE_SPECIAL);
         }
 
-        if (!$entityInstance->getOwner()) {
-            $entityInstance->setOwner($this->getUser());
+        // Assigner le restaurant sélectionné en session ou le premier restaurant de l'utilisateur
+        if (!$entityInstance->getRestaurant()) {
+            $session = $this->requestStack->getSession();
+            $selectedRestaurantId = $session->get('selected_restaurant_id');
+
+            if ($selectedRestaurantId) {
+                $restaurant = $this->restaurantRepository->find($selectedRestaurantId);
+                // Vérifier que le restaurant appartient à l'utilisateur
+                if ($restaurant && $restaurant->getOwner() === $user) {
+                    $entityInstance->setRestaurant($restaurant);
+                    // Clear session after use
+                    $session->remove('selected_restaurant_id');
+                } else {
+                    $restaurant = $user->getFirstRestaurant();
+                }
+            } else {
+                $restaurant = $user->getFirstRestaurant();
+            }
+
+            if (!$restaurant) {
+                throw new \RuntimeException('Vous devez créer un restaurant avant de créer un menu');
+            }
+
+            if (!$entityInstance->getRestaurant()) {
+                $entityInstance->setRestaurant($restaurant);
+            }
         }
 
         // Mise a jour automatique de la position des items

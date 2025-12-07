@@ -58,9 +58,9 @@ class Ardoise
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $template = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ardoises')]
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'ardoises')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $owner = null;
+    private ?Restaurant $restaurant = null;
 
     // ==========================================
     // CHAMPS MENU DU JOUR (type=DAILY)
@@ -220,16 +220,24 @@ class Ardoise
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getRestaurant(): ?Restaurant
     {
-        return $this->owner;
+        return $this->restaurant;
     }
 
-    public function setOwner(?User $owner): static
+    public function setRestaurant(?Restaurant $restaurant): static
     {
-        $this->owner = $owner;
+        $this->restaurant = $restaurant;
 
         return $this;
+    }
+
+    /**
+     * Méthode de compatibilité - retourne le propriétaire du restaurant
+     */
+    public function getOwner(): ?User
+    {
+        return $this->restaurant?->getOwner();
     }
 
     // ==========================================

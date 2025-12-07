@@ -162,9 +162,9 @@
             {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
 
             <div class="form-group">
-                {{ form_label(registrationForm.nom_restaurant, 'Nom du restaurant') }}
-                {{ form_widget(registrationForm.nom_restaurant, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Le Petit Nicois'}}) }}
-                {{ form_errors(registrationForm.nom_restaurant) }}
+                {{ form_label(registrationForm.firstname, 'Prénom') }}
+                {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Alain'}}) }}
+                {{ form_errors(registrationForm.firstname) }}
                 <small class="form-text">
                     <i class="fas fa-info-circle me-1"></i>
                     Ce nom sera utilise pour creer votre URL publique
