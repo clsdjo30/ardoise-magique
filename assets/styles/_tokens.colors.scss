@@ -1,0 +1,30 @@
+// Color tokens for the Bistrot Moderne system
+$color-primary: #b85c38;
+$color-primary-strong: #9d4e30; // darker copper for pressed states
+$color-primary-soft: #d78a69; // lighter copper for hover
+$color-background: #f8f3ef;
+$color-surface: #fffaf6;
+$color-text: #2f1b0c;
+$color-muted: #6b4b36; // supporting text tone
+$color-border: #d4c4b7;
+$color-border-strong: #b89f8e;
+$color-accent: #9b8b6e;
+$color-success: #4a7a4a; // chosen to stay in a natural/culinary palette
+$color-warning: #b2853f;
+$color-info: #6c7c90;
+
+$gradient-button-primary: linear-gradient(135deg, #b85c38 0%, #f0dfd4 50%, #f8f3ef 100%);
+$gradient-sheen: linear-gradient(180deg, rgba(#ffffff, 0.25) 0%, rgba(#ffffff, 0) 60%);
+
+$shadow-soft: 0 12px 40px rgba($color-text, 0.18);
+$shadow-ambient: 0 6px 18px rgba($color-text, 0.12);
+$shadow-inset: inset 0 1px 0 rgba(#ffffff, 0.7);
+
+$overlay-strong: rgba($color-text, 0.6);
+$overlay-soft: rgba($color-text, 0.3);
+
+$focus-ring-color: rgba($color-primary, 0.35);
+$focus-ring: 0 0 0 3px $focus-ring-color;
+
+$hover-brighten: lighten($color-primary, 6%);
+$hover-dim: darken($color-text, 6%);
