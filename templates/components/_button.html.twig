@@ -1,0 +1,36 @@
+{# Usage:
+   {% include 'components/_button.html.twig' with {
+        label: 'Réserver',
+        variant: 'primary',           // primary | outline | ghost
+        size: 'md',                   // sm | md | lg
+        icon: 'fa-regular fa-calendar', // optional fontawesome class
+        href: path('app_landing'),    // optional: renders <a>
+        attributes: { 'data-modal-target': '#booking' } // optional map of attributes
+   } %}
+#}
+{% set variant_class = variant is defined ? ' c-button--' ~ variant : '' %}
+{% set size_class = size is defined ? ' c-button--' ~ size : '' %}
+{% set base_classes = 'c-button' ~ variant_class ~ size_class %}
+
+{% set attrs = '' %}
+{% if attributes is defined and attributes is iterable %}
+    {% for name, value in attributes %}
+        {% set attrs = attrs ~ ' ' ~ name ~ '="' ~ value ~ '"' %}
+    {% endfor %}
+{% endif %}
+
+{% if href is defined %}
+    <a class="{{ base_classes }}" href="{{ href }}"{{ attrs|raw }}>
+        {% if icon is defined %}
+            <span class="c-button__icon"><i class="{{ icon }}"></i></span>
+        {% endif %}
+        <span class="c-button__label">{{ label|default('Label') }}</span>
+    </a>
+{% else %}
+    <button type="{{ type|default('button') }}" class="{{ base_classes }}"{{ attrs|raw }}>
+        {% if icon is defined %}
+            <span class="c-button__icon"><i class="{{ icon }}"></i></span>
+        {% endif %}
+        <span class="c-button__label">{{ label|default('Label') }}</span>
+    </button>
+{% endif %}

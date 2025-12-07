@@ -1,0 +1,53 @@
+{# Usage:
+   {% include 'components/_navbar.html.twig' with {
+        brand_label: "L'Ardoise Magique",
+        brand_href: path('app_landing'),
+        links: [
+            { label: 'Accueil', href: path('app_landing'), active: true },
+            { label: 'Menu', href: '#menu' },
+            { label: 'Réserver', href: '#booking', attributes: { 'data-modal-target': '#booking-modal' } }
+        ],
+        actions: [
+            { label: 'Connexion', href: path('app_login'), variant: 'ghost' },
+            { label: 'S\'inscrire', href: path('app_register'), variant: 'primary' }
+        ]
+   } %}
+#}
+<nav class="c-navbar">
+    <div class="l-container c-navbar__inner">
+        <a class="c-navbar__brand" href="{{ brand_href|default('#') }}">
+            {{ brand_label|default("L'Ardoise Magique") }}
+        </a>
+
+        <div class="c-navbar__menu">
+            {% for link in links|default([]) %}
+                {% set attrs = '' %}
+                {% if link.attributes is defined and link.attributes is iterable %}
+                    {% for name, value in link.attributes %}
+                        {% set attrs = attrs ~ ' ' ~ name ~ '="' ~ value ~ '"' %}
+                    {% endfor %}
+                {% endif %}
+                <a class="c-navbar__link{% if link.active|default(false) %} c-navbar__link--active{% endif %}"
+                   href="{{ link.href|default('#') }}"{{ attrs|raw }}>
+                    {{ link.label|default('Lien') }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="c-navbar__actions">
+            {% for action in actions|default([]) %}
+                {% include 'components/_button.html.twig' with {
+                    label: action.label,
+                    href: action.href|default('#'),
+                    variant: action.variant|default('outline'),
+                    size: 'sm',
+                    attributes: action.attributes|default({})
+                } %}
+            {% endfor %}
+        </div>
+
+        <button class="c-navbar__toggle" aria-label="Ouvrir le menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+</nav>
