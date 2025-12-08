@@ -25,6 +25,6 @@
 /public/assets/
 ###< symfonycasts/sass-bundle ###
 
-.claude/
+.claude/settings.local.json
 AGENTS.md
 docs/
