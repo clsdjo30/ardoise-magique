@@ -26,6 +26,14 @@ class PublicController extends AbstractController
         ]);
     }
 
+    #[Route('/tarifs', name: 'app_tarifs', methods: ['GET'])]
+    public function tarifs(): Response
+    {
+        return $this->render('public/tarifs.html.twig', [
+            'title' => 'Tarifs',
+        ]);
+    }
+
     #[Route('/m/{restaurant}/{slug}', name: 'app_show_menu', methods: ['GET'])]
     public function showMenu(string $restaurant, string $slug): Response
     {
@@ -72,7 +80,7 @@ class PublicController extends AbstractController
                 'user' => $user,
             ]);
         } else {
-             $template = $ardoise->getTemplate();
+            $template = $ardoise->getTemplate();
             // Menu SPECIAL - récupérer et trier les collections par position
             $entrees = $ardoise->getEntree()->toArray();
             usort($entrees, fn($a, $b) => ($a->getPosition() ?? 0) <=> ($b->getPosition() ?? 0));

@@ -1,10 +1,371 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}L'Ardoise Magique - Gestion de menus pour restaurateurs{% endblock %}
-
-{% block extra_styles %}
+{% block title %}L'Ardoise Magique - Gestion de menus pour restaurateurs
 {% endblock %}
 
 {% block body %}
+{% set feature_cards = [
+        {
+            title: 'Menus du jour et spéciaux',
+            meta: 'Toujours à jour',
+            body: 'Publiez vos menus du jour et vos cartes événementielles (Saint-Valentin, Noël, fête des mères) en quelques clics.'
+        },
+        {
+            title: 'Diffusion instantanée',
+            meta: 'Web & réseaux',
+            body: 'Partagez un lien public, affichez un QR Code en salle, exportez en PDF ou JPG, et publiez sur Facebook/Instagram.'
+        },
+        {
+            title: 'Annuaire local',
+            meta: 'Visibilité de proximité',
+            body: 'Vos menus rejoignent un annuaire public pour être trouvés par ville, département ou type de cuisine.'
+        }
+    ] %}
 
+{% set plans = [
+        {
+            title: 'Offre Gratuite',
+            price: '0 € / mois',
+            meta: 'Idéale pour démarrer',
+            badge: '<span class="c-badge c-badge--accent">Essai libre</span>',
+            points: [
+                'Jusqu\'à 10 menus du jour par mois',
+                'Design basique',
+                'Lien partageable'
+            ],
+            cta: { label: 'Commencer', variant: 'outline', href: path('app_register') }
+        },
+        {
+            title: 'Starter',
+            price: '9,90 € / mois',
+            meta: 'Pour accélérer',
+            badge: '<span class="c-badge c-badge--primary">Populaire</span>',
+            points: [
+                'Menus illimités',
+                'Accès aux menus spéciaux',
+                'Apparition dans l\'annuaire public',
+                'Designs personnalisés'
+            ],
+            cta: { label: 'Essayer Starter', variant: 'primary', href: path('app_register') }
+        },
+        {
+            title: 'Premium',
+            price: '19,90 € / mois',
+            meta: 'Pour diffuser partout',
+            badge: '<span class="c-badge c-badge--success">Complet</span>',
+            points: [
+                'Menus illimités',
+                'Partage direct Facebook & Instagram',
+                'QR Code en salle',
+                'Designs premium',
+                'Support prioritaire'
+            ],
+            cta: { label: 'Choisir Premium', variant: 'primary', href: path('app_register') }
+        }
+    ] %}
+
+{% set testimonials = [
+        {
+            quote: 'Avant, je passais 20 minutes à refaire mon post Facebook chaque matin. Aujourd\'hui, mon menu est prêt et publié en deux clics. C\'est devenu un réflexe.',
+            author: 'Julien, chef à Nîmes'
+        }
+    ] %}
+{# DEBUT SECTION HERO #}
+<section class="l-section l-hero" id="hero">
+	<div class="l-container l-stack" style="gap: 1.5rem;">
+		<span class="l-hero__eyebrow">Bistrot Moderne</span>
+		<h1 class="l-hero__title">L'ardoise qui attire aussi sur Internet</h1>
+		<p class="c-card__body">
+			Vos menus du jour et vos menus spéciaux méritent d'être vus, en salle et sur le web.
+																		                Avec Ardoise Magique, créez, partagez et diffusez vos menus en ligne aussi facilement
+																		                que vous écrivez sur votre ardoise.
+		</p>
+		<p class="c-card__body">
+			L'application Ardoise Magique prolonge la communication locale des restaurateurs dans le monde digital.
+																		                Elle ne remplace pas votre ardoise physique — elle la complète. En quelques clics, vos menus sont visibles
+																		                sur Internet, prêts à être partagés sur les réseaux sociaux, consultés sur smartphone ou affichés via QR Code.
+		</p>
+		<div class="l-hero__actions">
+			{% include 'components/_button.html.twig' with {
+                    label: 'Créer mon premier menu gratuitement',
+                    variant: 'primary',
+                    size: 'lg',
+                    href: path('app_register'),
+                    icon: 'fa-solid fa-pen-nib'
+                } %}
+			{% include 'components/_button.html.twig' with {
+                    label: 'Parler à un conseiller',
+                    variant: 'outline',
+                    size: 'lg',
+                    attributes: { 'data-modal-target': '#contact-modal' },
+                    icon: 'fa-regular fa-comments'
+                } %}
+		</div>
+	</div>
+</section>
+{# FIN SECTION HERO #}
+
+{# DEBUT SECTION POURQUOI CETTE APPLICATION#}
+<section class="l-section" id="prolongement">
+	<div class="l-container l-stack" style="gap: 1rem;">
+		<h2>Continuez d'attirer les clients, mais aussi ceux qui vous cherchent en ligne</h2>
+		<p class="c-card__body">
+			Votre ardoise attire les passants dans la rue. Ardoise Magique fait la même chose, mais pour ceux qui vous cherchent
+																		                sur Google, Facebook ou Instagram. Vos menus deviennent visibles sur Internet, lisibles sur mobile, et référencés dans
+																		                un annuaire local. Résultat : plus de visibilité, plus de clients, sans changer vos habitudes.
+		</p>
+		<div class="c-card__meta">Application simple pour restaurateurs, conçue pour augmenter la visibilité locale sans perdre l'authenticité de l'ardoise physique.</div>
+	</div>
+</section>
+{# DEBUT SECTION POURQUOI CETTE APPLICATION#}
+
+{# DEBUT SECTION COMMENT CA MARCHE #}
+<section class="l-section" id="creation">
+	<div class="l-container l-stack" style="gap: 1.5rem;">
+		<h2>Créez vos menus en quelques minutes, sans compétence technique</h2>
+		<p class="c-card__body">
+			Avec Ardoise Magique, tout est pensé pour aller vite. Saisissez vos plats, choisissez un design adapté à votre établissement,
+																		                et partagez votre menu du jour en ligne. L'interface est intuitive, accessible depuis une tablette, un ordinateur ou un smartphone.
+		</p>
+		<div class="l-stack" style="gap: 0.75rem;">
+			<div class="c-card c-card--outlined">
+				<div class="c-card__title">Comment ça marche</div>
+				<ul class="c-card__body">
+					<li>Vous saisissez vos entrées, plats, desserts et boissons.</li>
+					<li>Vous choisissez le design de présentation (moderne, traditionnel ou festif).</li>
+					<li>Vous publiez et partagez le lien de votre menu sur les réseaux ou par QR Code.</li>
+				</ul>
+			</div>
+			<div class="l-hero__actions">
+				{% include 'components/_button.html.twig' with {
+                        label: 'Tester gratuitement Ardoise Magique',
+                        variant: 'primary',
+                        size: 'lg',
+                        href: path('app_register'),
+                        icon: 'fa-solid fa-rocket'
+                    } %}
+			</div>
+		</div>
+	</div>
+</section>
+{# FIN SECTION COMMENT CA MARCHE #}
+
+{# DEBUT SECTION FONCTIONNALITEES #}
+<section class="l-section" id="fonctionnalites">
+	<div class="l-container l-stack" style="gap: 1.5rem;">
+		<h2>Des fonctionnalités conçues pour le quotidien des restaurateurs</h2>
+		<p class="c-card__body">
+			Ardoise Magique est née dans les cuisines. Chaque outil a été pensé pour faciliter la vie des restaurateurs qui veulent être visibles
+																		                sans perdre de temps.
+		</p>
+		<div class="l-grid" style="--grid-min: 260px;">
+			{% for feature in feature_cards %}
+				{% include 'components/_card.html.twig' with {
+                        title: feature.title,
+                        meta: feature.meta,
+                        body: feature.body
+                    } %}
+			{% endfor %}
+		</div>
+		<div class="l-stack">
+			<div class="c-card c-card--outlined">
+				<ul class="c-card__body">
+					<li>Créez et modifiez vos menus du jour à tout moment.</li>
+					<li>Créez vos menus spéciaux : Saint-Valentin, Noël, Fête des Mères, Nouvel An, etc.</li>
+					<li>Choisissez parmi plusieurs modèles de présentation.</li>
+					<li>Générez un lien public pour partager votre menu en ligne.</li>
+					<li>Téléchargez votre menu au format PDF.</li>
+					<li>Exportez votre menu en image JPG prête à publier.</li>
+					<li>Connectez Facebook ou Instagram pour publier automatiquement.</li>
+					<li>Créez une fiche de présentation pour votre restaurant.</li>
+					<li>Profitez d'un annuaire public où les internautes découvrent vos menus.</li>
+					<li>Proposez un QR Code en salle pour afficher votre menu virtuel.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+{# FIN SECTION FONCTIONNALITEES #}
+
+{# DEBUT SECTION PRESENTATION ANNUAIRE #}
+<section class="l-section" id="visibilite">
+	<div class="l-container l-stack" style="gap: 1.25rem;">
+		<h2>Faites connaître votre cuisine à tous ceux qui vous cherchent autour de vous</h2>
+		<p class="c-card__body">
+			Chaque menu publié avec Ardoise Magique est automatiquement ajouté à notre annuaire public. Les visiteurs peuvent rechercher les menus disponibles
+																		                par ville, département ou type de cuisine. Les restaurants actifs gagnent ainsi en visibilité locale et apparaissent naturellement dans les résultats Google.
+		</p>
+		<p class="c-card__body">
+			Grâce à cette visibilité digitale, Ardoise Magique devient un véritable levier de référencement local pour les restaurants.
+																		                Vos clients potentiels peuvent vous trouver en tapant : « menu du jour à Nîmes », « restaurant Fête des Mères à Montpellier »,
+																		                ou « menu spécial Saint-Valentin à Alès ».
+		</p>
+		<div class="l-hero__actions">
+			{% include 'components/_button.html.twig' with {
+                    label: 'Voir l\'annuaire public',
+                    variant: 'outline',
+                    href: '#',
+                    icon: 'fa-regular fa-map'
+                } %}
+            </div>
+        </div>
+</section>
+{# FIN SECTION PRESENTATION ANNUAIRE #}
+
+{# DEBUT SECTION PRESENTATION TARIF IMPORTANT DEPLACER CETTE SECTION DANS LA PAGE TARIFS #}
+<section class="l-section" id="tarifs">
+        <div class="l-container l-stack" style="gap: 1.5rem;">
+            <h2>Des formules simples, adaptées à votre rythme</h2>
+            <p class="c-card__body">
+                Commencez gratuitement, puis passez à la vitesse supérieure quand vous en ressentez le besoin. Aucune carte bancaire n'est demandée pour l'offre gratuite.
+            </p>
+            <div class="l-grid" style="--grid-min: 260px;">
+                {% for plan in plans %}
+                    {% set list %}
+                        <ul class="c-card__body">
+                            {% for point in plan.points %}
+                                <li>{{ point }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endset %}
+                    {% include 'components/_card.html.twig' with {
+                        title: plan.title ~ ' — ' ~ plan.price,
+                        meta: plan.meta,
+                        body: (plan.badge|raw ~ list)|raw,
+                        footer: include('components/_button.html.twig', {
+                            label: plan.cta.label,
+                            variant: plan.cta.variant,
+                            href: plan.cta.href,
+                            size: 'md'
+                        }, with_context=false)
+                    } %}
+                {% endfor %}
+            </div>
+        </div>
+</section>
+{# DEBUT SECTION PRESENTATION TARIF IMPORTANT DEPLACER CETTE SECTION DANS LA PAGE TARIFS #}
+
+{# DEBUT SECTION PRESENTATION VIDEO #}
+<section class="l-section" id="videos">
+        <div class="l-container l-stack" style="gap: 1rem;">
+            <h2>Découvrez Ardoise Magique en action</h2>
+            <p class="c-card__body">
+                Apprenez en quelques secondes comment tirer le meilleur parti de l'application. Nos tutoriels rapides vous montrent chaque cas d'usage réel,
+                depuis la création jusqu'au partage de votre menu.
+            </p>
+            <div class="l-grid" style="--grid-min: 240px;">
+                {% for video in [
+                    'Créer un menu du jour en moins d\'une minute',
+                    'Créer un menu spécial Fête des Mères',
+                    'Partager votre menu sur Facebook ou Instagram',
+                    'Afficher votre menu numérique via QR Code'
+                ] %}
+                    {% include 'components/_card.html.twig' with {
+                        title: video,
+                        meta: 'Tutoriel express',
+                        body: 'Découvrez en quelques étapes comment appliquer cette bonne pratique.',
+                        footer: include('components/_button.html.twig', {
+                            label: 'Voir la vidéo',
+                            variant: 'ghost',
+                            href: '#'
+                        }, with_context=false)
+                    } %}
+                {% endfor %}
+            </div>
+            <div class="l-hero__actions">
+                {% include 'components/_button.html.twig' with {
+                    label: 'Voir toutes les vidéos',
+                    variant: 'primary',
+                    href: '#',
+                    icon: 'fa-solid fa-play'
+                } %}
+            </div>
+        </div>
+</section>
+{# DEBUT SECTION PRESENTATION VIDEO #}
+
+{# DEBUT SECTION TEMOIGNAGES #}
+    <section class="l-section" id="temoignages">
+        <div class="l-container l-stack" style="gap: 1rem;">
+            <h2>Ils ont adopté Ardoise Magique</h2>
+            <p class="c-card__body">
+                De nombreux restaurateurs utilisent déjà Ardoise Magique pour simplifier leur communication. Ils gagnent du temps chaque jour,
+                tout en touchant plus de clients localement.
+            </p>
+            <div class="l-grid" style="--grid-min: 300px;">
+                {% for testimonial in testimonials %}
+                    {% include 'components/_card.html.twig' with {
+                        title: 'Témoignage',
+                        meta: testimonial.author,
+                        body: '« ' ~ testimonial.quote ~ ' »',
+                        highlight: true
+                    } %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{# FIN SECTION TEMOIGNAGES #}
+
+
+{# DEBUT SECTION HISTOIRE #}
+<section class="l-section" id="apropos">
+        <div class="l-container l-stack" style="gap: 1rem;">
+            <h2>Une application née dans les cuisines</h2>
+            <p class="c-card__body">
+                Ardoise Magique a été imaginée par un ancien chef de cuisine passionné de digital. Elle a été pensée pour permettre aux restaurateurs d'être présents en ligne
+                sans perdre de temps et sans dénaturer leur communication.
+            </p>
+            <p class="c-card__body">
+                Cette application fait partie de l'écosystème Digitalfy, une agence indépendante spécialisée dans la création d'outils web et mobiles pour les professionnels de la restauration.
+            </p>
+            <div class="l-hero__actions">
+                {% include 'components/_button.html.twig' with {
+                    label: 'Découvrir les services Digitalfy',
+                    variant: 'outline',
+                    href: '#',
+                    icon: 'fa-solid fa-mug-hot'
+                } %}
+		</div>
+	</div>
+</section>
+{# FIN SECTION HISTOIRE #}
+
+{# DEBUT SECTION FOOTER #}
+<section class="l-section" id="cta-final">
+	<div class="l-container l-stack" style="gap: 1rem; text-align: center;">
+		<h2>L'Ardoise Magique — Créez, partagez et diffusez vos menus en ligne</h2>
+		<div class="c-card__meta">Développé en France par Digitalfy — Hébergement européen — Conforme RGPD.</div>
+		<div class="l-hero__actions" style="justify-content: center;">
+			{% include 'components/_button.html.twig' with {
+                    label: 'Essayer gratuitement Ardoise Magique',
+                    variant: 'primary',
+                    size: 'lg',
+                    href: path('app_register')
+                } %}
+			{% include 'components/_button.html.twig' with {
+                    label: 'Nous contacter',
+                    variant: 'ghost',
+                    size: 'lg',
+                    attributes: { 'data-modal-target': '#contact-modal' }
+                } %}
+		</div>
+		<div class="l-cluster" style="justify-content: center; color: #6b4b36;">
+			<a href="#tarifs" class="c-navbar__link">Tarifs</a>
+			<a href="#videos" class="c-navbar__link">Tutoriels</a>
+			<a href="#blog" class="c-navbar__link">Blog</a>
+			<a href="#mentions" class="c-navbar__link">Mentions légales</a>
+			<a href="#contact" class="c-navbar__link" data-modal-target="#contact-modal">Contact</a>
+		</div>
+	</div>
+</section>
+{# DEBUT SECTION FOOTER #}
+{% include 'components/_modal.html.twig' with {
+        id: 'contact-modal',
+        title: 'Prendre contact',
+        body: '<p>Laissez-nous vos coordonnées et un membre de l\'équipe vous rappelle rapidement.</p><p>Email : contact@ardoise-magique.fr<br>Téléphone : 01 23 45 67 89</p>',
+        actions: [
+            { label: 'Fermer', variant: 'ghost', attributes: { 'data-modal-close': true } },
+            { label: 'Envoyer un message', variant: 'primary', attributes: { 'data-modal-close': true } }
+        ]
+    } %}
 {% endblock %}

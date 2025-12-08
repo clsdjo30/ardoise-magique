@@ -1,5 +1,5 @@
 import '../stimulus_bootstrap.js';
-import '../styles/app.css';
+import '../styles/admin/app.css';
 
 import initModal from './components/modal.js';
 import initDropdown from './components/dropdown.js';
