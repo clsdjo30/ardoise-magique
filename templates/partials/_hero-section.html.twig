@@ -1,45 +1,68 @@
 <!-- SECTION 1 — HERO -->
-{% block extra_styles %}
-<style>
-.hero__container {
-            background-color: var(--ivory);
-            color: var(--dark-brown);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            overflow-x: hidden;
-            /* Texture subtile papier/lin */
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4c4b7' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
-        }
-</style>
-{% endblock %}
-<section id="hero" class="">
-  <div class="container hero__container">
+<section id="hero" class="hero">
+  <div class="hero__container">
+    {# Left side - Content #}
     <div class="hero__content">
+      {# Tagline with diamonds #}
+      <div class="hero__tagline">
+        <p class="hero__tagline-text">Refresh Your Taste Buds</p>
+        <div class="hero__diamonds">
+          <span class="hero__diamond"></span>
+          <span class="hero__diamond"></span>
+          <span class="hero__diamond"></span>
+        </div>
+      </div>
+
+      {# Main title #}
       <h1 class="hero__title">
-        L’ardoise qui attire aussi sur Internet
+        Delicious Foods With<br>
+        Wonderful <span class="hero__title-highlight">Eating</span>
       </h1>
 
-      <p class="hero__subtitle">
-        Vos menus du jour et vos menus spéciaux méritent d’être vus —
-        en salle <span class="hero__subtitle--highlight">et sur le web</span>.
+      {# Description #}
+      <p class="hero__description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       </p>
 
-      <p class="hero__text">
-        Créez et partagez vos menus en ligne aussi facilement que vous écrivez sur votre ardoise.
-        Ardoise Magique prolonge votre communication locale dans le monde digital :
-        vos menus deviennent visibles, partageables et consultables partout.
-      </p>
-
+      {# Call to action buttons #}
       <div class="hero__cta-wrapper">
-        <a href="#section-tarifs" class="btn btn--primary hero__cta">
-          Créer mon menu
+        <a href="#menu" class="hero__cta hero__cta--primary">
+          Menu
+        </a>
+        <a href="#reservation" class="hero__cta hero__cta--secondary">
+          Book a table
         </a>
       </div>
     </div>
 
-    <!-- Optionnel : zone visuelle à droite (mockup, illus…) -->
+    {# Right side - Visual with circular image and decorative rings #}
     <div class="hero__visual">
-     <img src="{{ asset('images/landing/hero-ardoise.webp')}}" alt="Exemple de menu du jour affiché en ligne avec Ardoise Magique" class="hero__image" width="500" height="500" loading="eager">
+      <div class="hero__image-wrapper">
+        {# Decorative rings #}
+        <div class="hero__ring hero__ring--outer"></div>
+
+        {# Main image circle #}
+        <div class="hero__image-circle">
+          <img
+            src="{{ asset('images/landing/hero-ardoise.webp') }}"
+            alt="Delicious healthy food plate with salmon and vegetables"
+            width="550"
+            height="550"
+            loading="eager"
+          >
+        </div>
+
+        <div class="hero__ring hero__ring--inner"></div>
+      </div>
     </div>
   </div>
+
+  {# Background decorative elements #}
+  <svg class="hero__deco hero__deco--1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <path fill="currentColor" d="M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z"/>
+  </svg>
+
+  <svg class="hero__deco hero__deco--2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <path fill="currentColor" d="M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z"/>
+  </svg>
 </section>
