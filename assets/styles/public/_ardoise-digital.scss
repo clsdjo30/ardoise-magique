@@ -1,0 +1,198 @@
+@use './tokens.colors' as colors;
+@use './tokens.typography' as type;
+
+// Custom green color for the digital/category section
+$color-digital-green: #4caf50;
+$color-digital-green-light: #66bb6a;
+$color-digital-green-dark: #388e3c;
+
+.ardoise-digital {
+    padding: 4rem 0;
+    background-color: colors.$color-background;
+
+    &__container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    &__header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    &__title {
+        font-family: type.$font-family-heading;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: type.$font-weight-strong;
+        color: colors.$color-text;
+        margin-bottom: 1rem;
+        line-height: type.$line-height-heading;
+
+        .highlight {
+            color: $color-digital-green;
+        }
+    }
+
+    &__subtitle {
+        font-size: type.$font-size-lg;
+        color: colors.$color-muted;
+        font-style: italic;
+        position: relative;
+        display: inline-block;
+        padding: 0 2rem;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 50px;
+            height: 1px;
+            background-color: colors.$color-border;
+        }
+
+        &::before {
+            left: 0;
+        }
+
+        &::after {
+            right: 0;
+        }
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(5, 1fr);
+        }
+    }
+
+    &__card {
+        background-color: colors.$color-surface;
+        border: 2px solid $color-digital-green;
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba($color-digital-green, 0.15);
+            border-color: $color-digital-green-dark;
+        }
+
+        &:active {
+            transform: translateY(-2px);
+        }
+    }
+
+    &__icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $color-digital-green;
+        font-size: 2.5rem;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+    }
+
+    &__card-title {
+        font-family: type.$font-family-body;
+        font-size: type.$font-size-md;
+        font-weight: type.$font-weight-normal;
+        color: colors.$color-text;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    &__arrow {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: colors.$color-text;
+        transition: transform 0.3s ease;
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ardoise-digital__card:hover & {
+            transform: translateX(5px);
+        }
+    }
+
+    &__cta {
+        text-align: center;
+    }
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 2rem;
+        background-color: transparent;
+        color: $color-digital-green;
+        border: 2px solid $color-digital-green;
+        border-radius: 8px;
+        font-family: type.$font-family-body;
+        font-size: type.$font-size-md;
+        font-weight: type.$font-weight-strong;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: $color-digital-green;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba($color-digital-green, 0.2);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 767px) {
+    .ardoise-digital {
+        padding: 3rem 0;
+
+        &__grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        &__card {
+            padding: 1.5rem 1rem;
+        }
+
+        &__icon {
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+        }
+    }
+}
