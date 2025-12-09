@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initModal();
     initDropdown();
     initTabs();
+    initHero();
+
 
     // Expose a simple toast helper for ad-hoc notifications in templates.
     window.showToast = createToast();
@@ -19,6 +21,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize section prolongement animations
     new SectionProlongement();
 
-    // Initialize hero section animations
-    initHero();
 });

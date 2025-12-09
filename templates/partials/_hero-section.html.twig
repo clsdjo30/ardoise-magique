@@ -1,68 +1,76 @@
 <!-- SECTION 1 — HERO -->
 <section id="hero" class="hero">
-  <div class="hero__container">
-    {# Left side - Content #}
-    <div class="hero__content">
-      {# Tagline with diamonds #}
-      <div class="hero__tagline">
-        <p class="hero__tagline-text">Refresh Your Taste Buds</p>
-        <div class="hero__diamonds">
-          <span class="hero__diamond"></span>
-          <span class="hero__diamond"></span>
-          <span class="hero__diamond"></span>
-        </div>
-      </div>
+	<div
+		class="hero__container">
+		{# Left side - Content #}
+		<div
+			class="hero__content">
+			{# Tagline with diamonds #}
+			<div class="hero__tagline">
+				<p class="hero__tagline-text">
+					Tous vos menus méritent d’être vus en salle et sur le web.
+				</p>
+				<div class="hero__diamonds">
+					<span class="hero__diamond"></span>
+					<span class="hero__diamond"></span>
+					<span class="hero__diamond"></span>
+				</div>
+			</div>
 
-      {# Main title #}
-      <h1 class="hero__title">
-        Delicious Foods With<br>
-        Wonderful <span class="hero__title-highlight">Eating</span>
-      </h1>
+			{# Main title #}
+			<h1 class="hero__title">
+				L'Ardoise qui attire
+				<br>
+				aussi sur
+				<span class="hero__title-highlight">Internet</span>
+			</h1>
 
-      {# Description #}
-      <p class="hero__description">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
+			{# Description #}
+			<p class="hero__description">
+				Créez et partagez vos menus en ligne aussi facilement que vous écrivez sur votre ardoise.
+			</p>
+			<p class="hero__description">
+				Ardoise Magique prolonge votre communication locale dans le monde digital : vos menus deviennent visibles, partageables et consultables partout.
+			</p>
 
-      {# Call to action buttons #}
-      <div class="hero__cta-wrapper">
-        <a href="#menu" class="hero__cta hero__cta--primary">
-          Menu
-        </a>
-        <a href="#reservation" class="hero__cta hero__cta--secondary">
-          Book a table
-        </a>
-      </div>
-    </div>
+			{# Call to action buttons #}
+			<div
+				class="hero__cta-wrapper">
+				{# <a href="#menu" class="hero__cta hero__cta--primary">
+				          Créer mon menu
+				        </a> #}
+				<a href="#reservation" class="hero__cta hero__cta--secondary">
+					Créer mon menu
+				</a>
+			</div>
+		</div>
 
-    {# Right side - Visual with circular image and decorative rings #}
-    <div class="hero__visual">
-      <div class="hero__image-wrapper">
-        {# Decorative rings #}
-        <div class="hero__ring hero__ring--outer"></div>
+		{# Right side - Visual with circular image and decorative rings #}
+		<div class="hero__visual">
+			<div
+				class="hero__image-wrapper">
+				{# Decorative rings #}
+				<div class="hero__ring hero__ring--outer"></div>
 
-        {# Main image circle #}
-        <div class="hero__image-circle">
-          <img
-            src="{{ asset('images/landing/hero-ardoise.webp') }}"
-            alt="Delicious healthy food plate with salmon and vegetables"
-            width="550"
-            height="550"
-            loading="eager"
-          >
-        </div>
+				{# Main image circle #}
+				<div class="hero__image-circle">
+					<img src="{{ asset('images/landing/hero-menu-du-jour.webp') }}" alt="Delicious healthy food plate with salmon and vegetables" width="550" height="680" loading="eager">
+				</div>
 
-        <div class="hero__ring hero__ring--inner"></div>
-      </div>
-    </div>
-  </div>
+				<div class="hero__ring hero__ring--inner"></div>
+			</div>
+		</div>
+	</div>
 
-  {# Background decorative elements #}
-  <svg class="hero__deco hero__deco--1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+	{# Background decorative elements #}
+	<img
+	src="{{asset('images/landing/deco/fast-food.svg')}}" class="hero__deco hero__deco--1" alt="Icône de fast-food"/>
+	{# <svg class="hero__deco hero__deco--1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+	    <path fill="currentColor" d="M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z"/>
+	  </svg> #}
+	<img
+	src="{{asset('images/landing/deco/meatloaf.svg')}}" class="hero__deco hero__deco--2" alt="Icône de fast-food"/>
+{# <svg class="hero__deco hero__deco--2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
     <path fill="currentColor" d="M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z"/>
-  </svg>
-
-  <svg class="hero__deco hero__deco--2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-    <path fill="currentColor" d="M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z"/>
-  </svg>
+  </svg> #}
 </section>
