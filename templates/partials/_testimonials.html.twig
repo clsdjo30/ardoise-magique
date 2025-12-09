@@ -1,0 +1,48 @@
+{% set testimonials = [
+        {
+            quote: 'Avant, je passais 20 minutes à refaire mon post Facebook chaque matin. Aujourd’hui, mon menu est prêt et publié en deux clics. C’est devenu un réflexe.',
+            author: 'Julien',
+            role: 'Chef de cuisne à Nimes'
+        },
+        {
+            quote: 'Ardoise Magique nous permet de mettre à jour le menu du jour sans appeler notre graphiste ou toucher au site. Les clients retrouvent notre cuisine en ligne aussi facilement qu’en vitrine.',
+            author: 'Mathilde',
+            role: 'gérante de bistro à Montpellier'
+        },
+        {
+            quote: 'On a gagné en visibilité locale. Beaucoup de nouveaux clients nous disent qu’ils ont trouvé notre menu du jour en ligne avant de réserver.',
+            author: 'Laurent',
+            role: 'restaurant de cuisine du marché à Alès'
+        }
+    ] %}
+
+<section id="section-temoignages" class="section section--testimonials">
+	<div class="container section__container">
+		<header class="section__header">
+			<h2 class="section__title">
+				Ils ont adopté Ardoise Magique
+			</h2>
+			<p class="section__subtitle">
+				Des restaurateurs qui gagnent du temps chaque jour tout en touchant plus de clients localement.
+			</p>
+		</header>
+
+		<div class="testimonials__grid">
+			{% for testimonial in testimonials %}
+				<article class="testimonial">
+					<div class="testimonial__content">
+						<p class="testimonial__text">
+							{{ testimonial.quote}}
+						</p>
+					</div>
+					<footer class="testimonial__footer">
+						<p class="testimonial__author">
+							<span class="testimonial__name">{{ testimonial.author }}</span>,
+							<span class="testimonial__role">{{ testimonial.role }}</span>
+						</p>
+					</footer>
+				</article>
+			{% endfor %}
+		</div>
+	</div>
+</section>

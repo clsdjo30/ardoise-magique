@@ -52,11 +52,14 @@
         actions: nav_actions
     } %}
 
-    <main class="l-container" style="padding-block: 2rem;">
+    <main>
         {% block body %}{% endblock %}
     </main>
 
     <footer class="l-section" style="text-align: center;">
+        {% block footer %}
+
+         {% endblock %}
         <div class="l-container">
             <p class="c-card__meta">&copy; {{ "now"|date("Y") }} L'Ardoise Magique - Tous droits réservés</p>
         </div>

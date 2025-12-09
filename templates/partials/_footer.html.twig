@@ -1,0 +1,54 @@
+<!-- SECTION 10 — FOOTER -->
+<footer id="footer" class="footer">
+  <div class="container footer__container">
+    <!-- Logo + Description -->
+    <div class="footer__brand">
+      <a href="/" class="footer__logo">
+        <!-- <img src="/assets/images/logo-ardoise-magique.svg" alt="Logo Ardoise Magique"> -->
+        <span class="footer__logo-text">Ardoise Magique</span>
+      </a>
+      <p class="footer__tagline">
+        Créez, partagez et diffusez vos menus du jour et menus spéciaux en ligne.<br>
+        Une solution simple, pensée par et pour les restaurateurs.
+      </p>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="footer__nav" aria-label="Navigation principale du site">
+      <ul class="footer__links">
+        <li><a href="/tarifs" class="footer__link">Tarifs</a></li>
+        <li><a href="/tutoriels" class="footer__link">Tutoriels</a></li>
+        <li><a href="/blog" class="footer__link">Blog</a></li>
+        <li><a href="/contact" class="footer__link">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Liens légaux -->
+    <nav class="footer__legal" aria-label="Liens légaux et conditions">
+      <ul class="footer__links">
+        <li><a href="/mentions-legales" class="footer__link">Mentions légales</a></li>
+        <li><a href="/cgu" class="footer__link">CGU</a></li>
+        <li><a href="/cgv" class="footer__link">CGV</a></li>
+        <li><a href="/politique-confidentialite" class="footer__link">Politique de confidentialité</a></li>
+        <li><a href="/cookies" class="footer__link">Gestion des cookies</a></li>
+      </ul>
+    </nav>
+
+    <!-- Informations complémentaires -->
+    <div class="footer__info">
+      <p>
+        Développé en France par
+        <a href="https://digitalfy.fr" target="_blank" rel="noopener" class="footer__link">Digitalfy</a><br>
+        Hébergement européen — Conforme RGPD
+      </p>
+      <p class="footer__copyright">
+        © <span id="year"></span> Ardoise Magique. Tous droits réservés.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mise à jour automatique de l'année dans le footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
