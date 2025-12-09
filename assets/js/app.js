@@ -1,10 +1,11 @@
 import '../stimulus_bootstrap.js';
-import '../styles/admin/app.css';
+import '../styles/public/app.scss';
 
 import initModal from './components/modal.js';
 import initDropdown from './components/dropdown.js';
 import initTabs from './components/tabs.js';
 import createToast from './components/toast.js';
+import SectionProlongement from './components/section-prolongement.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initModal();
@@ -13,4 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Expose a simple toast helper for ad-hoc notifications in templates.
     window.showToast = createToast();
+
+    // Initialize section prolongement animations
+    new SectionProlongement();
 });

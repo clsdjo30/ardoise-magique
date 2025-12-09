@@ -1,0 +1,294 @@
+@use '../tokens.colors' as colors;
+@use '../tokens.typography' as type;
+
+// Section Prolongement - "Pourquoi cette application"
+// Style: Bistrot Moderne avec ambiance chaleureuse et raffinée
+// Mobile-first avec breakpoints à 768px et 1024px
+
+.l-section--prolongement {
+    position: relative;
+    background: linear-gradient(135deg, colors.$color-background 0%, colors.$color-surface 100%);
+    overflow: hidden;
+
+    // Effet texture papier/lin subtil
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 20% 50%, rgba(colors.$color-primary, 0.03) 0%, transparent 50%),
+            radial-gradient(circle at 80% 50%, rgba(colors.$color-accent, 0.04) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .l-container {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.c-prolongement {
+    // Mobile-first: disposition verticale
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+        gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+        gap: 2.5rem;
+    }
+}
+
+.c-prolongement__header {
+    text-align: center;
+    max-width: 800px;
+    margin-inline: auto;
+
+    @media (min-width: 768px) {
+        text-align: left;
+    }
+}
+
+.c-prolongement__title {
+    font-family: type.$font-family-heading;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: type.$font-weight-heading;
+    line-height: type.$line-height-heading;
+    letter-spacing: type.$letter-spacing-tight;
+    color: colors.$color-text;
+    margin: 0 0 1rem 0;
+
+    // Effet dégradé subtil sur le texte
+    background: linear-gradient(135deg, colors.$color-text 0%, colors.$color-muted 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    @media (min-width: 768px) {
+        margin-bottom: 1.25rem;
+    }
+}
+
+.c-prolongement__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    @media (min-width: 768px) {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+}
+
+.c-prolongement__main {
+    // Carte principale avec effet relief
+    background: colors.$color-surface;
+    border: 1px solid colors.$color-border;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow:
+        colors.$shadow-ambient,
+        inset 0 1px 0 rgba(white, 0.5);
+    position: relative;
+    overflow: hidden;
+
+    // Effet brillance cuivre en haut
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            colors.$color-primary 20%,
+            colors.$color-primary-soft 50%,
+            colors.$color-primary 80%,
+            transparent 100%
+        );
+        opacity: 0.6;
+    }
+
+    @media (min-width: 768px) {
+        padding: 2rem;
+        border-radius: 18px;
+    }
+
+    @media (min-width: 1024px) {
+        padding: 2.5rem;
+    }
+}
+
+.c-prolongement__text {
+    font-family: type.$font-family-body;
+    font-size: type.$font-size-lg;
+    line-height: type.$line-height-body;
+    color: colors.$color-text;
+    margin: 0;
+
+    // Effet de lettrine moderne sur le premier mot (optionnel)
+    &::first-letter {
+        font-size: 1.5em;
+        font-weight: type.$font-weight-strong;
+        color: colors.$color-primary;
+        float: left;
+        margin-right: 0.1em;
+        line-height: 0.9;
+    }
+
+    @media (min-width: 768px) {
+        font-size: type.$font-size-xl;
+    }
+}
+
+.c-prolongement__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.c-prolongement__badge {
+    background: linear-gradient(135deg, colors.$color-primary 0%, colors.$color-primary-soft 100%);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    border-radius: 14px;
+    box-shadow:
+        colors.$shadow-soft,
+        inset 0 1px 0 rgba(white, 0.3);
+    position: relative;
+    overflow: hidden;
+
+    // Effet brillance
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(white, 0.15) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    @media (min-width: 768px) {
+        padding: 1.5rem 1.75rem;
+    }
+}
+
+.c-prolongement__badge-label {
+    font-family: type.$font-family-body;
+    font-size: type.$font-size-sm;
+    font-weight: type.$font-weight-strong;
+    line-height: type.$line-height-body;
+    margin: 0;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    @media (min-width: 1024px) {
+        text-align: left;
+    }
+}
+
+.c-prolongement__illustration {
+    background: colors.$color-surface;
+    border: 2px dashed colors.$color-border;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    position: relative;
+
+    // Effet ardoise
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 1.5rem,
+            colors.$color-border 1.5rem,
+            colors.$color-border calc(1.5rem + 1px)
+        );
+
+    @media (min-width: 768px) {
+        min-height: 150px;
+    }
+
+    @media (min-width: 1024px) {
+        min-height: 180px;
+    }
+}
+
+.c-prolongement__illustration-icon {
+    font-size: 3rem;
+    color: colors.$color-accent;
+    opacity: 0.4;
+
+    @media (min-width: 768px) {
+        font-size: 4rem;
+    }
+}
+
+// Animation au scroll (optionnel, nécessite JS)
+.c-prolongement--animate {
+    .c-prolongement__main {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .c-prolongement__badge {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
+    }
+
+    &.is-visible {
+        .c-prolongement__main,
+        .c-prolongement__badge {
+            opacity: 1;
+            transform: translate(0);
+        }
+    }
+}
+
+// États interactifs
+.c-prolongement__main {
+    transition:
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+
+    @media (hover: hover) {
+        &:hover {
+            box-shadow:
+                colors.$shadow-soft,
+                inset 0 1px 0 rgba(white, 0.5);
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.c-prolongement__badge {
+    transition:
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+
+    @media (hover: hover) {
+        &:hover {
+            box-shadow:
+                0 16px 48px rgba(colors.$color-primary, 0.3),
+                inset 0 1px 0 rgba(white, 0.3);
+            transform: translateY(-2px);
+        }
+    }
+}

@@ -1,7 +1,6 @@
 symfonycasts_sass:
     root_sass:
         - 'assets/styles/public/app.scss'
-        - 'assets/styles/admin/admin.scss'
-    sass_options:
-        load_path:
-            - '%kernel.project_dir%/assets/vendor/bootstrap/scss'
+    # sass_options:
+    #     load_path:
+    #         - '%kernel.project_dir%/assets/vendor/bootstrap/scss'
