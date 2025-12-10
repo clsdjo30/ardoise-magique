@@ -1,5 +1,6 @@
 @use './tokens.colors' as colors;
 @use './tokens.typography' as type;
+@use './tokens.spacing' as spacing;
 
 // Hero section styles
 .hero {
@@ -7,40 +8,31 @@
     min-height: 100vh;
     display: flex;
     align-items: center;
-    background-color: colors.$color-background;
+    background: linear-gradient(135deg, colors.$color-background 0%, colors.$color-texture-paper 50%, colors.$color-surface 100%);
     overflow: hidden;
 
-    // Background decorative elements
-    &::before,
-    &::after {
+    // Subtle texture overlay for paper/linen effect
+    &::before {
         content: '';
         position: absolute;
-        opacity: 0.08;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        opacity: 0.5;
         pointer-events: none;
         z-index: 0;
     }
 
-    // Left decoration
-    &::before {
-        top: 10%;
-        left: -5%;
-        width: 300px;
-        height: 300px;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%236b4b36' d='M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z'/%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-    }
-
-    // Right decoration
+    // Decorative accent gradient overlay
     &::after {
-        bottom: 10%;
-        right: -5%;
-        width: 250px;
-        height: 250px;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cpath fill='%236b4b36' d='M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z'/%3E%3C/svg%3E");
-        background-size: contain;
-        background-repeat: no-repeat;
-        transform: rotate(45deg);
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        background: radial-gradient(ellipse at top right, rgba(colors.$color-primary-soft, 0.08) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
     }
 }
 
@@ -49,24 +41,24 @@
     z-index: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: spacing.$spacing-4xl;
     align-items: center;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: spacing.$spacing-4xl spacing.$spacing-xl;
 
     @media (max-width: 968px) {
         grid-template-columns: 1fr;
-        gap: 3rem;
-        padding: 3rem 1.5rem;
+        gap: spacing.$spacing-3xl;
+        padding: spacing.$spacing-3xl spacing.$spacing-lg;
     }
 }
 
 .hero__content {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding-right: 2rem;
+    gap: spacing.$spacing-lg;
+    padding-right: spacing.$spacing-xl;
 
     @media (max-width: 968px) {
         padding-right: 0;
@@ -78,7 +70,7 @@
 .hero__tagline {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: spacing.$spacing-sm;
 }
 
 .hero__tagline-text {
@@ -86,14 +78,14 @@
     font-size: type.$font-size-sm;
     font-weight: type.$font-weight-strong;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: colors.$color-info;
+    letter-spacing: type.$letter-spacing-wider;
+    color: colors.$color-muted;
     margin: 0;
 }
 
 .hero__diamonds {
     display: flex;
-    gap: 0.5rem;
+    gap: spacing.$spacing-xs;
 
     @media (max-width: 968px) {
         justify-content: center;
@@ -101,10 +93,11 @@
 }
 
 .hero__diamond {
-    width: 12px;
-    height: 12px;
-    background-color: colors.$color-primary;
+    width: 10px;
+    height: 10px;
+    background: colors.$gradient-button-primary;
     transform: rotate(45deg);
+    box-shadow: 0 2px 8px rgba(colors.$color-primary, 0.3);
     animation: diamondPulse 2s ease-in-out infinite;
 
     &:nth-child(2) {
@@ -142,9 +135,13 @@
 }
 
 .hero__title-highlight {
-    color: colors.$color-info;
+    color: colors.$color-primary;
     display: inline-block;
     position: relative;
+    background: linear-gradient(135deg, colors.$color-primary 0%, colors.$color-primary-soft 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 
     &::after {
         content: '';
@@ -152,9 +149,10 @@
         bottom: 0.1em;
         left: 0;
         width: 100%;
-        height: 0.08em;
-        background-color: colors.$color-info;
-        opacity: 0.3;
+        height: 0.12em;
+        background: colors.$gradient-button-primary;
+        opacity: 0.4;
+        border-radius: 2px;
     }
 }
 
@@ -173,8 +171,8 @@
 
 .hero__cta-wrapper {
     display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: spacing.$spacing-md;
+    margin-top: spacing.$spacing-lg;
 
     @media (max-width: 968px) {
         flex-direction: column;
@@ -187,44 +185,49 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 2rem;
-    border-radius: 999px;
+    padding: spacing.$spacing-md spacing.$spacing-2xl;
+    border-radius: spacing.$radius-button;
     font-family: type.$font-family-body;
     font-size: type.$font-size-md;
     font-weight: type.$font-weight-strong;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: none;
+    border: 2px solid transparent;
     outline: none;
+    box-shadow: colors.$shadow-ambient;
 
     &--primary {
-        background-color: colors.$color-text;
-        color: colors.$color-surface;
+        background: colors.$gradient-button-primary;
+        color: colors.$color-text;
+        border-color: colors.$color-primary-soft;
 
         &:hover {
-            background-color: lighten(colors.$color-text, 10%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(colors.$color-text, 0.3);
+            box-shadow: colors.$shadow-soft;
+            border-color: colors.$color-primary;
         }
 
         &:active {
             transform: translateY(0);
+            box-shadow: colors.$shadow-ambient;
         }
     }
 
     &--secondary {
-        background-color: colors.$color-primary;
-        color: colors.$color-surface;
+        background: colors.$gradient-button-primary;
+        color: colors.$color-text;
+        border-color: colors.$color-primary;
 
         &:hover {
-            background-color: colors.$color-primary-strong;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(colors.$color-primary, 0.4);
+            box-shadow: colors.$shadow-soft;
+            border-color: colors.$color-primary-strong;
         }
 
         &:active {
             transform: translateY(0);
+            box-shadow: colors.$shadow-ambient;
         }
     }
 }
@@ -236,7 +239,7 @@
     justify-content: center;
 
     @media (max-width: 968px) {
-        margin-top: 2rem;
+        margin-top: spacing.$spacing-2xl;
     }
 }
 
@@ -254,10 +257,12 @@
     position: relative;
     width: 100%;
     height: 120%;
-    border-radius: 10%;
+    border-radius: spacing.$radius-xl;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(colors.$color-text, 0.15);
+    box-shadow: colors.$shadow-elevated,
+                0 0 0 1px rgba(colors.$color-border-strong, 0.3);
     z-index: 2;
+    border: 3px solid colors.$color-surface;
 
     img {
         width: 100%;
@@ -269,9 +274,10 @@
 
 .hero__ring {
     position: absolute;
-    border-radius: 10%;
-    border: 3px solid colors.$color-primary;
-    opacity: 0.6;
+    border-radius: spacing.$radius-xl;
+    border: 2px solid colors.$color-primary-soft;
+    opacity: 0.5;
+    box-shadow: 0 4px 12px rgba(colors.$color-primary, 0.2);
 
     &--outer {
         top: 50%;
@@ -292,6 +298,7 @@
         animation: ringFloat 6s ease-in-out infinite reverse;
         animation-delay: 0.5s;
         z-index: 3;
+        border-color: colors.$color-primary;
     }
 }
 
@@ -306,12 +313,14 @@
     }
 }
 
-// Background decorative vegetables/herbs
+// Background decorative food icons
 .hero__deco {
     position: absolute;
     pointer-events: none;
-    opacity: 0.1;
+    opacity: 0.06;
     z-index: 0;
+    color: colors.$color-primary;
+    filter: drop-shadow(0 4px 8px rgba(colors.$color-primary, 0.1));
 
     &--1 {
         top: 5%;
@@ -319,6 +328,7 @@
         width: 250px;
         height: 250px;
         transform: rotate(-15deg);
+        animation: float 8s ease-in-out infinite;
     }
 
     &--2 {
@@ -327,6 +337,8 @@
         width: 300px;
         height: 300px;
         transform: rotate(-25deg);
+        animation: float 10s ease-in-out infinite;
+        animation-delay: 1s;
     }
 
     &--3 {
@@ -335,5 +347,16 @@
         width: 120px;
         height: 120px;
         transform: rotate(45deg);
+        animation: float 6s ease-in-out infinite;
+        animation-delay: 0.5s;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(var(--rotate, 0deg));
+    }
+    50% {
+        transform: translateY(-20px) rotate(var(--rotate, 0deg));
     }
 }
