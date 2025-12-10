@@ -1,5 +1,6 @@
 @use './tokens.colors' as colors;
 @use './tokens.typography' as type;
+@use './tokens.spacing' as spacing;
 @use './base';
 @use './layout';
 
@@ -12,5 +13,9 @@
 @use './components/section-prolongement';
 @use './components/marquee';
 @use './hero';
+@use './ardoise-digital';
 @use './fonctionnalite';
 @use './how-it-works';
+@use './sections';
+@use './registration';
+@use './onboarding';

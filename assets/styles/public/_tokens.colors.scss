@@ -11,6 +11,7 @@ $color-border-strong: #b89f8e;
 $color-accent: #9b8b6e;
 $color-success: #4a7a4a; // chosen to stay in a natural/culinary palette
 $color-warning: #b2853f;
+$color-error: #f52702;
 $color-info: #6c7c90;
 $color-digital-green: #4caf50;
 $color-digital-green-light: #66bb6a;
@@ -37,6 +38,12 @@ $color-texture-paper: #faf7f4;
 $color-texture-linen: #f5f0eb;
 $color-divider-soft: rgba($color-border, 0.5);
 $color-divider-strong: rgba($color-border-strong, 0.8);
+
+// Brown tones for contrast sections
+$color-brown-light: #e8dfd6;
+$color-brown-medium: #d4c4b7;
+$color-brown-dark: #c4b5a7;
+$gradient-brown: linear-gradient(135deg, $color-brown-light 0%, $color-brown-medium 100%);
 
 // Additional shadows for depth
 $shadow-elevated: 0 16px 48px rgba($color-text, 0.15);

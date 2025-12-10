@@ -1,10 +1,28 @@
 @use './tokens.colors' as colors;
 @use './tokens.typography' as type;
+@use './tokens.spacing' as spacing;
 
-// How it Works Section - Inspired by the provided design
+// How it Works Section - Bistrot Moderne
 .creation__steps {
-  margin-top: 3rem;
-  margin-bottom: 2rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: spacing.$spacing-4xl spacing.$container-padding-x;
+  background: colors.$gradient-brown;
+  position: relative;
+
+  // Pattern overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23b89f8e' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: spacing.$spacing-3xl spacing.$container-padding-x-mobile;
+  }
 }
 
 .creation__title {
@@ -13,9 +31,22 @@
   font-weight: type.$font-weight-heading;
   text-align: center;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: type.$letter-spacing-wider;
   color: colors.$color-text;
-  margin-bottom: 4rem;
+  margin-bottom: spacing.$spacing-4xl;
+  position: relative;
+  z-index: 1;
+
+  // Décoratif - ligne sous le titre
+  &::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: colors.$gradient-button-primary;
+    margin: spacing.$spacing-md auto 0;
+    border-radius: spacing.$radius-sm;
+  }
 }
 
 .creation__list {
@@ -25,38 +56,36 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 2rem;
+  gap: spacing.$spacing-2xl;
   position: relative;
+  z-index: 1;
 
-  // Wavy connector line between steps
+  // Elegant connector line between steps - Bistrot style
   &::before {
     content: '';
     position: absolute;
     top: 80px;
     left: 15%;
     right: 15%;
-    height: 4px;
+    height: 2px;
     background: linear-gradient(90deg,
-      #7B9CC5 0%,
-      #8891C0 33%,
-      #9585BA 66%,
-      #5E4E9E 100%
+      transparent 0%,
+      colors.$color-primary-soft 10%,
+      colors.$color-primary 50%,
+      colors.$color-primary-soft 90%,
+      transparent 100%
     );
     z-index: 0;
-
-    // Create wavy effect using mask or clip-path
-    mask-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 2 Q 25 0, 50 2 T 100 2' stroke='black' stroke-width='4' fill='none' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
-    mask-size: 100% 100%;
-    mask-repeat: no-repeat;
+    opacity: 0.4;
   }
 
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
+    gap: spacing.$spacing-3xl;
 
     &::before {
-      display: none; // Hide connector on mobile
+      display: none;
     }
   }
 }
@@ -82,53 +111,47 @@
   font-family: type.$font-family-heading;
   font-size: type.$font-size-3xl;
   font-weight: 700;
-  color: #4a5578;
-  margin-bottom: 2rem;
+  color: colors.$color-text;
+  margin-bottom: spacing.$spacing-xl;
   position: relative;
+  background: colors.$gradient-button-primary;
+  border: 3px solid colors.$color-surface;
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.12),
-    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    colors.$shadow-card,
+    inset 0 2px 4px rgba(colors.$color-surface, 0.5);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-  // Double circle effect
+  // Outer ring with copper glow
   &::before {
     content: '';
     position: absolute;
-    inset: -8px;
+    inset: -12px;
     border-radius: 50%;
-    background: inherit;
+    border: 2px solid colors.$color-primary-soft;
     opacity: 0.3;
     z-index: -1;
   }
 
-  // Inner white circle
+  // Inner circle background
   &::after {
     content: '';
     position: absolute;
-    inset: 12px;
+    inset: 10px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #f5f7fb 0%, #ffffff 100%);
+    background: linear-gradient(135deg, colors.$color-surface 0%, colors.$color-texture-paper 100%);
     z-index: -1;
-  }
-
-  // Gradient backgrounds for each step
-  .creation__item:nth-child(1) & {
-    background: linear-gradient(135deg, #7B9CC5 0%, #8FA8CC 100%);
-  }
-
-  .creation__item:nth-child(2) & {
-    background: linear-gradient(135deg, #8891C0 0%, #9D99C4 100%);
-  }
-
-  .creation__item:nth-child(3) & {
-    background: linear-gradient(135deg, #9585BA 0%, #7968A6 100%);
   }
 
   &:hover {
     transform: translateY(-4px) scale(1.05);
     box-shadow:
-      0 12px 32px rgba(0, 0, 0, 0.18),
-      inset 0 2px 4px rgba(255, 255, 255, 0.4);
+      colors.$shadow-hover,
+      inset 0 2px 4px rgba(colors.$color-surface, 0.6);
+
+    &::before {
+      opacity: 0.5;
+      inset: -16px;
+    }
   }
 
   @media (max-width: 768px) {
@@ -141,7 +164,7 @@
 .creation__step-content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: spacing.$spacing-sm;
 }
 
 .creation__step-title {
@@ -168,8 +191,120 @@
 
 // Additional styling for the parent section if needed
 .section--creation {
+  background: colors.$color-background;
+  padding: 0;
+
   .section__container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
+    display: block;
+    padding: 0;
+  }
+
+  // Block d'introduction avec pattern de fond
+  .section__container--split {
+    display: block;
+  }
+
+  .section__content {
+    position: relative;
+    padding: spacing.$section-padding-y spacing.$container-padding-x;
+    text-align: center;
+    z-index: 1;
+
+    @media (max-width: 768px) {
+      padding: spacing.$section-padding-y-mobile spacing.$container-padding-x-mobile;
+    }
+
+    // Background pleine largeur avec pattern
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4c4b7' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+      background-color: colors.$color-surface;
+      z-index: -1;
+    }
+
+    .section__header {
+      position: relative;
+      margin-bottom: spacing.$spacing-2xl;
+      text-align: center;
+    }
+
+    .section__title {
+      position: relative;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section__text {
+      position: relative;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+  }
+
+  // Hide visual since we're using full width intro
+  .section__visual {
+    display: none;
+  }
+
+  .section__cta-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: spacing.$spacing-3xl spacing.$container-padding-x;
+    background: colors.$gradient-brown;
+    margin: 0;
+    position: relative;
+
+    // Pattern overlay
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23b89f8e' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      padding: spacing.$spacing-2xl spacing.$container-padding-x-mobile;
+    }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: spacing.$spacing-md spacing.$spacing-2xl;
+    border-radius: spacing.$radius-button;
+    font-family: type.$font-family-body;
+    font-size: type.$font-size-md;
+    font-weight: type.$font-weight-strong;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    z-index: 1;
+
+    &--primary {
+      background: colors.$gradient-button-primary;
+      color: colors.$color-text;
+      border-color: colors.$color-primary;
+      box-shadow: colors.$shadow-ambient;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: colors.$shadow-soft;
+        border-color: colors.$color-primary-strong;
+      }
+    }
   }
 }

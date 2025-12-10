@@ -101,7 +101,8 @@
 
 // Container utility
 .container {
-    width: min(1200px, 100% - 2rem);
+    width: 100%;
+    max-width: 1400px;
     margin-inline: auto;
     padding-inline: spacing.$container-padding-x;
 
@@ -112,8 +113,10 @@
 
 // Common section utilities
 .section__container {
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0;
 }
 
 .section__header {

@@ -5,11 +5,18 @@
 // Hero section styles
 .hero {
     position: relative;
+    width: 100%;
+    max-width: 100vw;
     min-height: 100vh;
     display: flex;
     align-items: center;
     background: linear-gradient(135deg, colors.$color-background 0%, colors.$color-texture-paper 50%, colors.$color-surface 100%);
     overflow: hidden;
+
+    @media (max-width: 768px) {
+        min-height: auto;
+        padding: spacing.$spacing-3xl 0;
+    }
 
     // Subtle texture overlay for paper/linen effect
     &::before {
@@ -43,6 +50,7 @@
     grid-template-columns: 1fr 1fr;
     gap: spacing.$spacing-4xl;
     align-items: center;
+    width: 100%;
     max-width: 1400px;
     margin: 0 auto;
     padding: spacing.$spacing-4xl spacing.$spacing-xl;
@@ -51,6 +59,11 @@
         grid-template-columns: 1fr;
         gap: spacing.$spacing-3xl;
         padding: spacing.$spacing-3xl spacing.$spacing-lg;
+    }
+
+    @media (max-width: 768px) {
+        padding: spacing.$spacing-2xl spacing.$spacing-md;
+        gap: spacing.$spacing-2xl;
     }
 }
 

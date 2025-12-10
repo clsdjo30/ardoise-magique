@@ -9,6 +9,8 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 body {
@@ -19,6 +21,7 @@ body {
     color: colors.$color-text;
     background-color: colors.$color-background;
     overflow-x: hidden;
+    max-width: 100vw;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
 }
@@ -89,6 +92,30 @@ hr {
     border: 0;
     border-bottom: 1px solid colors.$color-border;
     margin: 2rem 0;
+}
+
+// Section spacing and separation
+section {
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+// Add spacing between major sections
+.hero + .marquee-container,
+.marquee-container + .l-section,
+.l-section + .section,
+.section + .section,
+.fonctionnalite + .section {
+    margin-top: 0;
+}
+
+// Ensure visual distinction between sections with different backgrounds
+section[class*="section--"] {
+    &:not(:first-child) {
+        border-top: 1px solid transparent;
+    }
 }
 
 img {
