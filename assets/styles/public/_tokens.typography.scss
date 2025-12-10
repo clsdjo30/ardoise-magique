@@ -21,3 +21,17 @@ $font-size-hero: clamp(2.5rem, 3vw + 2rem, 3.5rem);
 $letter-spacing-tight: -0.01em;
 $letter-spacing-normal: 0;
 $letter-spacing-wide: 0.01em;
+$letter-spacing-wider: 0.025em;
+
+// Text sizes for specific contexts
+$font-size-section-title: $font-size-3xl;
+$font-size-section-subtitle: $font-size-lg;
+$font-size-card-title: $font-size-xl;
+$font-size-card-text: $font-size-md;
+
+// Line heights for specific contexts
+$line-height-tight: 1.2;
+$line-height-relaxed: 1.75;
+
+// Text transforms
+$text-transform-uppercase: uppercase;

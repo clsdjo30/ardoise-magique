@@ -31,3 +31,18 @@ $focus-ring: 0 0 0 3px $focus-ring-color;
 
 $hover-brighten: lighten($color-primary, 6%);
 $hover-dim: darken($color-text, 6%);
+
+// Texture colors for Bistrot Moderne
+$color-texture-paper: #faf7f4;
+$color-texture-linen: #f5f0eb;
+$color-divider-soft: rgba($color-border, 0.5);
+$color-divider-strong: rgba($color-border-strong, 0.8);
+
+// Additional shadows for depth
+$shadow-elevated: 0 16px 48px rgba($color-text, 0.15);
+$shadow-card: 0 8px 24px rgba($color-text, 0.1);
+$shadow-hover: 0 12px 32px rgba($color-text, 0.14);
+
+// Gradient variations
+$gradient-section-alt: linear-gradient(180deg, $color-surface 0%, $color-background 100%);
+$gradient-subtle: linear-gradient(135deg, rgba($color-primary-soft, 0.08) 0%, rgba($color-surface, 0.5) 100%);

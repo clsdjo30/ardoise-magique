@@ -1,5 +1,6 @@
 @use '../tokens.colors' as colors;
 @use '../tokens.typography' as type;
+@use '../tokens.spacing' as spacing;
 
 .c-button {
     --button-padding-y: 0.55rem;
@@ -11,7 +12,7 @@
     justify-content: center;
     gap: var(--button-gap);
     padding: var(--button-padding-y) var(--button-padding-x);
-    border-radius: 999px;
+    border-radius: spacing.$radius-button;
     border: 1px solid transparent;
     font-family: type.$font-family-body;
     font-weight: type.$font-weight-strong;

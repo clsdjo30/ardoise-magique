@@ -1,13 +1,6 @@
 @use './tokens.colors' as colors;
 @use './tokens.typography' as type;
-
-$space-2xs: 0.25rem;
-$space-xs: 0.5rem;
-$space-sm: 0.75rem;
-$space-md: 1rem;
-$space-lg: 1.5rem;
-$space-xl: 2rem;
-$space-2xl: 3rem;
+@use './tokens.spacing' as spacing;
 
 .l-container {
     width: min(1100px, 100% - 2rem);
@@ -17,39 +10,65 @@ $space-2xl: 3rem;
 .l-stack {
     display: flex;
     flex-direction: column;
-    gap: var(--stack-gap, $space-md);
+    gap: var(--stack-gap, spacing.$spacing-md);
 }
 
 .l-cluster {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--cluster-gap, $space-md);
+    gap: var(--cluster-gap, spacing.$spacing-md);
     align-items: center;
 }
 
 .l-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(var(--grid-min, 240px), 1fr));
-    gap: var(--grid-gap, $space-lg);
+    gap: var(--grid-gap, spacing.$spacing-lg);
 }
 
 .l-section {
-    padding-block: clamp($space-xl, 4vw, $space-2xl);
+    padding-block: clamp(spacing.$section-padding-y-mobile, 8vw, spacing.$section-padding-y);
     background-color: var(--section-bg, transparent);
+}
+
+.l-section--alternate {
+    background-color: colors.$color-surface;
+}
+
+.l-section--texture {
+    background-color: colors.$color-texture-linen;
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23d4c4b7' stroke-width='0.5' opacity='0.3'/%3E%3C/svg%3E");
+        opacity: 0.15;
+        pointer-events: none;
+    }
+}
+
+.l-section + .l-section {
+    margin-top: spacing.$section-gap;
+
+    @media (max-width: 768px) {
+        margin-top: spacing.$section-gap-mobile;
+    }
 }
 
 .l-surface {
     background-color: colors.$color-surface;
     border: 1px solid colors.$color-border;
-    border-radius: 12px;
+    border-radius: spacing.$radius-card;
     box-shadow: colors.$shadow-ambient;
-    padding: $space-lg;
+    padding: spacing.$card-padding;
 }
 
 .l-hero {
-    padding-block: clamp($space-2xl, 8vw, 4rem);
+    padding-block: clamp(spacing.$spacing-2xl, 8vw, 4rem);
     display: grid;
-    gap: $space-lg;
+    gap: spacing.$spacing-lg;
     align-items: center;
 }
 
@@ -70,12 +89,63 @@ $space-2xl: 3rem;
 .l-hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: $space-sm;
+    gap: spacing.$spacing-sm;
     align-items: center;
 }
 
 .l-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, colors.$color-border, transparent);
-    margin-block: $space-lg;
+    margin-block: spacing.$spacing-lg;
+}
+
+// Container utility
+.container {
+    width: min(1200px, 100% - 2rem);
+    margin-inline: auto;
+    padding-inline: spacing.$container-padding-x;
+
+    @media (max-width: 768px) {
+        padding-inline: spacing.$container-padding-x-mobile;
+    }
+}
+
+// Common section utilities
+.section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section__header {
+    text-align: center;
+    margin-bottom: spacing.$spacing-3xl;
+
+    @media (max-width: 768px) {
+        margin-bottom: spacing.$spacing-2xl;
+    }
+}
+
+.section__title {
+    font-family: type.$font-family-heading;
+    font-size: type.$font-size-section-title;
+    font-weight: type.$font-weight-heading;
+    line-height: type.$line-height-heading;
+    letter-spacing: type.$letter-spacing-tight;
+    color: colors.$color-text;
+    margin-bottom: spacing.$spacing-md;
+}
+
+.section__subtitle {
+    font-size: type.$font-size-section-subtitle;
+    line-height: type.$line-height-relaxed;
+    color: colors.$color-muted;
+    max-width: 700px;
+    margin-inline: auto;
+}
+
+.section__text {
+    font-size: type.$font-size-card-text;
+    line-height: type.$line-height-body;
+    color: colors.$color-text;
+    margin-bottom: spacing.$spacing-md;
 }
