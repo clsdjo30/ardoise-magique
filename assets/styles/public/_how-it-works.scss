@@ -1,0 +1,175 @@
+@use './tokens.colors' as colors;
+@use './tokens.typography' as type;
+
+// How it Works Section - Inspired by the provided design
+.creation__steps {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.creation__title {
+  font-family: type.$font-family-heading;
+  font-size: type.$font-size-2xl;
+  font-weight: type.$font-weight-heading;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: colors.$color-text;
+  margin-bottom: 4rem;
+}
+
+.creation__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  position: relative;
+
+  // Wavy connector line between steps
+  &::before {
+    content: '';
+    position: absolute;
+    top: 80px;
+    left: 15%;
+    right: 15%;
+    height: 4px;
+    background: linear-gradient(90deg,
+      #7B9CC5 0%,
+      #8891C0 33%,
+      #9585BA 66%,
+      #5E4E9E 100%
+    );
+    z-index: 0;
+
+    // Create wavy effect using mask or clip-path
+    mask-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 2 Q 25 0, 50 2 T 100 2' stroke='black' stroke-width='4' fill='none' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+
+    &::before {
+      display: none; // Hide connector on mobile
+    }
+  }
+}
+
+.creation__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  max-width: 280px;
+}
+
+.creation__step-number {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: type.$font-family-heading;
+  font-size: type.$font-size-3xl;
+  font-weight: 700;
+  color: #4a5578;
+  margin-bottom: 2rem;
+  position: relative;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  // Double circle effect
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.3;
+    z-index: -1;
+  }
+
+  // Inner white circle
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f5f7fb 0%, #ffffff 100%);
+    z-index: -1;
+  }
+
+  // Gradient backgrounds for each step
+  .creation__item:nth-child(1) & {
+    background: linear-gradient(135deg, #7B9CC5 0%, #8FA8CC 100%);
+  }
+
+  .creation__item:nth-child(2) & {
+    background: linear-gradient(135deg, #8891C0 0%, #9D99C4 100%);
+  }
+
+  .creation__item:nth-child(3) & {
+    background: linear-gradient(135deg, #9585BA 0%, #7968A6 100%);
+  }
+
+  &:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow:
+      0 12px 32px rgba(0, 0, 0, 0.18),
+      inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  }
+
+  @media (max-width: 768px) {
+    width: 140px;
+    height: 140px;
+    font-size: type.$font-size-2xl;
+  }
+}
+
+.creation__step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.creation__step-title {
+  font-family: type.$font-family-heading;
+  font-size: type.$font-size-xl;
+  font-weight: type.$font-weight-heading;
+  color: colors.$color-text;
+  margin: 0;
+  line-height: type.$line-height-heading;
+}
+
+.creation__step-text {
+  font-family: type.$font-family-body;
+  font-size: type.$font-size-md;
+  font-weight: type.$font-weight-body;
+  color: colors.$color-muted;
+  line-height: type.$line-height-body;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: type.$font-size-sm;
+  }
+}
+
+// Additional styling for the parent section if needed
+.section--creation {
+  .section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
