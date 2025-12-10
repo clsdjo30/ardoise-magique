@@ -2,11 +2,8 @@
 @use './tokens.typography' as type;
 
 // Custom green color for the digital/category section
-$color-digital-green: #4caf50;
-$color-digital-green-light: #66bb6a;
-$color-digital-green-dark: #388e3c;
 
-.ardoise-digital {
+.fonctionnalite {
     padding: 4rem 0;
     background-color: colors.$color-background;
 
@@ -30,7 +27,7 @@ $color-digital-green-dark: #388e3c;
         line-height: type.$line-height-heading;
 
         .highlight {
-            color: $color-digital-green;
+            color: colors.$color-digital-green;
         }
     }
 
@@ -66,6 +63,7 @@ $color-digital-green-dark: #388e3c;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 1.5rem;
         margin-bottom: 3rem;
+        perspective: 900px;
 
         @media (min-width: 768px) {
             grid-template-columns: repeat(5, 1fr);
@@ -74,7 +72,7 @@ $color-digital-green-dark: #388e3c;
 
     &__card {
         background-color: colors.$color-surface;
-        border: 2px solid $color-digital-green;
+        border: 1px solid colors.$color-border;
         border-radius: 12px;
         padding: 2rem 1.5rem;
         display: flex;
@@ -82,19 +80,43 @@ $color-digital-green-dark: #388e3c;
         align-items: center;
         gap: 1.25rem;
         text-align: center;
-        transition: all 0.3s ease;
+        transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
         cursor: pointer;
         position: relative;
         overflow: hidden;
+        will-change: transform;
+        --glow-x: 50%;
+        --glow-y: 50%;
+        --delay: 0ms;
+        box-shadow: 0 8px 24px rgba(colors.$color-digital-green, 0);
+        background: colors.$color-surface;
 
         &:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba($color-digital-green, 0.15);
-            border-color: $color-digital-green-dark;
+            box-shadow: 0 8px 24px rgba(colors.$color-success, 0.15);
+            border-color: colors.$color-digital-green-dark;
         }
 
         &:active {
             transform: translateY(-2px);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            pointer-events: none;
+            background: radial-gradient(circle at var(--glow-x) var(--glow-y), rgba(colors.$color-digital-green, 0.18), transparent 40%);
+            opacity: 0;
+            transition: opacity 200ms ease;
+        }
+
+        &.is-hovered::after {
+            opacity: 1;
+        }
+
+        &.is-visible {
+            animation: fonctionnalite-reveal 420ms var(--delay) ease both;
         }
     }
 
@@ -104,7 +126,7 @@ $color-digital-green-dark: #388e3c;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $color-digital-green;
+        color: colors.$color-primary-soft;
         font-size: 2.5rem;
 
         svg {
@@ -114,10 +136,22 @@ $color-digital-green-dark: #388e3c;
         }
     }
 
+    &__icon.pulse {
+        animation: fonctionnalite-icon-pulse 480ms ease;
+    }
+
     &__card-title {
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-lg;
+        font-weight: type.$font-weight-heading;
+        color: colors.$color-text;
+        margin: 0;
+        line-height: 1.4;
+    }
+    &__card-subtitle {
         font-family: type.$font-family-body;
-        font-size: type.$font-size-md;
-        font-weight: type.$font-weight-normal;
+        font-size: type.$font-size-sm;
+        font-weight: type.$font-weight-body;
         color: colors.$color-text;
         margin: 0;
         line-height: 1.4;
@@ -152,8 +186,8 @@ $color-digital-green-dark: #388e3c;
         justify-content: center;
         padding: 0.75rem 2rem;
         background-color: transparent;
-        color: $color-digital-green;
-        border: 2px solid $color-digital-green;
+        color: colors.$color-digital-green;
+        border: 2px solid colors.$color-digital-green;
         border-radius: 8px;
         font-family: type.$font-family-body;
         font-size: type.$font-size-md;
@@ -163,15 +197,38 @@ $color-digital-green-dark: #388e3c;
         transition: all 0.3s ease;
 
         &:hover {
-            background-color: $color-digital-green;
+            background-color: colors.$color-digital-green;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba($color-digital-green, 0.2);
+            box-shadow: 0 6px 16px rgba(colors.$color-digital-green, 0.2);
         }
 
         &:active {
             transform: translateY(0);
         }
+    }
+}
+
+@keyframes fonctionnalite-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fonctionnalite-icon-pulse {
+    0% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
     }
 }
 
@@ -194,5 +251,17 @@ $color-digital-green-dark: #388e3c;
             height: 50px;
             font-size: 2rem;
         }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ardoise-digital__card {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .ardoise-digital__icon.pulse {
+        animation: none !important;
     }
 }
