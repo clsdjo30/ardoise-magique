@@ -65,14 +65,102 @@
     border: 1px solid colors.$color-border;
     padding: 0.4rem 0.5rem;
     border-radius: 8px;
+    position: relative;
+}
+
+.c-navbar__toggle-icon {
+    transition: opacity 200ms ease, transform 200ms ease;
+
+    &--close {
+        position: absolute;
+        opacity: 0;
+        transform: rotate(90deg);
+    }
+
+    &--open {
+        opacity: 1;
+        transform: rotate(0deg);
+    }
 }
 
 @media (max-width: 800px) {
+    .c-navbar__inner {
+        flex-wrap: wrap;
+    }
+
+    .c-navbar__menu,
+    .c-navbar__actions {
+        width: 100%;
+        order: 10;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        padding: 0 1.25rem;
+        transition: max-height 300ms ease, opacity 250ms ease, padding 300ms ease;
+    }
+
+    .c-navbar__actions {
+        order: 9;
+        flex-direction: row;
+        gap: 0.6rem;
+        padding-top: 0;
+        border-bottom: 1px solid rgba(colors.$color-border, 0.5);
+    }
+
     .c-navbar__menu {
-        display: none;
+        flex-direction: column;
+        gap: 0.25rem;
     }
 
     .c-navbar__toggle {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 150ms ease;
+
+        &:hover {
+            background-color: rgba(colors.$color-primary, 0.08);
+        }
+    }
+
+    .c-navbar__link {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+    }
+
+    // État ouvert
+    .c-navbar.is-open {
+        .c-navbar__actions {
+            display: flex;
+            max-height: 200px;
+            opacity: 1;
+            padding: 1rem 1.25rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .c-navbar__menu {
+            display: flex;
+            max-height: 500px;
+            opacity: 1;
+            padding: 0.75rem 1.25rem;
+            padding-bottom: 1rem;
+        }
+
+        .c-navbar__toggle {
+            background-color: rgba(colors.$color-primary, 0.12);
+            color: colors.$color-primary-strong;
+        }
+
+        .c-navbar__toggle-icon--close {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        .c-navbar__toggle-icon--open {
+            opacity: 0;
+            transform: rotate(-90deg);
+        }
     }
 }
