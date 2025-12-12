@@ -10,7 +10,8 @@
       "Bash(powershell:*)",
       "Bash(npm run build:*)",
       "Bash(dir:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(composer show:*)"
     ],
     "deny": [],
     "ask": []

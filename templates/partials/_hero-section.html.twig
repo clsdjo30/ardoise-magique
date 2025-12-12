@@ -34,11 +34,7 @@
 			</p>
 
 			{# Call to action buttons #}
-			<div
-				class="hero__cta-wrapper">
-				{# <a href="#menu" class="hero__cta hero__cta--primary">
-				          Créer mon menu
-				        </a> #}
+			<div class="hero__cta-wrapper">
 				<a href="#reservation" class="hero__cta hero__cta--secondary">
 					Créer mon menu
 				</a>
@@ -54,7 +50,11 @@
 
 				{# Main image circle #}
 				<div class="hero__image-circle">
-					<img src="{{ asset('images/landing/hero-menu-du-jour.webp') }}" alt="Delicious healthy food plate with salmon and vegetables" width="550" height="680" loading="eager">
+					<img src="{{ asset('images/landing/hero-menu-du-jour-640.webp') }}" srcset="
+						                            {{ asset('images/landing/hero-menu-du-jour-540.webp') }} 540w,
+						                            {{ asset('images/landing/hero-menu-du-jour-640.webp') }} 640w,
+						                            {{ asset('images/landing/hero-menu-du-jour-760.webp') }} 760w
+						                        " sizes="(min-width: 1200px) 380px, (min-width: 768px) 320px, 90vw" alt="Assiette de plats du jour présentée sur une table de restaurant, illustrant un menu du jour attractif." width="380" height="470" loading="eager" fetchpriority="high" decoding="async" class="hero__image">
 				</div>
 
 				<div class="hero__ring hero__ring--inner"></div>
@@ -63,14 +63,8 @@
 	</div>
 
 	{# Background decorative elements #}
-	<img
-	src="{{asset('images/landing/deco/fast-food.svg')}}" class="hero__deco hero__deco--1" alt="Icône de fast-food"/>
-	{# <svg class="hero__deco hero__deco--1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-	    <path fill="currentColor" d="M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z"/>
-	  </svg> #}
-	<img
-	src="{{asset('images/landing/deco/meatloaf.svg')}}" class="hero__deco hero__deco--2" alt="Icône de fast-food"/>
-{# <svg class="hero__deco hero__deco--2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-    <path fill="currentColor" d="M100 20 L120 60 L160 60 L130 90 L145 130 L100 105 L55 130 L70 90 L40 60 L80 60 Z"/>
-  </svg> #}
+	<img src="{{ asset('images/landing/deco/fast-food.webp') }}" class="hero__deco hero__deco--1" alt="" role="presentation" loading="lazy" decoding="async">
+
+	<img src="{{ asset('images/landing/deco/meatloaf.webp') }}" class="hero__deco hero__deco--2" alt="" role="presentation" loading="lazy" decoding="async">
+
 </section>
