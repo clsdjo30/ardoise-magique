@@ -510,12 +510,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 300px;
-    background: linear-gradient(135deg,
-        rgba(colors.$color-primary-soft, 0.1) 0%,
-        rgba(colors.$color-primary, 0.05) 100%);
-    border-radius: spacing.$radius-xl;
-    border: 2px dashed colors.$color-border;
 }
 
 .section__cta-wrapper {

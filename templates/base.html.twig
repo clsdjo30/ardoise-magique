@@ -66,11 +66,53 @@
 			{% block body %}{% endblock %}
 		</main>
 
-		<footer class="l-section" style="text-align: center;"> {% block footer %}{% endblock %}
+		<footer class="c-footer">
+			{% block footer %}{% endblock %}
 			<div class="l-container">
-				<p class="c-card__meta">&copy;
-					{{ "now"|date("Y") }}
-					L'Ardoise Magique - Tous droits réservés</p>
+				{# Social Media Links #}
+				<div class="c-footer__social">
+					<a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="c-footer__social-link">
+						<i class="fab fa-instagram"></i>
+					</a>
+					<a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="c-footer__social-link">
+						<i class="fab fa-facebook-f"></i>
+					</a>
+					<a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="c-footer__social-link">
+						<i class="fab fa-twitter"></i>
+					</a>
+					<a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="c-footer__social-link">
+						<i class="fab fa-linkedin-in"></i>
+					</a>
+				</div>
+
+				{# Navigation Links #}
+				<nav class="c-footer__nav">
+					<ul class="c-footer__nav-list">
+						<li class="c-footer__nav-item">
+							<a href="{{ path('app_landing') }}" class="c-footer__nav-link">Accueil</a>
+						</li>
+						<li class="c-footer__nav-item">
+							<a href="{{ path('app_blog_index') }}" class="c-footer__nav-link">Blog</a>
+						</li>
+						<li class="c-footer__nav-item">
+							<a href="{{ path('app_tarifs') }}" class="c-footer__nav-link">Tarifs</a>
+						</li>
+						<li class="c-footer__nav-item">
+							<a href="#" class="c-footer__nav-link">À propos</a>
+						</li>
+						<li class="c-footer__nav-item">
+							<a href="#" class="c-footer__nav-link">Mentions légales</a>
+						</li>
+						<li class="c-footer__nav-item">
+							<a href="#" class="c-footer__nav-link">Confidentialité</a>
+						</li>
+					</ul>
+				</nav>
+
+				{# Copyright #}
+				<p class="c-footer__copyright">
+					&copy; {{ "now"|date("Y") }} L'Ardoise Magique - Tous droits réservés
+				</p>
 			</div>
 		</footer>
 

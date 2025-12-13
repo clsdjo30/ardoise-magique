@@ -9,13 +9,15 @@
 @use './components/form';
 @use './components/badge';
 @use './components/navbar';
+@use './components/footer';
 @use './components/modal';
 @use './components/section-prolongement';
 @use './components/marquee';
 @use './hero';
 @use './ardoise-digital';
 @use './fonctionnalite';
-@use './how-it-works';
+@use './_how-it-works';
 @use './sections';
 @use './registration';
 @use './onboarding';
+@use './tarifs.scss';
