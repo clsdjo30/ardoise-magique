@@ -22,6 +22,10 @@
 	{% endif %}
 
 	<div class="container-fluid am-dashboard py-4">
+
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+            {{include('partials/admin/_admin_dashboard.html.twig')}}
+        {% elseif is_granted('ROLE_ADMIN') %}
 		<header class="am-hero card border-0 shadow-sm mb-4">
 			<div class="card-body">
 				<div class="d-flex justify-content-end mb-2">
@@ -123,7 +127,7 @@
 							<div class="am-kpi-icon bg-primary-subtle text-primary">
 								<i class="fa fa-fire"></i>
 							</div>
-							<div class="flex-grow-1">
+							<div >
 								<div class="am-kpi-label">Total menus</div>
 								<div class="am-kpi-value">{{ totalMenus }}</div>
 								<small class="text-muted">Ardoises prêtes</small>
@@ -137,7 +141,7 @@
 							<div class="am-kpi-icon bg-success-subtle text-success">
 								<i class="fa fa-check"></i>
 							</div>
-							<div class="flex-grow-1">
+							<div>
 								<div class="am-kpi-label">Publiés</div>
 								<div class="am-kpi-value">{{ menusPublies }}</div>
 								<small class="text-muted">Visible par vos clients</small>
@@ -151,7 +155,7 @@
 							<div class="am-kpi-icon bg-warning-subtle text-warning">
 								<i class="fa fa-hourglass-half"></i>
 							</div>
-							<div class="flex-grow-1">
+							<div>
 								<div class="am-kpi-label">Brouillons</div>
 								<div class="am-kpi-value">{{ totalMenus - menusPublies }}</div>
 								<small class="text-muted">En cuisine</small>
@@ -323,6 +327,7 @@
 				{% endif %}
 			</div>
 		</div>
+        {% endif %}
 	</div>
 
 	{# Modal de sélection de restaurant #}

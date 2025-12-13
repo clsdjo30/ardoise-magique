@@ -1,0 +1,143 @@
+<header class="am-hero card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm btn-outline-secondary" id="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+                <i class="fa fa-circle-half-stroke" id="theme-icon"></i>
+                <span class="d-none d-md-inline ms-1">Thème</span>
+            </button>
+        </div>
+
+        <div class="row align-items-center g-4">
+            <div class="col-xl-7">
+                <div class="d-flex align-items-center gap-2 text-uppercase small fw-semibold text-muted mb-2">
+                    <i class="fa fa-shield-halved text-primary"></i>
+                    <span>Pilotage global Ardoise Magique</span>
+                </div>
+
+                <h1 class="mb-2">Bienvenue Super Admin Cédric</h1>
+
+                <p class="text-muted mb-3">
+                    Vue d’ensemble de toutes les ardoises et restaurants enregistrés sur la plateforme.
+                    Surveille l’activité, les menus publiés et accède rapidement aux outils d’administration.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="am-chip">
+                        <i class="fa fa-fire me-2 text-primary"></i>
+                        {{ totalMenus }} menu{{ totalMenus > 1 ? 's' : '' }} au total
+                    </span>
+                    <span class="am-chip">
+                        <i class="fa fa-check me-2 text-success"></i>
+                        {{ menusPublies }} menu{{ menusPublies > 1 ? 's' : '' }} publiés
+                    </span>
+                    <span class="am-chip">
+                        <i class="fa fa-moon me-2 text-warning"></i>
+                        {{ totalMenus - menusPublies }} brouillon{{ (totalMenus - menusPublies) > 1 ? 's' : '' }}
+                    </span>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary"
+                       href="{{ ea_url().setController('App\\Controller\\Admin\\UserCrudController') }}">
+                        <i class="fa fa-users me-2"></i>
+                        Gérer les utilisateurs
+                    </a>
+                    <a class="btn btn-outline-primary"
+                       href="{{ ea_url().setController('App\\Controller\\Admin\\RestaurantCrudController') }}">
+                        <i class="fa fa-utensils me-2"></i>
+                        Gérer les restaurants
+                    </a>
+                    <a class="btn btn-link text-decoration-none"
+                       href="#menus-list">
+                        <i class="fa fa-clipboard-list me-2"></i>
+                        Voir tous les menus
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-xl-5">
+                <div class="am-card am-status-panel h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="text-muted fw-semibold">État global</div>
+                        <span class="am-status-chip {{ menusPublies > 0 ? 'is-online' : 'is-offline' }}">
+                            <i class="fa {{ menusPublies > 0 ? 'fa-check' : 'fa-eye-slash' }} me-1"></i>
+                            {{ menusPublies > 0 ? 'Plateforme active' : 'Aucun menu publié' }}
+                        </span>
+                    </div>
+
+                    <div class="mb-3 small text-muted">
+                        <p class="mb-1">
+                            <i class="fa fa-circle me-1 text-primary"></i>
+                            Surveille les menus publiés pour vérifier l’activité des restaurateurs.
+                        </p>
+                        <p class="mb-1">
+                            <i class="fa fa-circle me-1 text-primary"></i>
+                            Utilise les vues “Utilisateurs” et “Restaurants” pour contrôler les comptes.
+                        </p>
+                    </div>
+
+                    <div class="d-flex flex-column gap-1 small text-muted">
+                        <span><i class="fa fa-gauge-high me-2 text-primary"></i>Point d’entrée pour auditer l’usage de la plateforme.</span>
+                        <span><i class="fa fa-wrench me-2 text-warning"></i>Accès direct aux outils de maintenance via le menu latéral.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="am-section mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="am-section-title">
+            <i class="fa fa-gauge-high me-2 text-primary"></i>
+            Vue rapide globale
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-md-4">
+            <div class="am-card am-kpi h-100">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="am-kpi-icon bg-primary-subtle text-primary">
+                        <i class="fa fa-fire"></i>
+                    </div>
+                    <div>
+                        <div class="am-kpi-label">Total menus</div>
+                        <div class="am-kpi-value">{{ totalMenus }}</div>
+                        <small class="text-muted">Toutes les ardoises de la plateforme</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="am-card am-kpi h-100">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="am-kpi-icon bg-success-subtle text-success">
+                        <i class="fa fa-check"></i>
+                    </div>
+                    <div>
+                        <div class="am-kpi-label">Menus publiés</div>
+                        <div class="am-kpi-value">{{ menusPublies }}</div>
+                        <small class="text-muted">Actuellement visibles par les clients</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="am-card am-kpi h-100">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="am-kpi-icon bg-warning-subtle text-warning">
+                        <i class="fa fa-hourglass-half"></i>
+                    </div>
+                    <div>
+                        <div class="am-kpi-label">Brouillons</div>
+                        <div class="am-kpi-value">{{ totalMenus - menusPublies }}</div>
+                        <small class="text-muted">Menus en préparation chez les restaurateurs</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

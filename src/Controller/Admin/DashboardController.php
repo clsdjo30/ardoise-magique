@@ -20,18 +20,16 @@ class DashboardController extends AbstractDashboardController
 {
     public function __construct(
         private ArdoiseRepository $ardoiseRepository
-    ) {
-    }
+    ) {}
 
     public function configureAssets(): Assets
     {
         return Assets::new()
-        ->addJsFile('js/form.js')
-        ->addJsFile('js/template-selector.js')
-        ->addJsFile('js/collection-field.js')
-        ->addCssFile('styles/admin.css')
-        ->addCssFile('styles/template-selector.css');
-
+            ->addJsFile('js/form.js')
+            ->addJsFile('js/template-selector.js')
+            ->addJsFile('js/collection-field.js')
+            ->addCssFile('styles/admin.css')
+            ->addCssFile('styles/template-selector.css');
     }
 
     /**
@@ -137,51 +135,23 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $dashboardRoute = $this->isGranted('ROLE_SUPER_ADMIN')
-            ? ['routeName' => 'app_admin_dashboard']
-            : ['routeName' => 'admin', 'routeParameters' => ['restaurant' => $user->getSlug()]];
-
-        yield MenuItem::linkToRoute('Dashboard', 'fa fa-home', $dashboardRoute['routeName'], $dashboardRoute['routeParameters'] ?? []);
-
-        // Section Restaurants
-        yield MenuItem::section('Mon Etablissement');
-        yield MenuItem::linkToCrud('Mes Restaurants', 'fa fa-utensils', Restaurant::class)
-            ->setController(RestaurantCrudController::class);
-        yield MenuItem::linkToCrud('Ajouter un Restaurant', 'fa fa-plus', Restaurant::class)
-            ->setController(RestaurantCrudController::class)
-            ->setAction('new');
-
-        // Section Menus du Jour
-        yield MenuItem::section('Menus du Jour');
-        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-sun', Ardoise::class)
-            ->setController(DailyMenuCrudController::class);
-        yield MenuItem::linkToCrud('Creer un Menu', 'fa fa-plus', Ardoise::class)
-            ->setController(DailyMenuCrudController::class)
-            ->setAction('new');
-
-        // Section Menus Speciaux
-        yield MenuItem::section('Menus Speciaux');
-        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-star', Ardoise::class)
-            ->setController(SpecialMenuCrudController::class);
-        yield MenuItem::linkToCrud('Creer un Menu', 'fa fa-plus', Ardoise::class)
-            ->setController(SpecialMenuCrudController::class)
-            ->setAction('new');
-
-        // Section Utilisateurs (uniquement pour super admin)
+        // 1) Super admin : menu "global"
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            yield MenuItem::section('Administration');
-            yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', User::class)
-                ->setController(UserCrudController::class);
+            yield from $this->getSuperAdminMenuItems();
+            return;
         }
 
-        // Section Marketing Social (placeholder)
-        yield MenuItem::section('Marketing Social');
-        yield MenuItem::linkToUrl('Partage Facebook', 'fab fa-facebook', '#')
-            ->setLinkRel('nofollow');
-        yield MenuItem::linkToUrl('Partage Instagram', 'fab fa-instagram', '#')
-            ->setLinkRel('nofollow');
+        // 2) Restaurateur / admin de restaurant
+        if ($this->isGranted('ROLE_ADMIN')) {
+            yield from $this->getRestaurantAdminMenuItems();
+            return;
+        }
+
+        // 3) Fallback éventuel (autres rôles, ROLE_USER simple, etc.)
+        // À adapter selon ton besoin
+        yield MenuItem::linkToRoute('Dashboard', 'fa fa-home', 'app_admin_dashboard');
+        yield MenuItem::section('Session');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
     }
 
     /**
@@ -198,5 +168,95 @@ class DashboardController extends AbstractDashboardController
         }
 
         return null;
+    }
+
+    /**
+     * Menu pour les restaurateurs (ROLE_ADMIN)
+     */
+    private function getRestaurantAdminMenuItems(): iterable
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Dashboard spécifique du restaurateur : /admin/{restaurant-slug}
+        yield MenuItem::linkToRoute(
+            'Dashboard',
+            'fa fa-home',
+            'admin',
+            ['restaurant' => $user->getSlug()]
+        );
+
+        // Section Mon Établissement
+        yield MenuItem::section('Mon Établissement');
+        yield MenuItem::linkToCrud('Mes Restaurants', 'fa fa-utensils', Restaurant::class)
+            ->setController(RestaurantCrudController::class);
+        yield MenuItem::linkToCrud('Ajouter un Restaurant', 'fa fa-plus', Restaurant::class)
+            ->setController(RestaurantCrudController::class)
+            ->setAction('new');
+
+        // Section Menus du Jour
+        yield MenuItem::section('Menus du Jour');
+        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-sun', Ardoise::class)
+            ->setController(DailyMenuCrudController::class);
+        yield MenuItem::linkToCrud('Créer un Menu', 'fa fa-plus', Ardoise::class)
+            ->setController(DailyMenuCrudController::class)
+            ->setAction('new');
+
+        // Section Menus Spéciaux
+        yield MenuItem::section('Menus Spéciaux');
+        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-star', Ardoise::class)
+            ->setController(SpecialMenuCrudController::class);
+        yield MenuItem::linkToCrud('Créer un Menu', 'fa fa-plus', Ardoise::class)
+            ->setController(SpecialMenuCrudController::class)
+            ->setAction('new');
+
+        // Section Marketing Social
+        yield MenuItem::section('Marketing Social');
+        yield MenuItem::linkToUrl('Partage Facebook', 'fab fa-facebook', '#')
+            ->setLinkRel('nofollow');
+        yield MenuItem::linkToUrl('Partage Instagram', 'fab fa-instagram', '#')
+            ->setLinkRel('nofollow');
+
+        // Session
+        yield MenuItem::section('Session');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
+    }
+
+    /**
+     * Menu pour les super administrateurs (ROLE_SUPER_ADMIN)
+     */
+    private function getSuperAdminMenuItems(): iterable
+    {
+        // Lien vers le dashboard principal super admin
+        yield MenuItem::linkToRoute('Dashboard', 'fa fa-home', 'app_admin_dashboard');
+
+        // Section Administration globale
+        yield MenuItem::section('Administration');
+
+        // Tous les utilisateurs
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', User::class)
+            ->setController(UserCrudController::class);
+
+        // Tous les restaurants (optionnel mais pertinent pour un super admin)
+        yield MenuItem::linkToCrud('Restaurants', 'fa fa-utensils', Restaurant::class)
+            ->setController(RestaurantCrudController::class);
+
+        // Tous les menus (tous types confondus)
+        yield MenuItem::section('Menus');
+        yield MenuItem::linkToCrud('Menus du Jour', 'fa fa-sun', Ardoise::class)
+            ->setController(DailyMenuCrudController::class);
+        yield MenuItem::linkToCrud('Menus Spéciaux', 'fa fa-star', Ardoise::class)
+            ->setController(SpecialMenuCrudController::class);
+
+        // Tu peux garder ou non la partie Marketing Social pour le super admin
+        yield MenuItem::section('Marketing Social');
+        yield MenuItem::linkToUrl('Partage Facebook', 'fab fa-facebook', '#')
+            ->setLinkRel('nofollow');
+        yield MenuItem::linkToUrl('Partage Instagram', 'fab fa-instagram', '#')
+            ->setLinkRel('nofollow');
+
+        // Session
+        yield MenuItem::section('Session');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
     }
 }
