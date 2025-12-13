@@ -1,0 +1,121 @@
+@use './tokens.colors' as colors;
+@use './tokens.typography' as type;
+@use './tokens.spacing' as spacing;
+
+// Section Ardoise Digital - Bistrot Moderne
+.l-section--prolongement {
+    position: relative;
+    background: colors.$color-surface;
+    padding: spacing.$section-padding-y spacing.$container-padding-x;
+
+    @media (max-width: 768px) {
+        padding: spacing.$section-padding-y-mobile spacing.$container-padding-x-mobile;
+    }
+
+    // Séparation visuelle forte avec bordure supérieure
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 1200px;
+        height: 1px;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            colors.$color-divider-strong 20%,
+            colors.$color-divider-strong 80%,
+            transparent 100%);
+    }
+
+    // Accent décoratif avec dégradé subtil
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 200px;
+        background: radial-gradient(ellipse at top center,
+            rgba(colors.$color-primary-soft, 0.05) 0%,
+            transparent 70%);
+        pointer-events: none;
+    }
+
+    .section__container {
+        position: relative;
+        z-index: 1;
+        max-width: 1400px;
+    }
+
+    .section__header {
+        text-align: center;
+        margin-bottom: spacing.$spacing-3xl;
+
+        @media (max-width: 768px) {
+            margin-bottom: spacing.$spacing-2xl;
+        }
+    }
+
+    .section__title {
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-section-title;
+        font-weight: type.$font-weight-heading;
+        line-height: type.$line-height-tight;
+        letter-spacing: type.$letter-spacing-tight;
+        color: colors.$color-text;
+        margin-bottom: spacing.$spacing-lg;
+        max-width: 1400px;
+        margin-inline: auto;
+
+        @media (max-width: 768px) {
+            font-size: type.$font-size-2xl;
+        }
+    }
+
+    .section__content {
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .section__text {
+        font-size: type.$font-size-lg;
+        line-height: type.$line-height-relaxed;
+        color: colors.$color-text;
+        margin-bottom: spacing.$spacing-md;
+
+        strong {
+            color: colors.$color-primary;
+            font-weight: type.$font-weight-strong;
+            background: linear-gradient(135deg,
+                colors.$color-primary 0%,
+                colors.$color-primary-soft 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 768px) {
+            font-size: type.$font-size-md;
+        }
+    }
+
+    .section__seo {
+        font-size: type.$font-size-sm;
+        line-height: type.$line-height-body;
+        color: colors.$color-muted;
+        margin-top: spacing.$spacing-xl;
+        padding: spacing.$spacing-lg;
+        background: rgba(colors.$color-texture-linen, 0.5);
+        border-left: 3px solid colors.$color-primary-soft;
+        border-radius: spacing.$radius-sm;
+        box-shadow: colors.$shadow-ambient;
+
+        strong {
+            color: colors.$color-text;
+            font-weight: type.$font-weight-strong;
+        }
+    }
+}

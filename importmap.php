@@ -13,7 +13,8 @@
  */
 return [
     'app' => [
-        'path' => './assets/app.js',
+        // Entry point for design system scripts (modal, dropdown, tabs, toast)
+        'path' => './assets/js/app.js',
         'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [

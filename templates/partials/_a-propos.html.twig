@@ -1,0 +1,51 @@
+﻿<!-- SECTION 9 — À PROPOS -->
+<section id="section-a-propos" class="section section--about">
+	<div
+		class="container section__container">
+		<!-- Bloc d'introduction pleine largeur -->
+		<header class="section__header">
+			<h2 class="section__title">
+				Une application née dans les cuisines
+			</h2>
+		</header>
+
+		<!-- Contenu split -->
+		<div class="section__container--split">
+			<div class="section__content">
+				<p class="section__text">
+					<strong>Ardoise Magique</strong>
+					a été imaginée par un ancien chef de cuisine
+										        passionné de digital. L’objectif est simple: permettre aux restaurateurs d’être présents en ligne
+										        sans perdre de temps et sans dénaturer leur façon de communiquer.
+				</p>
+
+				<p class="section__text">
+					L’application prolonge l’ardoise physique dans le monde digital:
+										        vos menus du jour et menus spéciaux restent fidèles à votre identité,
+										        tout en étant visibles sur Internet.
+				</p>
+
+				<p class="section__text">
+					Ardoise Magique fait partie de l’écosystème
+					<strong>Digitalfy</strong>, une agence indépendante spécialisée dans
+												        la création d’outils web et mobiles pour les professionnels de la restauration.
+				</p>
+
+				<div class="section__cta-wrapper">
+					<a href="https://digitalfy.fr" class="btn btn--secondary" target="_blank" rel="noopener">
+						Découvrir les services Digitalfy
+					</a>
+				</div>
+			</div>
+
+			<!-- Visuel optionnel : portrait, logo, illustration Digitalfy -->
+			<source type="image/webp" srcset="
+				      {{ asset('images/landing/about/naissance-cuisine-480.webp') }} 480w,
+				      {{ asset('images/landing/about/naissance-cuisine-960.webp') }} 960w,
+				      {{ asset('images/landing/about/naissance-cuisine-1440.webp') }} 1440w
+				    " sizes="100vw">
+			<img src="{{ asset('images/landing/about/naissance-cuisine-960.webp') }}" alt="Vue panoramique illustrant le menu du jour du restaurant" width="960" height="640" loading="eager" fetchpriority="low" decoding="async" class="hero__image">
+		</picture>
+
+	</div>
+</div></section>

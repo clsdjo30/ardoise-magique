@@ -5,9 +5,10 @@ framework:
             - assets/
         missing_import_mode: strict
         excluded_patterns:
+            # Exclure les partials SCSS (fichiers commençant par _)
             - '**/assets/styles/**/_*.scss'
+            # Exclure tout le dossier Bootstrap SCSS
             - '**/assets/vendor/bootstrap/scss/**'
-            - '**/*.scss'
 
 when@prod:
     framework:

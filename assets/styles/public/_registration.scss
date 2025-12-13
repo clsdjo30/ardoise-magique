@@ -1,0 +1,389 @@
+@use "./tokens.colors" as colors;
+@use "./tokens.typography" as type;
+@use "./tokens.spacing" as spacing;
+
+// ========================================
+// AUTHENTICATION PAGES - BISTROT MODERNE
+// Registration & Login
+// ========================================
+
+.register-container {
+    min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: spacing.$spacing-2xl spacing.$container-padding-x;
+    background: colors.$color-background;
+    position: relative;
+    overflow-x: hidden;
+
+    @media (max-width: 768px) {
+        padding: spacing.$spacing-xl spacing.$container-padding-x-mobile;
+        min-height: auto;
+        padding-top: spacing.$spacing-2xl;
+        padding-bottom: spacing.$spacing-2xl;
+    }
+
+    // Pattern de fond subtil
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4c4b7' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.6;
+        pointer-events: none;
+    }
+}
+
+.register-card {
+    background: colors.$color-surface;
+    border-radius: spacing.$radius-card;
+    box-shadow: colors.$shadow-elevated;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+
+    // Texture overlay
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Cpath d='M30 0v60M0 30h60' stroke='%23d4c4b7' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+        opacity: 0.15;
+        pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+        max-width: 100%;
+        border-radius: spacing.$radius-md;
+    }
+}
+
+.register-header {
+    text-align: center;
+    padding: spacing.$spacing-3xl spacing.$spacing-2xl spacing.$spacing-xl;
+    background: linear-gradient(
+        135deg,
+        colors.$color-texture-paper 0%,
+        colors.$color-surface 100%
+    );
+    border-bottom: 1px solid colors.$color-border;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 768px) {
+        padding: spacing.$spacing-2xl spacing.$spacing-xl spacing.$spacing-lg;
+    }
+
+    i {
+        color: colors.$color-primary;
+        filter: drop-shadow(0 4px 8px rgba(colors.$color-primary, 0.2));
+        margin-bottom: spacing.$spacing-md;
+    }
+
+    h1 {
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-3xl;
+        font-weight: type.$font-weight-heading;
+        color: colors.$color-text;
+        margin-bottom: spacing.$spacing-sm;
+        letter-spacing: type.$letter-spacing-tight;
+
+        @media (max-width: 768px) {
+            font-size: type.$font-size-2xl;
+        }
+    }
+
+    p {
+        font-size: type.$font-size-md;
+        color: colors.$color-muted;
+        margin: 0;
+    }
+}
+
+.register-body {
+    padding: spacing.$spacing-2xl;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 768px) {
+        padding: spacing.$spacing-xl spacing.$spacing-lg;
+    }
+}
+
+.feature-box {
+    background: linear-gradient(
+        135deg,
+        rgba(colors.$color-primary-soft, 0.1) 0%,
+        rgba(colors.$color-primary, 0.05) 100%
+    );
+    border-left: 4px solid colors.$color-primary;
+    border-radius: spacing.$radius-sm;
+    padding: spacing.$spacing-md spacing.$spacing-lg;
+    margin-bottom: spacing.$spacing-2xl;
+
+    p {
+        display: flex;
+        align-items: center;
+        gap: spacing.$spacing-sm;
+        font-size: type.$font-size-md;
+        color: colors.$color-text;
+        line-height: type.$line-height-relaxed;
+
+        i {
+            color: colors.$color-primary;
+            flex-shrink: 0;
+        }
+    }
+}
+
+// Form styles
+.form-group {
+    margin-bottom: spacing.$spacing-xl;
+
+    label {
+        display: block;
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-sm;
+        font-weight: type.$font-weight-strong;
+        color: colors.$color-text;
+        margin-bottom: spacing.$spacing-xs;
+        text-transform: uppercase;
+        letter-spacing: type.$letter-spacing-wider;
+    }
+
+    .form-control {
+        width: 100%;
+        max-width: 100%;
+        padding: spacing.$spacing-md spacing.$spacing-lg;
+        font-family: type.$font-family-body;
+        font-size: type.$font-size-md;
+        color: colors.$color-text;
+        background: colors.$color-background;
+        border: 2px solid colors.$color-border;
+        border-radius: spacing.$radius-md;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+
+        @media (max-width: 768px) {
+            padding: spacing.$spacing-sm spacing.$spacing-md;
+            font-size: type.$font-size-sm;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: colors.$color-primary;
+            box-shadow: 0 0 0 3px rgba(colors.$color-primary, 0.1);
+            background: colors.$color-surface;
+        }
+
+        &::placeholder {
+            color: colors.$color-muted;
+            opacity: 0.7;
+        }
+    }
+
+    .form-text {
+        display: block;
+        margin-top: spacing.$spacing-xs;
+        font-size: type.$font-size-sm;
+        color: colors.$color-muted;
+        line-height: type.$line-height-relaxed;
+
+        i {
+            color: colors.$color-primary;
+        }
+    }
+
+    // Error styles
+    .invalid-feedback {
+        display: block;
+        margin-top: spacing.$spacing-xs;
+        padding: spacing.$spacing-xs spacing.$spacing-sm;
+        font-size: type.$font-size-sm;
+        color: colors.$color-error;
+        background: rgba(colors.$color-error, 0.05);
+        border-left: 3px solid colors.$color-error;
+        border-radius: spacing.$radius-sm;
+    }
+
+    .form-control.is-invalid {
+        border-color: colors.$color-error;
+
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(colors.$color-error, 0.1);
+        }
+    }
+}
+
+.btn-register {
+    width: 100%;
+    padding: spacing.$spacing-md spacing.$spacing-xl;
+    font-family: type.$font-family-heading;
+    font-size: type.$font-size-md;
+    font-weight: type.$font-weight-strong;
+    color: colors.$color-text;
+    background: colors.$gradient-button-primary;
+    border: none;
+    border-radius: spacing.$radius-button;
+    cursor: pointer;
+    box-shadow: colors.$shadow-soft;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: type.$letter-spacing-wider;
+    margin-top: spacing.$spacing-lg;
+
+    i {
+        filter: drop-shadow(0 2px 4px rgba(colors.$color-text, 0.2));
+        padding-right: spacing.$spacing-md;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: colors.$shadow-hover;
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: colors.$shadow-soft;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+.login-link {
+    text-align: center;
+    padding: spacing.$spacing-xl spacing.$spacing-2xl;
+    background: colors.$color-texture-linen;
+    border-top: 1px solid colors.$color-border;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 768px) {
+        padding: spacing.$spacing-lg spacing.$spacing-xl;
+    }
+
+    p {
+        font-size: type.$font-size-md;
+        color: colors.$color-muted;
+        margin: 0;
+    }
+
+    a {
+        color: colors.$color-primary;
+        font-weight: type.$font-weight-strong;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: colors.$color-primary-strong;
+            text-decoration: underline;
+        }
+
+        i {
+            color: colors.$color-primary;
+        }
+    }
+}
+
+// ========================================
+// LOGIN PAGE - Same styles as registration
+// ========================================
+.login-container {
+    @extend .register-container;
+}
+
+.login-card {
+    @extend .register-card;
+}
+
+.login-header {
+    @extend .register-header;
+
+    .login-header__row-title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: spacing.$spacing-md;
+        margin-bottom: spacing.$spacing-md;
+
+        i {
+            font-size: type.$font-size-3xl;
+
+            @media (max-width: 768px) {
+                font-size: type.$font-size-2xl;
+            }
+        }
+
+        h1 {
+            margin: 0;
+        }
+    }
+}
+
+.login-body {
+    @extend .register-body;
+
+    .alert {
+        padding: spacing.$spacing-md spacing.$spacing-lg;
+        border-radius: spacing.$radius-sm;
+        margin-bottom: spacing.$spacing-lg;
+        display: flex;
+        align-items: flex-start;
+        gap: spacing.$spacing-sm;
+        font-size: type.$font-size-sm;
+        line-height: type.$line-height-relaxed;
+
+        i {
+            flex-shrink: 0;
+            margin-top: 0.2em;
+        }
+
+        &.alert-danger {
+            background: rgba(colors.$color-error, 0.05);
+            color: colors.$color-error;
+            border-left: 3px solid colors.$color-error;
+
+            i {
+                color: colors.$color-error;
+            }
+        }
+
+        &.alert-info {
+            background: rgba(colors.$color-info, 0.05);
+            color: colors.$color-info;
+            border-left: 3px solid colors.$color-info;
+
+            i {
+                color: colors.$color-info;
+            }
+        }
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+            font-weight: type.$font-weight-strong;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+.btn-login {
+    @extend .btn-register;
+}
+
+.register-link {
+    @extend .login-link;
+}

@@ -1,0 +1,32 @@
+@use "../tokens.colors" as colors;
+@use "../tokens.typography" as type;
+/* --- MARQUEE (Défilement infini) --- */
+.marquee-container {
+    background: colors.$color-text;
+    color: colors.$color-surface;
+    padding: 1.5rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transform: rotate(-1deg);
+    margin: 3rem 0;
+}
+.marquee-content {
+    display: inline-block;
+    animation: scroll 20s linear infinite;
+}
+.marquee-item {
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 2rem;
+    letter-spacing: 1px;
+}
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}

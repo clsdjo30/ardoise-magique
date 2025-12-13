@@ -1,0 +1,61 @@
+@use '../tokens.colors' as colors;
+@use '../tokens.typography' as type;
+
+.c-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.c-form__group {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.c-form__label {
+    font-weight: type.$font-weight-strong;
+    color: colors.$color-text;
+}
+
+.c-form__hint {
+    color: colors.$color-muted;
+    font-size: type.$font-size-sm;
+}
+
+.c-form__error {
+    color: colors.$color-warning;
+    font-size: type.$font-size-sm;
+}
+
+.c-form__control {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid colors.$color-border;
+    border-radius: 10px;
+    background: colors.$color-surface;
+    color: colors.$color-text;
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.c-form__control:focus {
+    outline: none;
+    border-color: colors.$color-primary;
+    box-shadow: colors.$focus-ring;
+}
+
+.c-form__control:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.c-form__row {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.c-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}

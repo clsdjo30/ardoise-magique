@@ -1,0 +1,421 @@
+{% extends 'base.html.twig' %}
+
+{% block meta_title %}Blog - Conseils restauration | L'Ardoise Magique{% endblock %}
+{% block meta_description %}Découvrez nos articles sur la gestion de restaurant, recettes et actualités de la restauration.{% endblock %}
+
+{% block body %}
+{# Hero section with gradient #}
+<section class="blog-hero">
+    <div class="l-container">
+        <div class="blog-hero__content">
+            <h1 class="blog-hero__title">Notre Blog</h1>
+            <p class="blog-hero__subtitle">
+                Conseils, recettes et actualités pour les restaurateurs passionnés
+            </p>
+        </div>
+    </div>
+</section>
+
+{# Blog posts section #}
+<section class="l-section" style="padding: 4rem 0;">
+    <div class="l-container">
+        {# Blog posts grid #}
+        {% if posts|length > 0 %}
+            <div class="blog-grid">
+                {% for post in posts %}
+                    <article class="blog-card">
+                        <a href="{{ path('app_blog_show', {category: post.category, slug: post.slug}) }}" class="blog-card__link">
+                            {# Featured image #}
+                            <div class="blog-card__image-wrapper">
+                                {% if post.hasImage %}
+                                    <img src="{{ asset(post.image) }}"
+                                         alt="{{ post.title }}"
+                                         class="blog-card__image">
+                                {% else %}
+                                    <div class="blog-card__image-placeholder">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                {% endif %}
+                                {# Category badge #}
+                                <span class="blog-card__badge blog-card__badge--{{ post.category }}">
+                                    {{ post.category|capitalize }}
+                                </span>
+                            </div>
+
+                            {# Card content #}
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <i class="far fa-calendar"></i>
+                                    {{ post.publishedAt|date('d M Y') }}
+                                </div>
+
+                                <h3 class="blog-card__title">{{ post.title }}</h3>
+
+                                <p class="blog-card__excerpt">{{ post.excerpt }}</p>
+
+                                <div class="blog-card__footer">
+                                    <span class="blog-card__read-more">
+                                        Lire l'article
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="blog-empty">
+                <i class="fas fa-book-open"></i>
+                <p>Aucun article pour le moment.</p>
+            </div>
+        {% endif %}
+
+        {# Pagination #}
+        {% if total_pages > 1 %}
+        <nav class="blog-pagination">
+            {% if has_previous %}
+                <a href="{{ path('app_blog_index', {page: current_page - 1}) }}"
+                   class="blog-pagination__button blog-pagination__button--prev">
+                    <i class="fas fa-chevron-left"></i>
+                    Précédent
+                </a>
+            {% endif %}
+
+            <div class="blog-pagination__pages">
+                {% for p in 1..total_pages %}
+                    {% if p == current_page %}
+                        <span class="blog-pagination__page blog-pagination__page--active">{{ p }}</span>
+                    {% else %}
+                        <a href="{{ path('app_blog_index', {page: p}) }}"
+                           class="blog-pagination__page">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% if has_next %}
+                <a href="{{ path('app_blog_index', {page: current_page + 1}) }}"
+                   class="blog-pagination__button blog-pagination__button--next">
+                    Suivant
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+{# Styles #}
+<style>
+/* Hero Section */
+.blog-hero {
+    background: linear-gradient(135deg, #e8dfd6 0%, #d4c4b7 100%);
+    padding: 6rem 0 4rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.blog-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 60%);
+    pointer-events: none;
+}
+
+.blog-hero__content {
+    text-align: center;
+    color: #2f1b0c;
+    position: relative;
+    z-index: 1;
+}
+
+.blog-hero__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #b85c38;
+    text-shadow: 0 2px 4px rgba(47, 27, 12, 0.1);
+}
+
+.blog-hero__subtitle {
+    font-size: 1.25rem;
+    color: #6b4b36;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Blog Grid */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Blog Card */
+.blog-card {
+    background: #fffaf6;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(47, 27, 12, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #d4c4b7;
+}
+
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(47, 27, 12, 0.14);
+}
+
+.blog-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Image */
+.blog-card__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8f3ef 0%, #d4c4b7 100%);
+}
+
+.blog-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.blog-card:hover .blog-card__image {
+    transform: scale(1.05);
+}
+
+.blog-card__image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: rgba(255,255,255,0.5);
+}
+
+/* Category Badge */
+.blog-card__badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    background: rgba(255, 250, 246, 0.95);
+    color: #2f1b0c;
+    box-shadow: 0 2px 8px rgba(47, 27, 12, 0.15);
+    backdrop-filter: blur(8px);
+}
+
+.blog-card__badge--recettes {
+    background: #b85c38;
+    color: white;
+}
+
+.blog-card__badge--sorties {
+    background: #4a7a4a;
+    color: white;
+}
+
+.blog-card__badge--conseils {
+    background: #6c7c90;
+    color: white;
+}
+
+.blog-card__badge--actualites {
+    background: #b2853f;
+    color: white;
+}
+
+.blog-card__badge--news {
+    background: #9b8b6e;
+    color: white;
+}
+
+/* Card Content */
+.blog-card__content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.blog-card__meta {
+    color: #b85c38;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.blog-card__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    color: #2f1b0c;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.blog-card__excerpt {
+    color: #6b4b36;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.blog-card__footer {
+    padding-top: 1rem;
+    border-top: 1px solid rgba(212, 196, 183, 0.5);
+}
+
+.blog-card__read-more {
+    color: #b85c38;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: gap 0.3s ease;
+}
+
+.blog-card:hover .blog-card__read-more {
+    gap: 1rem;
+}
+
+/* Empty State */
+.blog-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b4b36;
+}
+
+.blog-empty i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    color: #b85c38;
+}
+
+/* Pagination */
+.blog-pagination {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.blog-pagination__button {
+    padding: 0.75rem 1.5rem;
+    background: #fffaf6;
+    color: #b85c38;
+    border: 2px solid #b85c38;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.blog-pagination__button:hover {
+    background: #b85c38;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(184, 92, 56, 0.25);
+}
+
+.blog-pagination__pages {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.blog-pagination__page {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #6b4b36;
+    background: #fffaf6;
+    border: 2px solid #d4c4b7;
+    transition: all 0.3s ease;
+}
+
+.blog-pagination__page:hover {
+    border-color: #b85c38;
+    color: #b85c38;
+    transform: translateY(-2px);
+}
+
+.blog-pagination__page--active {
+    background: #b85c38;
+    color: white;
+    border-color: #b85c38;
+    cursor: default;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .blog-hero__title {
+        font-size: 2.5rem;
+    }
+
+    .blog-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .blog-pagination {
+        gap: 0.5rem;
+    }
+
+    .blog-pagination__button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+</style>
+{% endblock %}

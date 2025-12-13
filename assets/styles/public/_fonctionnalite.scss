@@ -1,0 +1,260 @@
+@use './tokens.colors' as colors;
+@use './tokens.typography' as type;
+@use './tokens.spacing' as spacing;
+
+// Fonctionnalités Section - Bistrot Moderne
+
+.fonctionnalite {
+    padding: spacing.$section-padding-y 0;
+    background: colors.$color-texture-linen;
+
+    &__container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 spacing.$container-padding-x;
+
+        @media (max-width: 768px) {
+            padding: 0 spacing.$container-padding-x-mobile;
+        }
+    }
+
+    &__header {
+        text-align: center;
+        margin-bottom: spacing.$spacing-4xl;
+    }
+
+    &__title {
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-section-title;
+        font-weight: type.$font-weight-heading;
+        color: colors.$color-text;
+        margin-bottom: spacing.$spacing-lg;
+        line-height: type.$line-height-heading;
+        letter-spacing: type.$letter-spacing-tight;
+
+        @media (max-width: 768px) {
+            font-size: type.$font-size-2xl;
+        }
+    }
+
+    &__subtitle {
+        font-size: type.$font-size-lg;
+        color: colors.$color-muted;
+        line-height: type.$line-height-relaxed;
+        max-width: 1000px;
+        margin: 0 auto;
+
+        @media (max-width: 768px) {
+            font-size: type.$font-size-md;
+        }
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: spacing.$card-gap;
+        margin-bottom: spacing.$spacing-3xl;
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    &__card {
+        background: colors.$color-surface;
+        border: 1px solid colors.$color-border;
+        border-radius: spacing.$radius-card;
+        padding: spacing.$card-padding;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: spacing.$spacing-md;
+        text-align: center;
+        transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: colors.$shadow-card;
+
+        &:hover {
+            transform: translateY(-6px);
+            box-shadow: colors.$shadow-hover;
+            border-color: colors.$color-primary-soft;
+        }
+
+        &:active {
+            transform: translateY(-2px);
+        }
+
+        // Subtle gradient overlay on hover
+        &::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 0%, rgba(colors.$color-primary-soft, 0.1), transparent 60%);
+            opacity: 0;
+            transition: opacity 200ms ease;
+        }
+
+        &:hover::after {
+            opacity: 1;
+        }
+
+        &.is-visible {
+            animation: fonctionnalite-reveal 420ms var(--delay, 0ms) ease both;
+        }
+    }
+
+    &__icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: colors.$color-primary;
+        font-size: 2.5rem;
+        filter: drop-shadow(0 2px 4px rgba(colors.$color-primary, 0.2));
+
+        svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+    }
+
+    &__icon.pulse {
+        animation: fonctionnalite-icon-pulse 480ms ease;
+    }
+
+    &__card:hover &__icon {
+        color: colors.$color-primary-strong;
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+
+    &__card-title {
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-lg;
+        font-weight: type.$font-weight-heading;
+        color: colors.$color-text;
+        margin: 0;
+        line-height: 1.4;
+    }
+    &__card-subtitle {
+        font-family: type.$font-family-body;
+        font-size: type.$font-size-sm;
+        font-weight: type.$font-weight-body;
+        color: colors.$color-text;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    &__arrow {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: colors.$color-text;
+        transition: transform 0.3s ease;
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ardoise-digital__card:hover & {
+            transform: translateX(5px);
+        }
+    }
+
+    &__cta {
+        text-align: center;
+    }
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 2rem;
+        background-color: transparent;
+        color: colors.$color-digital-green;
+        border: 2px solid colors.$color-digital-green;
+        border-radius: 8px;
+        font-family: type.$font-family-body;
+        font-size: type.$font-size-md;
+        font-weight: type.$font-weight-strong;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: colors.$color-digital-green;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(colors.$color-digital-green, 0.2);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+@keyframes fonctionnalite-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fonctionnalite-icon-pulse {
+    0% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 767px) {
+    .ardoise-digital {
+        padding: 3rem 0;
+
+        &__grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        &__card {
+            padding: 1.5rem 1rem;
+        }
+
+        &__icon {
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ardoise-digital__card {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .ardoise-digital__icon.pulse {
+        animation: none !important;
+    }
+}

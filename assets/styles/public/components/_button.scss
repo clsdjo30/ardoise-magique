@@ -1,0 +1,108 @@
+@use '../tokens.colors' as colors;
+@use '../tokens.typography' as type;
+@use '../tokens.spacing' as spacing;
+
+.c-button {
+    --button-padding-y: 0.55rem;
+    --button-padding-x: 1.05rem;
+    --button-gap: 0.5rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--button-gap);
+    padding: var(--button-padding-y) var(--button-padding-x);
+    border-radius: spacing.$radius-button;
+    border: 1px solid transparent;
+    font-family: type.$font-family-body;
+    font-weight: type.$font-weight-strong;
+    font-size: type.$font-size-md;
+    line-height: 1.1;
+    text-decoration: none;
+    color: colors.$color-text;
+    background: colors.$color-surface;
+    box-shadow: colors.$shadow-inset, colors.$shadow-ambient;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 120ms ease;
+}
+
+.c-button:hover {
+    transform: translateY(-1px);
+    box-shadow: colors.$shadow-soft;
+}
+
+.c-button:active {
+    transform: translateY(0);
+    box-shadow: colors.$shadow-ambient;
+}
+
+.c-button:focus-visible {
+    outline: none;
+    box-shadow: colors.$focus-ring, colors.$shadow-ambient;
+}
+
+.c-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.c-button--primary {
+    background: colors.$gradient-button-primary;
+    color: colors.$color-text;
+    border-color: colors.$color-primary-soft;
+}
+
+.c-button--primary:hover {
+    border-color: colors.$color-primary-strong;
+}
+
+.c-button--outline {
+    background: transparent;
+    color: colors.$color-primary;
+    border-color: colors.$color-primary;
+    box-shadow: none;
+}
+
+.c-button--outline:hover {
+    background: rgba(colors.$color-primary, 0.08);
+    border-color: colors.$color-primary-strong;
+}
+
+.c-button--ghost {
+    background: transparent;
+    color: colors.$color-text;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.c-button--ghost:hover {
+    background: rgba(colors.$color-primary, 0.08);
+}
+
+.c-button--sm {
+    --button-padding-y: 0.4rem;
+    --button-padding-x: 0.85rem;
+    --button-gap: 0.4rem;
+    font-size: type.$font-size-sm;
+}
+
+.c-button--lg {
+    --button-padding-y: 0.8rem;
+    --button-padding-x: 1.3rem;
+    --button-gap: 0.6rem;
+    font-size: type.$font-size-lg;
+}
+
+.c-button__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+}
+
+.c-button__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}

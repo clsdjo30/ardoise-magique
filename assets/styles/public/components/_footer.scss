@@ -1,0 +1,144 @@
+@use '../tokens.colors' as colors;
+@use '../tokens.typography' as type;
+@use '../tokens.spacing' as spacing;
+
+/* ============================================
+   FOOTER COMPONENT - MOBILE FIRST
+   ============================================ */
+
+.c-footer {
+    background: colors.$color-surface;
+    padding: spacing.$spacing-3xl 0 spacing.$spacing-xl;
+    border-top: 1px solid colors.$color-border;
+}
+
+/* Social Media Links
+   -------------------------------------------- */
+.c-footer__social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: spacing.$spacing-md;
+    margin-bottom: spacing.$spacing-xl;
+}
+
+.c-footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid colors.$color-border;
+    color: colors.$color-muted;
+    text-decoration: none;
+    font-size: type.$font-size-lg;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: colors.$color-primary;
+        color: colors.$color-primary;
+        background: rgba(colors.$color-primary, 0.08);
+        transform: translateY(-2px);
+    }
+
+    i {
+        line-height: 1;
+    }
+}
+
+/* Navigation Links
+   -------------------------------------------- */
+.c-footer__nav {
+    margin-bottom: spacing.$spacing-lg;
+}
+
+.c-footer__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: spacing.$spacing-xs spacing.$spacing-md;
+}
+
+.c-footer__nav-item {
+    // No specific styles needed
+}
+
+.c-footer__nav-link {
+    color: colors.$color-text;
+    text-decoration: none;
+    font-size: type.$font-size-md;
+    font-weight: type.$font-weight-body;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    display: inline-block;
+
+    &:hover {
+        opacity: 1;
+        color: colors.$color-primary;
+    }
+}
+
+/* Copyright
+   -------------------------------------------- */
+.c-footer__copyright {
+    text-align: center;
+    font-size: type.$font-size-sm;
+    color: colors.$color-muted;
+    margin: 0;
+    opacity: 0.7;
+}
+
+/* ============================================
+   TABLET & DESKTOP (≥768px)
+   ============================================ */
+@media (min-width: 768px) {
+    .c-footer {
+        padding: spacing.$spacing-4xl 0 spacing.$spacing-2xl;
+    }
+
+    .c-footer__social {
+        gap: spacing.$spacing-lg;
+        margin-bottom: spacing.$spacing-2xl;
+    }
+
+    .c-footer__social-link {
+        width: 44px;
+        height: 44px;
+        font-size: type.$font-size-xl;
+    }
+
+    .c-footer__nav {
+        margin-bottom: spacing.$spacing-xl;
+    }
+
+    .c-footer__nav-list {
+        gap: spacing.$spacing-sm spacing.$spacing-xl;
+    }
+
+    .c-footer__nav-link {
+        font-size: type.$font-size-lg;
+    }
+
+    .c-footer__copyright {
+        font-size: type.$font-size-md;
+    }
+}
+
+/* ============================================
+   DESKTOP LARGE (≥1024px)
+   ============================================ */
+@media (min-width: 1024px) {
+    .c-footer {
+        padding: spacing.$spacing-5xl 0 spacing.$spacing-2xl;
+    }
+
+    .c-footer__social-link {
+        width: 48px;
+        height: 48px;
+    }
+}

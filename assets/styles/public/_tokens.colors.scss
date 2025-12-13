@@ -1,0 +1,55 @@
+// Color tokens for the Bistrot Moderne system
+$color-primary: #b85c38;
+$color-primary-strong: #9d4e30; // darker copper for pressed states
+$color-primary-soft: #d78a69; // lighter copper for hover
+$color-background: #f8f3ef;
+$color-surface: #fffaf6;
+$color-text: #2f1b0c;
+$color-muted: #6b4b36; // supporting text tone
+$color-border: #d4c4b7;
+$color-border-strong: #b89f8e;
+$color-accent: #9b8b6e;
+$color-success: #4a7a4a; // chosen to stay in a natural/culinary palette
+$color-warning: #b2853f;
+$color-error: #f52702;
+$color-info: #6c7c90;
+$color-digital-green: #4caf50;
+$color-digital-green-light: #66bb6a;
+$color-digital-green-dark: #388e3c;
+
+$gradient-button-primary: linear-gradient(135deg, #b85c38 0%, #f0dfd4 50%, #f8f3ef 100%);
+$gradient-sheen: linear-gradient(180deg, rgba(#ffffff, 0.25) 0%, rgba(#ffffff, 0) 60%);
+
+$shadow-soft: 0 12px 40px rgba($color-text, 0.18);
+$shadow-ambient: 0 6px 18px rgba($color-text, 0.12);
+$shadow-inset: inset 0 1px 0 rgba(#ffffff, 0.7);
+
+$overlay-strong: rgba($color-text, 0.6);
+$overlay-soft: rgba($color-text, 0.3);
+
+$focus-ring-color: rgba($color-primary, 0.35);
+$focus-ring: 0 0 0 3px $focus-ring-color;
+
+$hover-brighten: lighten($color-primary, 6%);
+$hover-dim: darken($color-text, 6%);
+
+// Texture colors for Bistrot Moderne
+$color-texture-paper: #faf7f4;
+$color-texture-linen: #f5f0eb;
+$color-divider-soft: rgba($color-border, 0.5);
+$color-divider-strong: rgba($color-border-strong, 0.8);
+
+// Brown tones for contrast sections
+$color-brown-light: #e8dfd6;
+$color-brown-medium: #d4c4b7;
+$color-brown-dark: #c4b5a7;
+$gradient-brown: linear-gradient(135deg, $color-brown-light 0%, $color-brown-medium 100%);
+
+// Additional shadows for depth
+$shadow-elevated: 0 16px 48px rgba($color-text, 0.15);
+$shadow-card: 0 8px 24px rgba($color-text, 0.1);
+$shadow-hover: 0 12px 32px rgba($color-text, 0.14);
+
+// Gradient variations
+$gradient-section-alt: linear-gradient(180deg, $color-surface 0%, $color-background 100%);
+$gradient-subtle: linear-gradient(135deg, rgba($color-primary-soft, 0.08) 0%, rgba($color-surface, 0.5) 100%);

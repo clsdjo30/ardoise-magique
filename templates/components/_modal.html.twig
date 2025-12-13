@@ -1,0 +1,40 @@
+{# Usage:
+   {% include 'components/_modal.html.twig' with {
+        id: 'booking-modal',
+        title: 'Réserver une table',
+        body: block('modal_body'),    // or string/html
+        actions: [
+            { label: 'Fermer', variant: 'ghost', attributes: { 'data-modal-close': true } },
+            { label: 'Confirmer', variant: 'primary', attributes: { 'data-modal-close': true } }
+        ]
+   } %}
+#}
+<div class="c-modal" data-modal id="{{ id|default('modal') }}" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="c-modal__dialog">
+        <header class="c-modal__header">
+            <h3 class="c-modal__title">{{ title|default('Titre du modal') }}</h3>
+            <button class="c-modal__close" type="button" data-modal-close aria-label="Fermer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </header>
+
+        <div class="c-modal__body">
+            {{ body|default('Contenu du modal')|raw }}
+        </div>
+
+        {% if actions is defined and actions is iterable %}
+            <footer class="c-modal__footer">
+                {% for action in actions %}
+                    {% include 'components/_button.html.twig' with {
+                        label: action.label|default('Action'),
+                        variant: action.variant|default('outline'),
+                        size: action.size|default('md'),
+                        href: action.href|default(null),
+                        attributes: (action.attributes|default({})),
+                        icon: action.icon|default(null)
+                    } %}
+                {% endfor %}
+            </footer>
+        {% endif %}
+    </div>
+</div>

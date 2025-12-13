@@ -1,0 +1,43 @@
+{# Usage:
+   {% include 'components/_card.html.twig' with {
+        title: 'Menu dégustation',
+        meta: 'Disponible le soir',
+        body: 'Un parcours en 5 temps autour des saveurs de saison.',
+        footer: block('actions')      // or pass array of buttons
+   } %}
+#}
+{% set classes = ['c-card'] %}
+{% if highlight is defined and highlight %}{% set classes = classes|merge(['c-card--highlight']) %}{% endif %}
+{% if outlined is defined and outlined %}{% set classes = classes|merge(['c-card--outlined']) %}{% endif %}
+
+<article class="{{ classes|join(' ') }}">
+    {% if title is defined or meta is defined %}
+        <header class="c-card__header">
+            <div class="c-card__titles">
+                {% if title is defined %}
+                    <h3 class="c-card__title">{{ title }}</h3>
+                {% endif %}
+                {% if meta is defined %}
+                    <div class="c-card__meta">{{ meta }}</div>
+                {% endif %}
+            </div>
+            {% if badge is defined %}
+                <div class="c-card__badge">
+                    {{ badge|raw }}
+                </div>
+            {% endif %}
+        </header>
+    {% endif %}
+
+    {% if body is defined %}
+        <div class="c-card__body">
+            {{ body|raw }}
+        </div>
+    {% endif %}
+
+    {% if footer is defined %}
+        <footer class="c-card__footer">
+            {{ footer|raw }}
+        </footer>
+    {% endif %}
+</article>

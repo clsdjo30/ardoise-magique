@@ -1,0 +1,230 @@
+{% extends 'base.html.twig' %}
+
+{% block meta_title %}Tarifs et Offres - L'Ardoise Magique | Formules de Gestion de Menus{% endblock %}
+
+{% block meta_description %}Découvrez nos offres adaptées à votre rythme : formule gratuite, Starter à 9,90€/mois ou Premium à 19,90€/mois. Commencez gratuitement, sans carte bancaire.{% endblock %}
+
+{% block meta_extra %}
+    {# Open Graph meta tags #}
+    <meta property="og:title" content="Tarifs et Offres - L'Ardoise Magique">
+    <meta property="og:description" content="Des formules simples pour gérer vos menus de restaurant. Commencez gratuitement, sans carte bancaire.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url('app_tarifs') }}">
+    <meta property="og:image" content="{{ absolute_url('/images/ardoise_magik_icone.webp') }}">
+
+    {# Twitter Card meta tags #}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tarifs et Offres - L'Ardoise Magique">
+    <meta name="twitter:description" content="Des formules simples pour gérer vos menus de restaurant. Commencez gratuitement.">
+
+    {# SEO Keywords #}
+    <meta name="keywords" content="tarifs restaurant, prix menu digital, abonnement menu restaurant, gestion menu gratuit, menu digital prix, solution menu restaurant, ardoise magique tarifs">
+
+    {# JSON-LD Structured Data for Pricing #}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "L'Ardoise Magique - Gestion de Menus de Restaurant",
+        "description": "Solution de gestion de menus digitaux pour restaurants avec différentes formules adaptées à vos besoins",
+        "brand": {
+            "@type": "Brand",
+            "name": "L'Ardoise Magique"
+        },
+        "offers": [
+            {
+                "@type": "Offer",
+                "name": "Offre Gratuite",
+                "description": "Jusqu'à 10 menus du jour par mois avec design basique et lien partageable",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "priceValidUntil": "{{ "now"|date_modify("+1 year")|date("Y-m-d") }}",
+                "availability": "https://schema.org/InStock",
+                "url": "{{ url('app_tarifs') }}",
+                "eligibleQuantity": {
+                    "@type": "QuantitativeValue",
+                    "value": "10",
+                    "unitText": "menus par mois"
+                }
+            },
+            {
+                "@type": "Offer",
+                "name": "Offre Starter",
+                "description": "Menus illimités avec designs personnalisés et apparition dans l'annuaire public",
+                "price": "9.90",
+                "priceCurrency": "EUR",
+                "priceValidUntil": "{{ "now"|date_modify("+1 year")|date("Y-m-d") }}",
+                "availability": "https://schema.org/InStock",
+                "url": "{{ url('app_tarifs') }}",
+                "priceSpecification": {
+                    "@type": "UnitPriceSpecification",
+                    "price": "9.90",
+                    "priceCurrency": "EUR",
+                    "unitText": "mois"
+                }
+            },
+            {
+                "@type": "Offer",
+                "name": "Offre Premium",
+                "description": "Menus illimités avec partage social, QR Code, designs premium et support prioritaire",
+                "price": "19.90",
+                "priceCurrency": "EUR",
+                "priceValidUntil": "{{ "now"|date_modify("+1 year")|date("Y-m-d") }}",
+                "availability": "https://schema.org/InStock",
+                "url": "{{ url('app_tarifs') }}",
+                "priceSpecification": {
+                    "@type": "UnitPriceSpecification",
+                    "price": "19.90",
+                    "priceCurrency": "EUR",
+                    "unitText": "mois"
+                }
+            }
+        ],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "127"
+        }
+    }
+    </script>
+{% endblock %}
+
+
+{% block body %}
+{# Hero Section #}
+<section class="pricing-hero">
+    <div class="l-container">
+        <h1 class="pricing-hero__title">Offres et Tarifs</h1>
+        <h2 class="pricing-hero__subtitle">Des formules simples, adaptées à votre rythme</h2>
+        <p class="pricing-hero__description">
+            Commencez gratuitement, puis passez à la vitesse supérieure quand vous en ressentez le besoin.<br>
+            <strong>Aucune carte bancaire n'est demandée pour l'offre gratuite.</strong>
+        </p>
+    </div>
+</section>
+
+{# Pricing Cards Section #}
+<section class="pricing-section">
+    <div class="l-container">
+        <div class="pricing-grid">
+            {# Offre Gratuite #}
+            <article class="pricing-card pricing-card--free">
+                <div class="pricing-card__header">
+                    <h3 class="pricing-card__name">Offre Gratuite</h3>
+                    <div class="pricing-card__price">
+                        <span class="pricing-card__amount">0 €</span>
+                        <span class="pricing-card__period">/ mois</span>
+                    </div>
+                </div>
+                <ul class="pricing-card__features">
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Jusqu'à 10 menus du jour par mois</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Design basique</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Lien partageable</span>
+                    </li>
+                </ul>
+                <div class="pricing-card__footer">
+                    <a href="{{ path('app_register') }}" class="c-button c-button--outline pricing-card__button">
+                        Commencer gratuitement
+                    </a>
+                </div>
+            </article>
+
+            {# Offre Starter #}
+            <article class="pricing-card pricing-card--starter pricing-card--featured">
+                <div class="pricing-card__badge">Populaire</div>
+                <div class="pricing-card__header">
+                    <h3 class="pricing-card__name">Offre Starter</h3>
+                    <div class="pricing-card__price">
+                        <span class="pricing-card__amount">9,90 €</span>
+                        <span class="pricing-card__period">/ mois</span>
+                    </div>
+                </div>
+                <ul class="pricing-card__features">
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Menus illimités</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Accès aux menus spéciaux</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Apparition dans l'annuaire public</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Designs personnalisés</span>
+                    </li>
+                </ul>
+                <div class="pricing-card__footer">
+                    <a href="{{ path('app_register') }}" class="c-button c-button--primary pricing-card__button">
+                        Essayer gratuitement
+                    </a>
+                </div>
+            </article>
+
+            {# Offre Premium #}
+            <article class="pricing-card pricing-card--premium">
+                <div class="pricing-card__header">
+                    <h3 class="pricing-card__name">Offre Premium</h3>
+                    <div class="pricing-card__price">
+                        <span class="pricing-card__amount">19,90 €</span>
+                        <span class="pricing-card__period">/ mois</span>
+                    </div>
+                </div>
+                <ul class="pricing-card__features">
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Menus illimités</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Partage direct sur Facebook et Instagram</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>QR Code pour menu virtuel dans votre établissement</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Designs Premium</span>
+                    </li>
+                    <li class="pricing-card__feature">
+                        <i class="fas fa-check"></i>
+                        <span>Support prioritaire</span>
+                    </li>
+                </ul>
+                <div class="pricing-card__footer">
+                    <a href="{{ path('app_register') }}" class="c-button c-button--primary pricing-card__button">
+                        Essayer gratuitement
+                    </a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+{# CTA Section #}
+<section class="pricing-cta">
+    <div class="l-container">
+        <div class="pricing-cta__content">
+            <h2 class="pricing-cta__title">Prêt à moderniser vos menus ?</h2>
+            <p class="pricing-cta__text">Rejoignez des centaines de restaurants qui utilisent déjà L'Ardoise Magique</p>
+            <a href="{{ path('app_register') }}" class="c-button c-button--primary c-button--lg">
+                <i class="fas fa-arrow-right"></i>
+                Essayer gratuitement Ardoise Magique
+            </a>
+            <p class="pricing-cta__note">Aucune carte bancaire requise • Annulation à tout moment</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

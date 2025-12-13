@@ -1,319 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}L'Ardoise Magique - Gestion de menus pour restaurateurs{% endblock %}
-
-{% block extra_styles %}
-    .hero-section {
-        padding: 100px 0;
-        text-align: center;
-        color: white;
-    }
-
-    .hero-title {
-        font-size: 4rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        animation: fadeInDown 1s ease-out;
-    }
-
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .hero-subtitle {
-        font-size: 1.5rem;
-        margin-bottom: 40px;
-        opacity: 0.95;
-        animation: fadeInUp 1s ease-out 0.3s backwards;
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .hero-buttons {
-        animation: fadeInUp 1s ease-out 0.6s backwards;
-    }
-
-    .hero-buttons .btn {
-        padding: 15px 40px;
-        font-size: 1.2rem;
-        border-radius: 50px;
-        margin: 10px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    .features-section {
-        padding: 80px 0;
-        background: white;
-    }
-
-    .features-section h2 {
-        text-align: center;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 60px;
-        color: #333;
-    }
-
-    .feature-card {
-        background: white;
-        border-radius: 15px;
-        padding: 40px;
-        text-align: center;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        height: 100%;
-        border: 2px solid transparent;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
-        border-color: #667eea;
-    }
-
-    .feature-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .feature-card h3 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #333;
-    }
-
-    .feature-card p {
-        color: #666;
-        line-height: 1.6;
-    }
-
-    .benefits-section {
-        padding: 80px 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-
-    .benefits-section h2 {
-        text-align: center;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 60px;
-    }
-
-    .benefit-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 30px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        backdrop-filter: blur(10px);
-        transition: background 0.3s;
-    }
-
-    .benefit-item:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    .benefit-icon {
-        font-size: 3rem;
-        margin-right: 25px;
-        min-width: 60px;
-    }
-
-    .benefit-content h4 {
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-
-    .benefit-content p {
-        margin: 0;
-        opacity: 0.9;
-    }
-
-    .cta-section {
-        padding: 100px 0;
-        background: white;
-        text-align: center;
-    }
-
-    .cta-section h2 {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        color: #333;
-    }
-
-    .cta-section p {
-        font-size: 1.3rem;
-        color: #666;
-        margin-bottom: 40px;
-    }
-
-    .cta-section .btn {
-        padding: 18px 50px;
-        font-size: 1.3rem;
-        border-radius: 50px;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-    }
-
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.5rem;
-        }
-        .hero-subtitle {
-            font-size: 1.2rem;
-        }
-        .hero-buttons .btn {
-            font-size: 1rem;
-            padding: 12px 30px;
-        }
-    }
+{% block title %}L'Ardoise Magique - Gestion de menus pour restaurateurs
 {% endblock %}
 
 {% block body %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container">
-        <h1 class="hero-title">🍽️ L'Ardoise Magique</h1>
-        <p class="hero-subtitle">
-            La solution moderne pour creer et partager<br>
-            vos menus de restaurant
-        </p>
-        <div class="hero-buttons">
-            <a href="{{ path('app_register') }}" class="btn btn-light btn-lg">
-                <i class="fas fa-rocket me-2"></i>
-                Commencer gratuitement
-            </a>
-            <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-sign-in-alt me-2"></i>
-                Se connecter
-            </a>
-        </div>
-    </div>
-</section>
+{% set testimonials = [
+        {
+            quote: 'Avant, je passais 20 minutes à refaire mon post Facebook chaque matin. Aujourd\'hui, mon menu est prêt et publié en deux clics. C\'est devenu un réflexe.',
+            author: 'Julien, chef à Nîmes'
+        }
+    ] %}
+{# DEBUT SECTION HERO #}
+{{include('partials/_hero-section.html.twig')}}
+{# FIN SECTION HERO #}
 
-<!-- Features Section -->
-<section class="features-section">
-    <div class="container">
-        <h2>Fonctionnalites</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <h3>Menus du Jour</h3>
-                    <p>Creez et publiez vos menus quotidiens avec entree, plat et dessert en quelques clics.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h3>Menus Speciaux</h3>
-                    <p>Gerez vos menus evenementiels : Noel, Saint-Valentin, fetes et occasions speciales.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-share-alt"></i>
-                    </div>
-                    <h3>Partage Facile</h3>
-                    <p>Partagez vos menus avec une URL unique et personnalisee pour votre restaurant.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{# DEBUT SECTION POURQUOI CETTE APPLICATION#}
+{{include('partials/_marquee.html.twig')}}
+{{include('partials/_ardoise-digital.html.twig')}}
+{# FIN SECTION POURQUOI CETTE APPLICATION#}
 
-<!-- Benefits Section -->
-<section class="benefits-section">
-    <div class="container">
-        <h2>Pourquoi choisir L'Ardoise Magique ?</h2>
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="benefit-content">
-                        <h4>Interface Intuitive</h4>
-                        <p>Tableau de bord simple et efficace avec EasyAdmin. Aucune competence technique requise.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="benefit-content">
-                        <h4>Design Responsive</h4>
-                        <p>Vos menus s'affichent parfaitement sur mobile, tablette et ordinateur.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="benefit-content">
-                        <h4>Securite Multi-Tenant</h4>
-                        <p>Vos donnees sont isolees et securisees. Chaque restaurateur a son propre espace.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="benefit-content">
-                        <h4>Mise a Jour Instantanee</h4>
-                        <p>Modifiez vos menus a tout moment, les changements sont immediats.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+{# DEBUT SECTION COMMENT CA MARCHE #}
+{{include('partials/_how-it-works.html.twig')}}
+{# FIN SECTION COMMENT CA MARCHE #}
 
-<!-- CTA Section -->
-<section class="cta-section">
-    <div class="container">
-        <h2>Pret a commencer ?</h2>
-        <p>Rejoignez des centaines de restaurateurs qui utilisent deja L'Ardoise Magique</p>
-        <a href="{{ path('app_register') }}" class="btn btn-gradient btn-lg">
-            <i class="fas fa-user-plus me-2"></i>
-            Creer mon compte gratuit
-        </a>
-    </div>
-</section>
+{# DEBUT SECTION FONCTIONNALITEES #}
+{{include('partials/_fonctionnalites.html.twig')}}
+{# FIN SECTION FONCTIONNALITEES #}
+
+{# DEBUT SECTION PRESENTATION ANNUAIRE #}
+{{include('partials/_annuaire.html.twig')}}
+{# FIN SECTION PRESENTATION ANNUAIRE #}
+
+{# DEBUT SECTION PRESENTATION VIDEO #}
+{{include('partials/_presentation-video.html.twig')}}
+{# DEBUT SECTION PRESENTATION VIDEO #}
+
+{# DEBUT SECTION TEMOIGNAGES #}
+{{include('partials/_testimonials.html.twig')}}
+{# FIN SECTION TEMOIGNAGES #}
+
+{# DEBUT SECTION HISTOIRE #}
+{{include('partials/_a-propos.html.twig')}}
+{# FIN SECTION HISTOIRE #}
+
+
+{% include 'components/_modal.html.twig' with {
+        id: 'contact-modal',
+        title: 'Prendre contact',
+        body: '<p>Laissez-nous vos coordonnées et un membre de l\'équipe vous rappelle rapidement.</p><p>Email : contact@ardoise-magique.fr<br>Téléphone : 01 23 45 67 89</p>',
+        actions: [
+            { label: 'Fermer', variant: 'ghost', attributes: { 'data-modal-close': true } },
+            { label: 'Envoyer un message', variant: 'primary', attributes: { 'data-modal-close': true } }
+        ]
+    } %}
 {% endblock %}

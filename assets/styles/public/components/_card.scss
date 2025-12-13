@@ -1,0 +1,62 @@
+@use '../tokens.colors' as colors;
+@use '../tokens.typography' as type;
+@use '../tokens.spacing' as spacing;
+
+.c-card {
+    background-color: colors.$color-surface;
+    border: 1px solid colors.$color-border;
+    border-radius: spacing.$radius-card;
+    padding: spacing.$card-padding;
+    box-shadow: colors.$shadow-card;
+    display: flex;
+    flex-direction: column;
+    gap: spacing.$spacing-sm;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: colors.$shadow-hover;
+    }
+}
+
+.c-card__header {
+    display: flex;
+    align-items: flex-start;
+    gap: spacing.$spacing-sm;
+    margin-bottom: spacing.$spacing-xs;
+}
+
+.c-card__title {
+    margin: 0;
+    font-family: type.$font-family-heading;
+    font-size: type.$font-size-xl;
+    line-height: type.$line-height-heading;
+    letter-spacing: type.$letter-spacing-tight;
+}
+
+.c-card__meta {
+    color: colors.$color-muted;
+    font-size: type.$font-size-sm;
+}
+
+.c-card__body {
+    color: colors.$color-text;
+    font-size: type.$font-size-md;
+    line-height: type.$line-height-body;
+}
+
+.c-card__footer {
+    display: flex;
+    align-items: center;
+    gap: spacing.$spacing-sm;
+    margin-top: auto;
+}
+
+.c-card--highlight {
+    border-color: colors.$color-primary-soft;
+    box-shadow: colors.$shadow-soft;
+}
+
+.c-card--outlined {
+    background: transparent;
+}

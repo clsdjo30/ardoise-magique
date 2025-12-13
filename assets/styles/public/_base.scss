@@ -1,0 +1,171 @@
+@use "./tokens.colors" as colors;
+@use "./tokens.typography" as type;
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+body {
+    margin: 0;
+    font-family: type.$font-family-body;
+    font-weight: type.$font-weight-body;
+    line-height: type.$line-height-body;
+    color: colors.$color-text;
+    background-color: colors.$color-background;
+    overflow-x: hidden;
+    max-width: 100vw;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Texture de grain (Noise) pour l'aspect premium/organique */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+}
+
+::selection {
+    background-color: colors.$color-primary-soft;
+    color: colors.$color-background;
+}
+
+a {
+    color: colors.$color-primary;
+    text-decoration: none;
+    transition: color 150ms ease, opacity 150ms ease;
+}
+
+a:hover {
+    color: colors.$color-primary-strong;
+}
+
+a:focus-visible {
+    outline: none;
+    box-shadow: colors.$focus-ring;
+    border-radius: 4px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: type.$font-family-heading;
+    font-weight: type.$font-weight-heading;
+    line-height: type.$line-height-heading;
+    letter-spacing: type.$letter-spacing-tight;
+    color: colors.$color-text;
+    margin: 0 0 0.75em;
+}
+
+p,
+ul,
+ol,
+dl,
+figure,
+blockquote {
+    margin: 0 0 1rem;
+}
+
+ul,
+ol {
+    padding-left: 1.25rem;
+}
+
+hr {
+    border: 0;
+    border-bottom: 1px solid colors.$color-border;
+    margin: 2rem 0;
+}
+
+// Section spacing and separation
+section {
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+// Add spacing between major sections
+.hero + .marquee-container,
+.marquee-container + .l-section,
+.l-section + .section,
+.section + .section,
+.fonctionnalite + .section {
+    margin-top: 0;
+}
+
+// Ensure visual distinction between sections with different backgrounds
+section[class*="section--"] {
+    &:not(:first-child) {
+        border-top: 1px solid transparent;
+    }
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    color: inherit;
+    background-color: colors.$color-background;
+    border: 1px solid colors.$color-border;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease,
+        background-color 150ms ease;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: colors.$focus-ring;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled,
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+code,
+pre {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    background-color: colors.$color-surface;
+    border: 1px solid colors.$color-border;
+    border-radius: 4px;
+}
+
+code {
+    padding: 0.125rem 0.25rem;
+}
+
+pre {
+    padding: 0.75rem;
+    overflow-x: auto;
+}

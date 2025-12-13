@@ -1,0 +1,70 @@
+<!-- SECTION 1 — HERO -->
+<section id="hero" class="hero">
+	<div
+		class="hero__container">
+		{# Left side - Content #}
+		<div
+			class="hero__content">
+			{# Tagline with diamonds #}
+			<div class="hero__tagline">
+				<p class="hero__tagline-text">
+					Tous vos menus méritent d’être vus en salle et sur le web.
+				</p>
+				<div class="hero__diamonds">
+					<span class="hero__diamond"></span>
+					<span class="hero__diamond"></span>
+					<span class="hero__diamond"></span>
+				</div>
+			</div>
+
+			{# Main title #}
+			<h1 class="hero__title">
+				L'Ardoise qui attire
+				<br>
+				aussi sur
+				<span class="hero__title-highlight">Internet</span>
+			</h1>
+
+			{# Description #}
+			<p class="hero__description">
+				Créez et partagez vos menus en ligne aussi facilement que vous écrivez sur votre ardoise.
+			</p>
+			<p class="hero__description">
+				Ardoise Magique prolonge votre communication locale dans le monde digital : vos menus deviennent visibles, partageables et consultables partout.
+			</p>
+
+			{# Call to action buttons #}
+			<div class="hero__cta-wrapper">
+				<a href="#reservation" class="hero__cta hero__cta--secondary">
+					Créer mon menu
+				</a>
+			</div>
+		</div>
+
+		{# Right side - Visual with circular image and decorative rings #}
+		<div class="hero__visual">
+			<div
+				class="hero__image-wrapper">
+				{# Decorative rings #}
+				<div class="hero__ring hero__ring--outer"></div>
+
+				{# Main image circle #}
+				<div class="hero__image-circle">
+					<img src="{{ asset('images/landing/hero-menu-du-jour-640.webp') }}" srcset="
+						                            {{ asset('images/landing/hero-menu-du-jour-540.webp') }} 540w,
+						                            {{ asset('images/landing/hero-menu-du-jour-640.webp') }} 640w,
+						                            {{ asset('images/landing/hero-menu-du-jour-760.webp') }} 760w
+						                        " sizes="(min-width: 1200px) 380px, (min-width: 768px) 320px, 90vw" alt="Assiette de plats du jour présentée sur une table de restaurant, illustrant un menu du jour attractif." width="380" height="470" loading="eager" fetchpriority="high" decoding="async" class="hero__image">
+				</div>
+
+				<div class="hero__ring hero__ring--inner"></div>
+			</div>
+		</div>
+	</div>
+
+	{# Background decorative elements #}
+	<img src="{{ asset('images/landing/deco/fast-food.webp') }}" class="hero__deco hero__deco--1" alt="" role="presentation" loading="lazy" decoding="async">
+
+	<img src="{{ asset('images/landing/deco/meatloaf.webp') }}" class="hero__deco hero__deco--2" alt="" role="presentation" loading="lazy" decoding="async">
+
+</section>
