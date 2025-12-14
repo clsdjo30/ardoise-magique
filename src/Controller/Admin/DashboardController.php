@@ -6,8 +6,11 @@ namespace App\Controller\Admin;
 
 use App\Entity\Ardoise;
 use App\Entity\Restaurant;
+use App\Entity\Subscription;
 use App\Entity\User;
 use App\Repository\ArdoiseRepository;
+use App\Service\Subscription\FeatureAccessService;
+use App\Service\Subscription\UsageTrackerService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -19,7 +22,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 class DashboardController extends AbstractDashboardController
 {
     public function __construct(
-        private ArdoiseRepository $ardoiseRepository
+        private ArdoiseRepository $ardoiseRepository,
+        private FeatureAccessService $featureAccess,
+        private UsageTrackerService $usageTracker
     ) {}
 
     public function configureAssets(): Assets
@@ -102,12 +107,38 @@ class DashboardController extends AbstractDashboardController
         usort($menus, fn($a, $b) => $b->getId() <=> $a->getId());
         $publishedMenu = $this->getFirstPublishedMenu($menus);
 
+        // Subscription information
+        $planCode = $user->getPlanCode();
+        $planConfig = $this->featureAccess->getCurrentPlan($user);
+
+        $quotaInfo = [
+            'daily_menus' => [
+                'used' => $this->usageTracker->getDailyMenuUsageThisMonth($user),
+                'limit' => $this->featureAccess->isUnlimited($user, 'menus_daily')
+                    ? -1
+                    : ($planConfig['features']['menus_daily']['quota'] ?? 0),
+                'period' => 'ce mois',
+            ],
+            'special_menus' => [
+                'used' => $this->usageTracker->getSpecialMenuUsageThisYear($user),
+                'limit' => $this->featureAccess->isUnlimited($user, 'menus_special')
+                    ? -1
+                    : ($planConfig['features']['menus_special']['quota'] ?? 0),
+                'period' => 'cette année',
+            ],
+        ];
+
         return $this->render('admin/dashboard.html.twig', [
             'totalMenus' => $totalMenus,
             'menusPublies' => $menusPublies,
             'menus' => $menus,
             'publishedMenu' => $publishedMenu,
             'userRestaurants' => $restaurants,
+            'planCode' => $planCode,
+            'planName' => $planConfig['name'] ?? 'Gratuit',
+            'quotaInfo' => $quotaInfo,
+            'canCreateDaily' => $this->featureAccess->canAccessFeature($user, 'menus_daily'),
+            'canCreateSpecial' => $this->featureAccess->canAccessFeature($user, 'menus_special'),
         ]);
     }
 
@@ -198,17 +229,45 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Menus du Jour');
         yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-sun', Ardoise::class)
             ->setController(DailyMenuCrudController::class);
-        yield MenuItem::linkToCrud('Créer un Menu', 'fa fa-plus', Ardoise::class)
-            ->setController(DailyMenuCrudController::class)
-            ->setAction('new');
+
+        if ($this->featureAccess->canAccessFeature($user, 'menus_daily')) {
+            $remaining = $this->featureAccess->getQuotaRemaining($user, 'menus_daily');
+            $label = $remaining === null
+                ? 'Créer un Menu'
+                : sprintf('Créer un Menu (%d restants)', $remaining);
+
+            yield MenuItem::linkToCrud($label, 'fa fa-plus', Ardoise::class)
+                ->setController(DailyMenuCrudController::class)
+                ->setAction('new');
+        } else {
+            yield MenuItem::linkToUrl('Créer un Menu 🔒', 'fa fa-lock', '#')
+                ->setLinkRel('nofollow');
+        }
 
         // Section Menus Spéciaux
         yield MenuItem::section('Menus Spéciaux');
-        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-star', Ardoise::class)
-            ->setController(SpecialMenuCrudController::class);
-        yield MenuItem::linkToCrud('Créer un Menu', 'fa fa-plus', Ardoise::class)
-            ->setController(SpecialMenuCrudController::class)
-            ->setAction('new');
+
+        if ($this->featureAccess->canAccessFeature($user, 'menus_special')) {
+            yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-star', Ardoise::class)
+                ->setController(SpecialMenuCrudController::class);
+
+            $remaining = $this->featureAccess->getQuotaRemaining($user, 'menus_special');
+            $label = $remaining === null
+                ? 'Créer un Menu'
+                : sprintf('Créer un Menu (%d restants)', $remaining);
+
+            yield MenuItem::linkToCrud($label, 'fa fa-plus', Ardoise::class)
+                ->setController(SpecialMenuCrudController::class)
+                ->setAction('new');
+        } else {
+            yield MenuItem::linkToUrl('Menus Spéciaux (Plan Starter requis) 🔒', 'fa fa-lock', '#')
+                ->setLinkRel('nofollow');
+        }
+
+        // Section Abonnement
+        yield MenuItem::section('Abonnement');
+        yield MenuItem::linkToRoute('Mon Abonnement', 'fa fa-crown', 'app_subscription_current');
+        yield MenuItem::linkToRoute('Voir les offres', 'fa fa-star', 'app_subscription_plans');
 
         // Section Marketing Social
         yield MenuItem::section('Marketing Social');
@@ -240,6 +299,11 @@ class DashboardController extends AbstractDashboardController
         // Tous les restaurants (optionnel mais pertinent pour un super admin)
         yield MenuItem::linkToCrud('Restaurants', 'fa fa-utensils', Restaurant::class)
             ->setController(RestaurantCrudController::class);
+
+        // Abonnements
+        yield MenuItem::section('Abonnements');
+        yield MenuItem::linkToCrud('Subscriptions', 'fa fa-credit-card', Subscription::class)
+            ->setController(SubscriptionCrudController::class);
 
         // Tous les menus (tous types confondus)
         yield MenuItem::section('Menus');

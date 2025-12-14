@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Abonnement{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="mb-4">Mon Abonnement</h1>
+
+            {# Subscription Overview Card #}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-crown me-2"></i>Plan {{ planConfig.name }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Statut:</strong>
+                            {% if subscription.active %}
+                                <span class="badge bg-success">Actif</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inactif</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Depuis le:</strong>
+                            {{ subscription.startedAt|date('d/m/Y') }}
+                        </div>
+                        {% if subscription.expiresAt %}
+                        <div class="col-md-6 mb-3">
+                            <strong>Expire le:</strong>
+                            {{ subscription.expiresAt|date('d/m/Y') }}
+                        </div>
+                        {% endif %}
+                        <div class="col-md-6 mb-3">
+                            <strong>Prix:</strong>
+                            {% if planConfig.price == 0 %}
+                                Gratuit
+                            {% else %}
+                                {{ planConfig.price }}€ / {{ planConfig.interval == 'month' ? 'mois' : 'an' }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if subscription.planCode != 'PREMIUM' %}
+                    <div class="alert alert-info mt-3 mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Envie de plus de fonctionnalités?</strong>
+                        <a href="{{ path('app_subscription_plans') }}" class="alert-link">
+                            Découvrez nos autres plans
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Usage Details #}
+            {% if usageDetails is not empty %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Utilisation des quotas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for key, detail in usageDetails %}
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0">{{ detail.name }}</h6>
+                            {% if detail.unlimited %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-infinity"></i> Illimité
+                                </span>
+                            {% else %}
+                                <span class="text-muted">
+                                    {{ detail.used }} / {{ detail.limit }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {% if not detail.unlimited %}
+                        <div class="progress mb-2" style="height: 25px;">
+                            {% set percentage = detail.limit > 0 ? (detail.used / detail.limit * 100)|round : 0 %}
+                            <div class="progress-bar
+                                {% if percentage >= 100 %}bg-danger
+                                {% elseif percentage >= 80 %}bg-warning
+                                {% else %}bg-success{% endif %}"
+                                role="progressbar"
+                                style="width: {{ percentage }}%"
+                                aria-valuenow="{{ percentage }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100">
+                                {{ percentage }}%
+                            </div>
+                        </div>
+                        <small class="text-muted">Période: {{ detail.period }}</small>
+
+                        {% if detail.used >= detail.limit %}
+                        <div class="alert alert-danger alert-sm mt-2 mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Quota atteint!</strong>
+                            <a href="{{ path('app_subscription_plans') }}" class="alert-link">
+                                Passez à un plan supérieur
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <p class="text-muted mb-0">
+                            <small>{{ detail.used }} créé(s) {{ detail.period }}</small>
+                        </p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {# Features List #}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list-check me-2"></i>Fonctionnalités incluses
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for featureName, feature in planFeatures %}
+                            {% if feature.enabled %}
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <strong>{{ featureName|replace({'_': ' '})|title }}</strong>
+                                {% if feature.quota is defined and feature.quota != -1 %}
+                                    - {{ feature.quota }} par {{ feature.period }}
+                                {% elseif feature.quota is defined and feature.quota == -1 %}
+                                    - Illimité
+                                {% endif %}
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {# Templates disponibles #}
+            {% if allowedTemplates is not empty %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-palette me-2"></i>Templates de design disponibles
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        {% for template in allowedTemplates %}
+                        <div class="col-md-4 col-sm-6">
+                            <div class="card border">
+                                <div class="card-body text-center py-2">
+                                    <i class="fas fa-file-alt text-primary mb-2"></i>
+                                    <p class="mb-0 small">{{ template|title }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {# Actions #}
+            <div class="d-flex justify-content-between">
+                <a href="{{ path('app_admin_dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Retour au dashboard
+                </a>
+                {% if subscription.planCode != 'PREMIUM' %}
+                <a href="{{ path('app_subscription_plans') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-up me-2"></i>Améliorer mon plan
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

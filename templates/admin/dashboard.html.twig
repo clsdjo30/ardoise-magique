@@ -113,6 +113,132 @@
 			</div>
 		</header>
 
+		{# Subscription Info & Quota Widgets #}
+		{% if planCode is defined %}
+		<section class="am-section mb-4">
+			<div class="subscription-widget mb-3 p-3 card border-0 shadow-sm">
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						<h5 class="mb-1">
+							<i class="fa fa-crown me-2 text-warning"></i>
+							Plan actuel: <strong>{{ planName }}</strong>
+						</h5>
+						{% if planCode == 'FREE' %}
+							<p class="text-muted mb-0 small">Passez à Starter ou Premium pour plus de fonctionnalités</p>
+						{% endif %}
+					</div>
+					{% if planCode != 'PREMIUM' %}
+						<a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-sm">
+							<i class="fa fa-arrow-up me-2"></i>
+							Voir les offres
+						</a>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="row g-3">
+				<div class="col-md-6">
+					<div class="am-card h-100">
+						<div class="card-header bg-primary text-white border-0">
+							<h6 class="mb-0">
+								<i class="fa fa-sun me-2"></i>
+								Menus du Jour
+							</h6>
+						</div>
+						<div class="card-body">
+							{% set dailyQuota = quotaInfo.daily_menus %}
+
+							{% if dailyQuota.limit == -1 %}
+								<p class="text-success mb-1 fw-bold">
+									<i class="fa fa-infinity me-2"></i>Illimité
+								</p>
+								<p class="text-muted small mb-0">{{ dailyQuota.used }} créés {{ dailyQuota.period }}</p>
+							{% else %}
+								<div class="progress mb-3" style="height: 25px;">
+									{% set percentage = dailyQuota.limit > 0 ? ((dailyQuota.used / dailyQuota.limit * 100)|round) : 0 %}
+									<div class="progress-bar
+										{% if percentage >= 100 %}bg-danger
+										{% elseif percentage >= 80 %}bg-warning
+										{% else %}bg-success{% endif %}"
+										style="width: {{ percentage }}%">
+										{{ percentage }}%
+									</div>
+								</div>
+								<p class="mb-2">
+									<strong>{{ dailyQuota.used }}</strong> / {{ dailyQuota.limit }}
+									menus utilisés {{ dailyQuota.period }}
+								</p>
+
+								{% if dailyQuota.used >= dailyQuota.limit %}
+									<div class="alert alert-danger mb-0 py-2">
+										<i class="fa fa-exclamation-triangle me-2"></i>
+										<strong>Quota atteint!</strong>
+										<a href="{{ path('app_subscription_plans') }}" class="alert-link">Passer à Starter</a>
+									</div>
+								{% endif %}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="am-card h-100">
+						<div class="card-header bg-info text-white border-0">
+							<h6 class="mb-0">
+								<i class="fa fa-star me-2"></i>
+								Menus Spéciaux
+							</h6>
+						</div>
+						<div class="card-body">
+							{% set specialQuota = quotaInfo.special_menus %}
+
+							{% if not canCreateSpecial %}
+								<div class="alert alert-warning mb-0">
+									<i class="fa fa-lock me-2"></i>
+									<strong>Fonctionnalité non disponible</strong>
+									<br>
+									<small>Disponible avec le plan Starter</small>
+									<br>
+									<a href="{{ path('app_subscription_plans') }}" class="btn btn-sm btn-warning mt-2">
+										Découvrir les plans
+									</a>
+								</div>
+							{% elseif specialQuota.limit == -1 %}
+								<p class="text-success mb-1 fw-bold">
+									<i class="fa fa-infinity me-2"></i>Illimité
+								</p>
+								<p class="text-muted small mb-0">{{ specialQuota.used }} créés {{ specialQuota.period }}</p>
+							{% else %}
+								<div class="progress mb-3" style="height: 25px;">
+									{% set percentage = specialQuota.limit > 0 ? ((specialQuota.used / specialQuota.limit * 100)|round) : 0 %}
+									<div class="progress-bar
+										{% if percentage >= 100 %}bg-danger
+										{% elseif percentage >= 80 %}bg-warning
+										{% else %}bg-success{% endif %}"
+										style="width: {{ percentage }}%">
+										{{ percentage }}%
+									</div>
+								</div>
+								<p class="mb-2">
+									<strong>{{ specialQuota.used }}</strong> / {{ specialQuota.limit }}
+									menus utilisés {{ specialQuota.period }}
+								</p>
+
+								{% if specialQuota.used >= specialQuota.limit %}
+									<div class="alert alert-danger mb-0 py-2">
+										<i class="fa fa-exclamation-triangle me-2"></i>
+										<strong>Quota atteint!</strong>
+										<a href="{{ path('app_subscription_plans') }}" class="alert-link">Passer à Premium</a>
+									</div>
+								{% endif %}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		{% endif %}
+
 		<section class="am-section mb-4">
 			<div class="d-flex align-items-center justify-content-between mb-3">
 				<div class="am-section-title">

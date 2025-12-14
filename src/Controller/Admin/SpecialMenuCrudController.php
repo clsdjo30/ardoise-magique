@@ -11,6 +11,7 @@ use App\Form\ArdoiseItemType;
 use App\Form\EntreeType;
 use App\Form\PlatType;
 use App\Form\DessertType;
+use App\Service\Subscription\FeatureAccessService;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -33,7 +34,8 @@ class SpecialMenuCrudController extends AbstractCrudController
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private RequestStack $requestStack,
-        private RestaurantRepository $restaurantRepository
+        private RestaurantRepository $restaurantRepository,
+        private FeatureAccessService $featureAccess
     ) {}
 
     public static function getEntityFqcn(): string
@@ -79,31 +81,49 @@ class SpecialMenuCrudController extends AbstractCrudController
 
             FormField::addFieldset("Personnalisez l'affichage de votre menu")
                 ->setCssClass('panel-classy bg-sidebar-200 p-3 mb-4 mt-4e'),
-            ChoiceField::new('template', 'Choisissez votre template')
-                ->setChoices([
-                    'Bistrot' => Ardoise::TEMPLATE_BISTROT,
-                    'Tradition' => Ardoise::TEMPLATE_TRADITIONNEL,
-                    'Brut' => Ardoise::TEMPLATE_BRUT,
-                    'Classe' => Ardoise::TEMPLATE_CLASSE,
-                    'Digital' => Ardoise::TEMPLATE_DIGITAL,
-                    'Magazine' => Ardoise::TEMPLATE_MAGAZINE,
-                    'Marché' => Ardoise::TEMPLATE_MARCHE,
-                    'Raffiné' => Ardoise::TEMPLATE_RAFINE,
-                ])
-                ->setColumns(12)
-                ->setRequired(true)
-                ->setFormTypeOption('expanded', true)
-                ->setFormTypeOption('attr', ['class' => 'template-grid'])
-                ->setFormTypeOption('choice_attr', function ($choice, $key, $value) {
-                    return [
-                        'class' => 'template-radio-option',
-                        'data-template-value' => $value,
-                        'data-template-label' => $key,
-                        'data-template-image' => '/images/vignette_jour/' . $value . '.webp'
-                    ];
-                })
-                ->setFormTypeOption('row_attr', ['class' => 'template-field-row'])
-                ->renderAsNativeWidget(false),
+        ];
+
+        // Filter templates based on user's plan
+        /** @var User $user */
+        $user = $this->getUser();
+        $allowedTemplates = $this->featureAccess->getAllowedTemplates($user);
+
+        $templateChoices = [];
+        $allTemplates = [
+            'Bistrot' => Ardoise::TEMPLATE_BISTROT,
+            'Tradition' => Ardoise::TEMPLATE_TRADITIONNEL,
+            'Brut' => Ardoise::TEMPLATE_BRUT,
+            'Classe' => Ardoise::TEMPLATE_CLASSE,
+            'Digital' => Ardoise::TEMPLATE_DIGITAL,
+            'Magazine' => Ardoise::TEMPLATE_MAGAZINE,
+            'Marché' => Ardoise::TEMPLATE_MARCHE,
+            'Raffiné' => Ardoise::TEMPLATE_RAFINE,
+        ];
+
+        foreach ($allTemplates as $label => $value) {
+            if (in_array($value, $allowedTemplates, true)) {
+                $templateChoices[$label] = $value;
+            }
+        }
+
+        yield ChoiceField::new('template', 'Choisissez votre template')
+            ->setChoices($templateChoices)
+            ->setColumns(12)
+            ->setRequired(true)
+            ->setFormTypeOption('expanded', true)
+            ->setFormTypeOption('attr', ['class' => 'template-grid'])
+            ->setFormTypeOption('choice_attr', function ($choice, $key, $value) {
+                return [
+                    'class' => 'template-radio-option',
+                    'data-template-value' => $value,
+                    'data-template-label' => $key,
+                    'data-template-image' => '/images/vignette_jour/' . $value . '.webp'
+                ];
+            })
+            ->setFormTypeOption('row_attr', ['class' => 'template-field-row'])
+            ->renderAsNativeWidget(false);
+
+        yield from [
 
             // Deuxieme Tab - MLes Entrées
             FormField::addTab('Vos Entrées'),
