@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     blog.content_dir: '%kernel.project_dir%/content/blog'
+    plans_config_file: '%kernel.project_dir%/config/plans.yaml'
 
 services:
     # default configuration for services in *this* file
@@ -30,3 +31,8 @@ services:
             $cache: '@cache.app'
             $logger: '@logger'
             $markdown: '@League\CommonMark\MarkdownConverter'
+
+    # Subscription services configuration
+    App\Service\Subscription\PlanConfigurationLoader:
+        arguments:
+            $configFile: '%plans_config_file%'

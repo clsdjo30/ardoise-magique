@@ -62,6 +62,9 @@ class Ardoise
     #[ORM\JoinColumn(nullable: false)]
     private ?Restaurant $restaurant = null;
 
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $createdAt = null;
+
     // ==========================================
     // CHAMPS MENU DU JOUR (type=DAILY)
     // ==========================================
@@ -137,6 +140,14 @@ class Ardoise
             $baseSlug = $slugger->slug($this->titre)->lower()->toString();
             // Ajouter un timestamp pour garantir l'unicite
             $this->slug = $baseSlug . '-' . uniqid();
+        }
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
         }
     }
 
@@ -230,6 +241,11 @@ class Ardoise
         $this->restaurant = $restaurant;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 
     /**

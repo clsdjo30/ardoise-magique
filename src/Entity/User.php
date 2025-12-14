@@ -51,6 +51,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Restaurant::class, mappedBy: 'owner', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $restaurants;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private ?Subscription $subscription = null;
+
     public function __construct()
     {
         $this->restaurants = new ArrayCollection();
@@ -222,5 +225,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFirstRestaurant(): ?Restaurant
     {
         return $this->restaurants->first() ?: null;
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(?Subscription $subscription): static
+    {
+        // Unset the owning side of the relation if necessary
+        if ($subscription === null && $this->subscription !== null) {
+            $this->subscription->setUser(null);
+        }
+
+        // Set the owning side of the relation if necessary
+        if ($subscription !== null && $subscription->getUser() !== $this) {
+            $subscription->setUser($this);
+        }
+
+        $this->subscription = $subscription;
+
+        return $this;
+    }
+
+    /**
+     * Get the plan code from subscription, or 'FREE' if no subscription
+     */
+    public function getPlanCode(): string
+    {
+        return $this->subscription?->getPlanCode() ?? 'FREE';
     }
 }
