@@ -60,7 +60,7 @@ class SpecialMenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
+        yield from [
 
             //MENU SPECIAL
             FormField::addTab('Généralités du Menu Spécial'),

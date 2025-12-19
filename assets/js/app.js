@@ -1,4 +1,3 @@
-import '../stimulus_bootstrap.js';
 import '../styles/public/app.scss';
 
 import initModal from './components/modal.js';
