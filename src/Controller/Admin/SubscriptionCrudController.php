@@ -55,7 +55,6 @@ class SubscriptionCrudController extends AbstractCrudController
                 return sprintf(
                     '%s %s (%s)',
                     $user->getFirstname() ?? '',
-                    $user->getLastname() ?? '',
                     $user->getEmail()
                 );
             });

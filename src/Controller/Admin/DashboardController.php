@@ -8,6 +8,7 @@ use App\Entity\Ardoise;
 use App\Entity\Restaurant;
 use App\Entity\Subscription;
 use App\Entity\User;
+use App\Entity\PlatCategorie;
 use App\Repository\ArdoiseRepository;
 use App\Service\Subscription\FeatureAccessService;
 use App\Service\Subscription\UsageTrackerService;
@@ -15,7 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
@@ -219,36 +220,33 @@ class DashboardController extends AbstractDashboardController
 
         // Section Mon Établissement
         yield MenuItem::section('Mon Établissement');
-        yield MenuItem::linkToCrud('Mes Restaurants', 'fa fa-utensils', Restaurant::class)
+        yield MenuItem::linkToCrud('Mes Restaurants', 'fa fa-hotel', Restaurant::class)
             ->setController(RestaurantCrudController::class);
-        yield MenuItem::linkToCrud('Ajouter un Restaurant', 'fa fa-plus', Restaurant::class)
-            ->setController(RestaurantCrudController::class)
-            ->setAction('new');
+        yield MenuItem::linkToRoute('Mon Abonnement', 'fa fa-id-card', 'app_subscription_current');
+        yield MenuItem::linkToRoute('Voir les offres', 'fa fa-gem', 'app_subscription_plans');
+
 
         // Section Menus du Jour
-        yield MenuItem::section('Menus du Jour');
-        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-sun', Ardoise::class)
-            ->setController(DailyMenuCrudController::class);
+        yield MenuItem::section('Menus');
+
+        // yield MenuItem::linkToCrud('Menu du jour', 'fa fa-bowl-rice', Ardoise::class)
+        //     ->setController(DailyMenuCrudController::class);
 
         if ($this->featureAccess->canAccessFeature($user, 'menus_daily')) {
             $remaining = $this->featureAccess->getQuotaRemaining($user, 'menus_daily');
             $label = $remaining === null
-                ? 'Créer un Menu'
-                : sprintf('Créer un Menu (%d restants)', $remaining);
+                ? 'Menu du Jour'
+                : sprintf('Menu du Jour (%d restants)', $remaining);
 
-            yield MenuItem::linkToCrud($label, 'fa fa-plus', Ardoise::class)
-                ->setController(DailyMenuCrudController::class)
-                ->setAction('new');
+            yield MenuItem::linkToCrud($label, 'fa fa-bowl-rice', Ardoise::class)
+                ->setController(DailyMenuCrudController::class);
         } else {
-            yield MenuItem::linkToUrl('Créer un Menu 🔒', 'fa fa-lock', '#')
+            yield MenuItem::linkToUrl(' 🔒', 'fa fa-lock', '#')
                 ->setLinkRel('nofollow');
         }
 
-        // Section Menus Spéciaux
-        yield MenuItem::section('Menus Spéciaux');
-
         if ($this->featureAccess->canAccessFeature($user, 'menus_special')) {
-            yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-star', Ardoise::class)
+            yield MenuItem::linkToCrud('Menus Spéciaux', 'fa fa-birthday-cake', Ardoise::class)
                 ->setController(SpecialMenuCrudController::class);
 
             $remaining = $this->featureAccess->getQuotaRemaining($user, 'menus_special');
@@ -260,14 +258,32 @@ class DashboardController extends AbstractDashboardController
                 ->setController(SpecialMenuCrudController::class)
                 ->setAction('new');
         } else {
-            yield MenuItem::linkToUrl('Menus Spéciaux (Plan Starter requis) 🔒', 'fa fa-lock', '#')
-                ->setLinkRel('nofollow');
+            yield MenuItem::linkToRoute('Menus Spéciaux 🔒', 'fa fa-lock', 'app_subscription_plans');
         }
 
-        // Section Abonnement
-        yield MenuItem::section('Abonnement');
-        yield MenuItem::linkToRoute('Mon Abonnement', 'fa fa-crown', 'app_subscription_current');
-        yield MenuItem::linkToRoute('Voir les offres', 'fa fa-star', 'app_subscription_plans');
+        // Section Cartes Restaurant
+        yield MenuItem::section('Cartes Restaurant');
+
+        if ($this->featureAccess->canAccessFeature($user, 'cards')) {
+             yield MenuItem::subMenu('Ma Bibliothèque', 'fa fa-book')->setSubItems([
+            MenuItem::linkToCrud('Cartes', 'fa fa-book-open', \App\Entity\Carte::class),
+            MenuItem::linkToCrud('Plats', 'fa fa-book', \App\Entity\PlatCatalogue::class)
+                ->setController(\App\Controller\Admin\PlatCatalogueCrudController::class),
+            MenuItem::linkToCrud('Catégories', 'fa fa-utensils', PlatCategorie::class)
+                ->setController(PlatCategorieCrudController::class),
+            MenuItem::linkToCrud('Ajouter un Plat', 'fa fa-plus', \App\Entity\PlatCatalogue::class)
+                ->setController(\App\Controller\Admin\PlatCatalogueCrudController::class)
+                ->setAction('new'),
+            MenuItem::linkToCrud('Catégories', 'fa fa-utensils', PlatCategorie::class)
+                ->setController(PlatCategorieCrudController::class)
+                ->setAction('new'),
+            MenuItem::linkToUrl('Créer une Carte', 'fa fa-magic', $this->generateUrl('app_carte_wizard'))
+        ]);
+
+        } else {
+            yield MenuItem::linkToUrl('Cartes Restaurant 🔒', 'fa fa-lock', '#')
+                ->setLinkRel('nofollow');
+        }
 
         // Section Marketing Social
         yield MenuItem::section('Marketing Social');

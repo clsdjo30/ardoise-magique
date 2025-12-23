@@ -1,0 +1,46 @@
+{{ form_start(form, {'attr': {'class': 'onboarding-form'}}) }}
+
+{# Date de début #}
+<div class="form-field">
+    <label for="{{ form.validFrom.vars.id }}">
+        {{ form.validFrom.vars.label }}
+        <span class="required">*</span>
+    </label>
+    {{ form_widget(form.validFrom) }}
+    {{ form_errors(form.validFrom) }}
+    {% if form.validFrom.vars.help %}
+        <div class="form-help">{{ form.validFrom.vars.help }}</div>
+    {% endif %}
+</div>
+
+{# Date de fin #}
+<div class="form-field">
+    <label for="{{ form.validTo.vars.id }}">
+        {{ form.validTo.vars.label }}
+    </label>
+    {{ form_widget(form.validTo) }}
+    {{ form_errors(form.validTo) }}
+    {% if form.validTo.vars.help %}
+        <div class="form-help">{{ form.validTo.vars.help }}</div>
+    {% endif %}
+</div>
+
+{# Restaurant #}
+<div class="form-field">
+    <label for="{{ form.restaurant.vars.id }}">
+        {{ form.restaurant.vars.label }}
+        <span class="required">*</span>
+    </label>
+    {{ form_widget(form.restaurant) }}
+    {{ form_errors(form.restaurant) }}
+</div>
+
+{# Navigation buttons #}
+<div class="wizard-navigation">
+    <div></div> {# Empty div for spacing #}
+    <button type="submit" class="btn btn-primary">
+        Suivant : Créer les sections
+    </button>
+</div>
+
+{{ form_end(form) }}

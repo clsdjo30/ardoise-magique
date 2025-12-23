@@ -58,11 +58,15 @@ class Restaurant
     #[ORM\OneToMany(targetEntity: Ardoise::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $ardoises;
 
+    #[ORM\OneToMany(targetEntity: Carte::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $cartes;
+
     public function __construct()
     {
         $this->openingHours = new ArrayCollection();
         $this->exceptionalOpenings = new ArrayCollection();
         $this->ardoises = new ArrayCollection();
+        $this->cartes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -234,6 +238,33 @@ class Restaurant
         if ($this->ardoises->removeElement($ardoise)) {
             if ($ardoise->getRestaurant() === $this) {
                 $ardoise->setRestaurant(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Carte>
+     */
+    public function getCartes(): Collection
+    {
+        return $this->cartes;
+    }
+
+    public function addCarte(Carte $carte): static
+    {
+        if (!$this->cartes->contains($carte)) {
+            $this->cartes->add($carte);
+            $carte->setRestaurant($this);
+        }
+        return $this;
+    }
+
+    public function removeCarte(Carte $carte): static
+    {
+        if ($this->cartes->removeElement($carte)) {
+            if ($carte->getRestaurant() === $this) {
+                $carte->setRestaurant(null);
             }
         }
         return $this;

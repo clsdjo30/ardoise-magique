@@ -1,0 +1,251 @@
+<div class="preview-summary">
+    <div class="summary-stats">
+        <div class="stat-item">
+            <span class="stat-label">Restaurant</span>
+            <span class="stat-value">{{ previewData.restaurant.name }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Valide du</span>
+            <span class="stat-value">{{ previewData.validFrom|date('d/m/Y') }}</span>
+        </div>
+        {% if previewData.validTo %}
+        <div class="stat-item">
+            <span class="stat-label">Valide au</span>
+            <span class="stat-value">{{ previewData.validTo|date('d/m/Y') }}</span>
+        </div>
+        {% endif %}
+        <div class="stat-item">
+            <span class="stat-label">Sections</span>
+            <span class="stat-value">{{ previewData.totalSections }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Plats</span>
+            <span class="stat-value">{{ previewData.totalDishes }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="preview-content">
+    <h3>Aperçu de la carte</h3>
+
+    {% if previewData.sectionsWithDishes is empty %}
+        <div class="preview-empty">
+            <p>Aucune section n'a été créée pour cette carte.</p>
+        </div>
+    {% else %}
+        {% for sectionData in previewData.sectionsWithDishes %}
+            <div class="preview-section">
+                <div class="preview-section-header">
+                    <h4>{{ sectionData.section.categorie.titre }}</h4>
+                    <span class="preview-section-count">{{ sectionData.count }} plat(s)</span>
+                </div>
+
+                {% if sectionData.section.description %}
+                    <p class="preview-section-description">{{ sectionData.section.description }}</p>
+                {% endif %}
+
+                {% if sectionData.variants is empty %}
+                    <p class="preview-section-empty">Aucun plat dans cette section</p>
+                {% else %}
+                    <div class="preview-dishes">
+                        {% for variant in sectionData.variants %}
+                            <div class="preview-dish">
+                                <div class="preview-dish-info">
+                                    <span class="preview-dish-name">{{ variant.platCatalogue.name }}</span>
+                                    <span class="preview-dish-variant">{{ variant.label }}</span>
+                                </div>
+                                <span class="preview-dish-price">{{ (variant.priceCents / 100)|number_format(2, ',', ' ') }}€</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<form method="post" class="preview-form">
+    <div class="form-field">
+        <label class="checkbox-label">
+            <input type="checkbox" name="isPublished" value="1" {{ wizardData.isPublished ? 'checked' : '' }}>
+            <span>Publier immédiatement cette carte</span>
+        </label>
+        <p class="form-help">Si coché, la carte sera visible publiquement</p>
+    </div>
+
+    <div class="wizard-navigation">
+        <a href="{{ path('app_carte_wizard', {'step': 'step3'}) }}" class="btn btn-secondary">
+            Retour
+        </a>
+        <button type="submit" class="btn btn-success">
+            ✓ Créer la carte
+        </button>
+    </div>
+</form>
+
+<style>
+.preview-summary {
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.preview-content {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.preview-content > h3 {
+    margin: 0 0 1.5rem 0;
+    color: #111827;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.75rem;
+}
+
+.preview-section {
+    margin-bottom: 2rem;
+}
+
+.preview-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.preview-section-header h4 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.125rem;
+}
+
+.preview-section-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+}
+
+.preview-section-description {
+    color: #6b7280;
+    margin: 0 0 1rem 0;
+    font-style: italic;
+}
+
+.preview-section-empty {
+    color: #9ca3af;
+    font-style: italic;
+    padding: 1rem;
+    text-align: center;
+}
+
+.preview-dishes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.preview-dish {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+}
+
+.preview-dish-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.preview-dish-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+.preview-dish-variant {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.preview-dish-price {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #059669;
+}
+
+.preview-empty {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+}
+
+.preview-form {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+}
+
+.btn-success {
+    background: #10b981;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-success:hover {
+    background: #059669;
+}
+</style>
