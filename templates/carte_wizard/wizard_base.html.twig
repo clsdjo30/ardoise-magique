@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Créer une Carte{% endblock %} - Ardoise Magique</title>
+
+    {# EasyAdmin CSS for consistent styling #}
+    <link rel="stylesheet" href="{{ asset('bundles/easyadmin/app.css') }}">
+
+    {# AssetMapper #}
+    {% block stylesheets %}
+        {{ importmap('app') }}
+    {% endblock %}
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .wizard-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+        }
+
+        .wizard-container {
+            position: relative;
+            z-index: 1001;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            width: 90%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wizard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .wizard-header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .wizard-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .wizard-progress {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .steps-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .steps-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active .step-circle {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-item.completed .step-circle {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .step-item.completed .step-circle::before {
+            content: '✓';
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .step-item.active .step-label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .step-item.completed .step-label {
+            color: #10b981;
+        }
+
+        .wizard-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .wizard-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .wizard-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .wizard-body::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .wizard-body::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .wizard-navigation {
+            background: #f9fafb;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .close-wizard {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .close-wizard:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            .wizard-container {
+                width: 95%;
+                max-height: 95vh;
+            }
+
+            .wizard-header {
+                padding: 1.5rem;
+            }
+
+            .wizard-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .wizard-body {
+                padding: 1.5rem;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+            }
+
+            .step-circle {
+                width: 32px;
+                height: 32px;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wizard-overlay"></div>
+
+    <div class="wizard-container">
+        <div class="wizard-header">
+            <button type="button" class="close-wizard" onclick="if(confirm('Êtes-vous sûr de vouloir quitter ? Vos modifications seront perdues.')) window.location.href='{{ path('app_carte_wizard_cancel') }}'">
+                ✕
+            </button>
+            <h1>{% block wizard_title %}Créer une Carte Restaurant{% endblock %}</h1>
+            <p>{% block wizard_description %}Créez votre carte en quelques étapes simples{% endblock %}</p>
+        </div>
+
+        <div class="wizard-progress">
+            <div class="steps-indicator">
+                <div class="step-item {% if currentStep == 'step1' %}active{% elseif currentStep in ['step2', 'step3', 'step4'] %}completed{% endif %}">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">Informations</span>
+                </div>
+                <div class="step-item {% if currentStep == 'step2' %}active{% elseif currentStep in ['step3', 'step4'] %}completed{% endif %}">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">Sections</span>
+                </div>
+                <div class="step-item {% if currentStep == 'step3' %}active{% elseif currentStep == 'step4' %}completed{% endif %}">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Plats</span>
+                </div>
+                <div class="step-item {% if currentStep == 'step4' %}active{% endif %}">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Aperçu</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard-body">
+            {% block wizard_content %}{% endblock %}
+        </div>
+    </div>
+
+    {% block javascripts %}
+        {{ importmap('app') }}
+    {% endblock %}
+</body>
+</html>

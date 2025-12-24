@@ -1,173 +1,29 @@
-{% extends 'base.html.twig' %}
+{% extends 'carte_wizard/wizard_base.html.twig' %}
 
-{% block title %}Créer une Carte - L'Ardoise Magique{% endblock %}
+{% block title %}{{ stepTitle }} - Créer une Carte{% endblock %}
 
-{% block body %}
-<div class="onboarding-container">
-    <div class="onboarding-content">
-        {# Header #}
-        <div class="onboarding-header">
-            <h1>Créer une Carte Restaurant</h1>
-            <p>{{ stepDescription }}</p>
-        </div>
+{% block wizard_description %}{{ stepDescription }}{% endblock %}
 
-        {# Progress Indicator #}
-        <div class="wizard-progress">
-            <div class="wizard-steps">
-                <div class="wizard-step {{ currentStep == 'step1' ? 'active' : (currentStep in ['step2', 'step3', 'step4'] ? 'completed' : '') }}">
-                    <div class="wizard-step-number">1</div>
-                    <div class="wizard-step-label">Informations</div>
-                </div>
-                <div class="wizard-step-divider"></div>
-                <div class="wizard-step {{ currentStep == 'step2' ? 'active' : (currentStep in ['step3', 'step4'] ? 'completed' : '') }}">
-                    <div class="wizard-step-number">2</div>
-                    <div class="wizard-step-label">Sections</div>
-                </div>
-                <div class="wizard-step-divider"></div>
-                <div class="wizard-step {{ currentStep == 'step3' ? 'active' : (currentStep == 'step4' ? 'completed' : '') }}">
-                    <div class="wizard-step-number">3</div>
-                    <div class="wizard-step-label">Plats</div>
-                </div>
-                <div class="wizard-step-divider"></div>
-                <div class="wizard-step {{ currentStep == 'step4' ? 'active' : '' }}">
-                    <div class="wizard-step-number">4</div>
-                    <div class="wizard-step-label">Aperçu</div>
-                </div>
+{% block wizard_content %}
+    {# Flash messages #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}" style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; background: {% if label == 'success' %}#d1fae5{% elseif label == 'error' %}#fee2e2{% else %}#dbeafe{% endif %}; color: {% if label == 'success' %}#065f46{% elseif label == 'error' %}#991b1b{% else %}#1e40af{% endif %};">
+                {{ message|raw }}
             </div>
-        </div>
-
-        {# Flash messages #}
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="flash-message flash-message--{{ label }}">
-                    {{ message|raw }}
-                </div>
-            {% endfor %}
         {% endfor %}
+    {% endfor %}
 
-        {# Step Content #}
-        <div class="onboarding-card">
-            <h2>{{ stepTitle }}</h2>
-
-            {% if currentStep == 'step1' %}
-                {% include 'carte_wizard/steps/step1.html.twig' %}
-            {% elseif currentStep == 'step2' %}
-                {% include 'carte_wizard/steps/step2.html.twig' %}
-            {% elseif currentStep == 'step3' %}
-                {% include 'carte_wizard/steps/step3.html.twig' %}
-            {% elseif currentStep == 'step4' %}
-                {% include 'carte_wizard/steps/step4.html.twig' %}
-            {% endif %}
-        </div>
-
-        {# Footer #}
-        <div class="onboarding-footer">
-            <a href="{{ path('app_carte_wizard_cancel') }}" class="btn-link">Annuler et revenir au dashboard</a>
-        </div>
+    {# Step Content #}
+    <div class="step-content">
+        {% if currentStep == 'step1' %}
+            {% include 'carte_wizard/steps/step1.html.twig' %}
+        {% elseif currentStep == 'step2' %}
+            {% include 'carte_wizard/steps/step2.html.twig' %}
+        {% elseif currentStep == 'step3' %}
+            {% include 'carte_wizard/steps/step3.html.twig' %}
+        {% elseif currentStep == 'step4' %}
+            {% include 'carte_wizard/steps/step4.html.twig' %}
+        {% endif %}
     </div>
-</div>
-
-<style>
-.wizard-progress {
-    margin: 2rem 0;
-    padding: 2rem 0;
-}
-
-.wizard-steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-}
-
-.wizard-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-}
-
-.wizard-step.active,
-.wizard-step.completed {
-    opacity: 1;
-}
-
-.wizard-step-number {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--color-background-secondary, #e5e7eb);
-    color: var(--color-text-secondary, #6b7280);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.wizard-step.active .wizard-step-number {
-    background: var(--color-primary, #3b82f6);
-    color: white;
-    transform: scale(1.1);
-}
-
-.wizard-step.completed .wizard-step-number {
-    background: var(--color-success, #10b981);
-    color: white;
-}
-
-.wizard-step-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-secondary, #6b7280);
-}
-
-.wizard-step.active .wizard-step-label {
-    color: var(--color-primary, #3b82f6);
-    font-weight: 600;
-}
-
-.wizard-step-divider {
-    width: 60px;
-    height: 2px;
-    background: var(--color-background-secondary, #e5e7eb);
-    margin: 0 1rem;
-}
-
-.wizard-step.completed + .wizard-step-divider {
-    background: var(--color-success, #10b981);
-}
-
-.wizard-navigation {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-background-secondary, #e5e7eb);
-}
-
-.btn-link {
-    color: var(--color-text-secondary, #6b7280);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.btn-link:hover {
-    color: var(--color-primary, #3b82f6);
-}
-
-@media (max-width: 640px) {
-    .wizard-step-label {
-        display: none;
-    }
-
-    .wizard-step-divider {
-        width: 30px;
-        margin: 0 0.5rem;
-    }
-}
-</style>
 {% endblock %}

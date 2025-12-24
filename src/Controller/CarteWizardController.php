@@ -96,23 +96,10 @@ class CarteWizardController extends AbstractController
             $wizardData->sections[] = $section;
         }
 
-        dump('BEFORE FORM: sections count = ' . count($wizardData->sections));
-        foreach ($wizardData->sections as $i => $s) {
-            dump("Section $i: " . ($s->categorie?->getTitre() ?? 'no category'));
-        }
-
         $form = $this->createForm(Step2SectionsType::class, $wizardData);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            dump('RAW POST DATA:', $request->request->all());
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            dump('AFTER FORM: sections count = ' . count($wizardData->sections));
-            foreach ($wizardData->sections as $i => $s) {
-                dump("Section $i: " . ($s->categorie?->getTitre() ?? 'no category'));
-            }
 
             // Update positions
             foreach ($wizardData->sections as $index => $section) {
@@ -135,11 +122,6 @@ class CarteWizardController extends AbstractController
 
     private function handleStep3(Request $request, CarteWizardData $wizardData): Response
     {
-        dump('STEP 3: sections count = ' . count($wizardData->sections));
-        foreach ($wizardData->sections as $i => $s) {
-            dump("Section $i: " . ($s->categorie?->getTitre() ?? 'no category'));
-        }
-
         if ($request->isMethod('POST')) {
             // Get selected variants from POST data
             $selectedVariants = $request->request->all('selectedVariants');

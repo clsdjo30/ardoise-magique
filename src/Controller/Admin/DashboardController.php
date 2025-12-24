@@ -265,20 +265,16 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Cartes Restaurant');
 
         if ($this->featureAccess->canAccessFeature($user, 'cards')) {
-             yield MenuItem::subMenu('Ma Bibliothèque', 'fa fa-book')->setSubItems([
-            MenuItem::linkToCrud('Cartes', 'fa fa-book-open', \App\Entity\Carte::class),
-            MenuItem::linkToCrud('Plats', 'fa fa-book', \App\Entity\PlatCatalogue::class)
-                ->setController(\App\Controller\Admin\PlatCatalogueCrudController::class),
+             yield MenuItem::subMenu('Bibliothèque', 'fa fa-book')->setSubItems([
             MenuItem::linkToCrud('Catégories', 'fa fa-utensils', PlatCategorie::class)
                 ->setController(PlatCategorieCrudController::class),
-            MenuItem::linkToCrud('Ajouter un Plat', 'fa fa-plus', \App\Entity\PlatCatalogue::class)
-                ->setController(\App\Controller\Admin\PlatCatalogueCrudController::class)
-                ->setAction('new'),
-            MenuItem::linkToCrud('Catégories', 'fa fa-utensils', PlatCategorie::class)
-                ->setController(PlatCategorieCrudController::class)
-                ->setAction('new'),
-            MenuItem::linkToUrl('Créer une Carte', 'fa fa-magic', $this->generateUrl('app_carte_wizard'))
+            MenuItem::linkToCrud('Plats', 'fa fa-book', \App\Entity\PlatCatalogue::class)
+                ->setController(\App\Controller\Admin\PlatCatalogueCrudController::class),
         ]);
+         yield MenuItem::subMenu('Edition de Carte', 'fa fa-pencil-alt')->setSubItems([
+            MenuItem::linkToCrud('Cartes', 'fa fa-list', \App\Entity\Carte::class),
+            MenuItem::linkToUrl('Créer une Carte', 'fa fa-magic', $this->generateUrl('app_carte_wizard'))
+         ]);
 
         } else {
             yield MenuItem::linkToUrl('Cartes Restaurant 🔒', 'fa fa-lock', '#')
