@@ -21,32 +21,40 @@ class CartePreviewService
      */
     public function generatePreviewData(CarteWizardData $wizardData): array
     {
-        $sectionsWithDishes = [];
+        $sections = [];
+        $totalDishes = 0;
 
         foreach ($wizardData->sections as $index => $section) {
             $variantIds = $wizardData->selectedVariants[$index] ?? [];
 
-            // Fetch variants
-            $variants = [];
+            // Build items array with details for the template
+            $items = [];
             if (!empty($variantIds)) {
-                $variants = $this->variantRepository->findBy(['id' => $variantIds]);
+                foreach ($variantIds as $variantId) {
+                    $variant = $this->variantRepository->find($variantId);
+                    if ($variant) {
+                        $items[] = [
+                            'variantId' => $variant->getId(),
+                            'dishName' => $variant->getPlatCatalogue()->getName(),
+                            'variantLabel' => $variant->getLabel(),
+                            'price' => $variant->getPriceCents(),
+                        ];
+                        $totalDishes++;
+                    }
+                }
             }
 
-            $sectionsWithDishes[] = [
+            $sections[] = [
                 'section' => $section,
-                'variants' => $variants,
-                'count' => count($variants),
+                'items' => $items,
+                'count' => count($items),
             ];
         }
 
         return [
-            'restaurant' => $wizardData->restaurant,
-            'validFrom' => $wizardData->validFrom,
-            'validTo' => $wizardData->validTo,
-            'isPublished' => $wizardData->isPublished,
-            'sectionsWithDishes' => $sectionsWithDishes,
+            'sections' => $sections,
             'totalSections' => count($wizardData->sections),
-            'totalDishes' => array_sum(array_column($sectionsWithDishes, 'count')),
+            'totalDishes' => $totalDishes,
         ];
     }
 }

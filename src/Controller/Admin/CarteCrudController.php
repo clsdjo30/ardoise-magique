@@ -20,9 +20,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CarteCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator
+    ) {
+    }
+
     public static function getEntityFqcn(): string
     {
         return Carte::class;
@@ -41,9 +48,8 @@ class CarteCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield TextField::new('slug', 'Identifiant')
-            ->onlyOnIndex()
-            ->setHelp('Identifiant unique de la carte');
+        yield TextField::new('name', 'Nom de la carte')
+            ->setRequired(true);
 
         yield AssociationField::new('restaurant', 'Restaurant')
             ->setRequired(true);
@@ -59,6 +65,25 @@ class CarteCrudController extends AbstractCrudController
 
         yield BooleanField::new('isPublished', 'Publiée')
             ->setHelp('La carte est-elle visible publiquement ?');
+
+        // Lien public
+        yield UrlField::new('publicUrl', 'Lien Public')
+            ->onlyOnIndex()
+            ->formatValue(function ($value, Carte $carte) {
+                if (!$carte->isPublished()) {
+                    return null;
+                }
+
+                return $this->urlGenerator->generate('app_show_carte', [
+                    'restaurant' => $carte->getRestaurant()->getOwner()->getSlug(),
+                    'slug' => $carte->getSlug()
+                ], UrlGeneratorInterface::ABSOLUTE_URL);
+            })
+            ->setTemplatePath('admin/field/carte_public_url.html.twig');
+
+        yield TextField::new('slug', 'Identifiant')
+            ->onlyOnDetail()
+            ->setHelp('Identifiant unique de la carte');
 
         yield DateTimeField::new('createdAt', 'Créée le')
             ->onlyOnIndex()

@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Ardoise;
 use App\Repository\ArdoiseRepository;
+use App\Repository\CarteRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +16,8 @@ class PublicController extends AbstractController
 {
     public function __construct(
         private UserRepository $userRepository,
-        private ArdoiseRepository $ardoiseRepository
+        private ArdoiseRepository $ardoiseRepository,
+        private CarteRepository $carteRepository
     ) {}
 
     #[Route('/', name: 'app_landing', methods: ['GET'])]
@@ -112,5 +114,32 @@ class PublicController extends AbstractController
                 'supplements' => $supplements,
             ]);
         }
+    }
+
+    #[Route('/m/{restaurant}/carte/{slug}', name: 'app_show_carte', methods: ['GET'])]
+    public function showCarte(string $restaurant, string $slug): Response
+    {
+        // 1. Trouver l'utilisateur par slug
+        $user = $this->userRepository->findOneBy(['slug' => $restaurant]);
+        if (!$user) {
+            throw $this->createNotFoundException('Restaurant non trouvé');
+        }
+
+        // 2. Trouver la carte par slug
+        $carte = $this->carteRepository->findOneBy(['slug' => $slug]);
+        if (!$carte || $carte->getRestaurant()->getOwner() !== $user) {
+            throw $this->createNotFoundException('Carte non trouvée');
+        }
+
+        // 3. Vérifier que la carte est publiée
+        if (!$carte->isPublished()) {
+            throw $this->createNotFoundException('Cette carte n\'est pas accessible');
+        }
+
+        // 4. Rendre le template
+        return $this->render('public/carte.html.twig', [
+            'carte' => $carte,
+            'restaurant' => $carte->getRestaurant(),
+        ]);
     }
 }

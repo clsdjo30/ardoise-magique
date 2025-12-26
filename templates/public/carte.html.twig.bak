@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ carte.name }} - {{ restaurant.name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .carte-header {
+            background: white;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-bottom: 4px solid #667eea;
+        }
+
+        .carte-title {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .restaurant-info {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-info strong {
+            color: #333;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .validity-period {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            color: #666;
+            font-style: italic;
+        }
+
+        .carte-section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: -30px -30px 25px -30px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .section-description {
+            color: rgba(255,255,255,0.9);
+            margin-top: 8px;
+            font-size: 0.95em;
+        }
+
+        .menu-item {
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9fafb;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: #f3f4f6;
+            transform: translateX(5px);
+        }
+
+        .menu-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .dish-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .variant-label {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-left: 8px;
+        }
+
+        .item-price {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #667eea;
+            white-space: nowrap;
+        }
+
+        .dish-description {
+            color: #666;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        .item-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #e0e7ff;
+            color: #4c1d95;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .detail-item {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .detail-item strong {
+            color: #333;
+        }
+
+        .variant-badge {
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .carte-header {
+                padding: 25px;
+            }
+
+            .carte-title {
+                font-size: 1.8em;
+            }
+
+            .carte-section {
+                padding: 20px;
+            }
+
+            .section-header {
+                margin: -20px -20px 20px -20px;
+                padding: 12px 15px;
+            }
+
+            .section-title {
+                font-size: 1.4em;
+            }
+
+            .menu-item {
+                padding: 15px;
+            }
+
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dish-name {
+                font-size: 1.1em;
+            }
+
+            .item-price {
+                font-size: 1.2em;
+                margin-top: 5px;
+            }
+
+            .item-details {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .carte-header,
+            .carte-section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .menu-item:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header de la carte -->
+        <div class="carte-header">
+            <h1 class="carte-title">{{ carte.name }}</h1>
+            <div class="restaurant-info">
+                <strong>Restaurant:</strong> {{ restaurant.name }}
+            </div>
+            <div class="restaurant-info">
+                <strong>Adresse:</strong> {{ restaurant.address }}, {{ restaurant.zipCode }} {{ restaurant.city }}
+            </div>
+            {% if restaurant.phoneNumber %}
+            <div class="restaurant-info">
+                <strong>Téléphone:</strong> {{ restaurant.phoneNumber }}
+            </div>
+            {% endif %}
+            <div class="validity-period">
+                Valide du {{ carte.validFrom|date('d/m/Y') }}
+                {% if carte.validTo %}
+                    au {{ carte.validTo|date('d/m/Y') }}
+                {% else %}
+                    (validité illimitée)
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sections -->
+        {% for section in carte.sections %}
+        <div class="carte-section">
+            <div class="section-header">
+                <h2 class="section-title">{{ section.titre }}</h2>
+                {% if section.description %}
+                <p class="section-description">{{ section.description }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Items de la section -->
+            {% for item in section.items %}
+            <div class="menu-item">
+                <div class="item-header">
+                    <div>
+                        <span class="dish-name">{{ item.platVariant.platCatalogue.name }}</span>
+                        <span class="variant-label">({{ item.platVariant.label }})</span>
+                    </div>
+                    <span class="item-price">{{ (item.platVariant.priceCents / 100)|number_format(2, ',', ' ') }} €</span>
+                </div>
+
+                {% if item.platVariant.platCatalogue.description %}
+                <div class="dish-description">{{ item.platVariant.platCatalogue.description }}</div>
+                {% endif %}
+
+                <div class="item-details">
+                    <!-- Tags -->
+                    {% if item.platVariant.platCatalogue.tags|length > 0 %}
+                    <div class="tags">
+                        {% for tag in item.platVariant.platCatalogue.tags %}
+                            <span class="tag">{{ tag.label }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Détails du variant -->
+                    <div class="detail-item">
+                        <strong>TVA:</strong> {{ item.platVariant.tvaRate }}%
+                    </div>
+
+                    {% if item.platVariant.isDefault %}
+                    <span class="variant-badge">Portion standard</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

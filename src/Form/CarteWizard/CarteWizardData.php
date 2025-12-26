@@ -20,6 +20,9 @@ class CarteWizardData
     #[Assert\NotNull(message: 'Le restaurant est obligatoire', groups: ['step1'])]
     public ?Restaurant $restaurant = null;
 
+    #[Assert\NotBlank(message: 'Le nom de la carte est obligatoire', groups: ['step1'])]
+    public ?string $name = null;
+
     /**
      * @var array<int, CarteSectionData>
      */

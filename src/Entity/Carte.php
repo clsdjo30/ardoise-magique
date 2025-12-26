@@ -23,6 +23,10 @@ class Carte
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom de la carte est obligatoire')]
+    private ?string $name = null;
+
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Assert\NotNull(message: 'La date de début est obligatoire')]
     private ?\DateTimeImmutable $validFrom = null;
@@ -85,6 +89,17 @@ class Carte
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getValidFrom(): ?\DateTimeImmutable
@@ -181,6 +196,6 @@ class Carte
 
     public function __toString(): string
     {
-        return $this->restaurant?->getName() . ' - Carte du ' . $this->validFrom?->format('d/m/Y') ?? 'Nouvelle carte';
+        return $this->name ?? 'Nouvelle carte';
     }
 }

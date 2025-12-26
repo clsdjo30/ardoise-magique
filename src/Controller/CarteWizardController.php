@@ -19,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[Route('/admin/wizard/carte')]
@@ -29,7 +30,8 @@ class CarteWizardController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private PlatVariantRepository $variantRepository,
-        private CartePreviewService $previewService
+        private CartePreviewService $previewService,
+        private UrlGeneratorInterface $urlGenerator
     ) {
     }
 
@@ -157,16 +159,29 @@ class CarteWizardController extends AbstractController
             // Update isPublished from form
             $wizardData->isPublished = $request->request->getBoolean('isPublished', false);
 
+            // Process drag-and-drop positions from the form
+            $this->processDragAndDropPositions($request, $wizardData);
+
             // Create carte from wizard data
             $carte = $this->createCarteFromWizardData($wizardData);
 
             $this->entityManager->persist($carte);
             $this->entityManager->flush();
 
+            // Generate public URL
+            $publicUrl = $this->urlGenerator->generate('app_show_carte', [
+                'restaurant' => $this->getUser()->getSlug(),
+                'slug' => $carte->getSlug()
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+
             // Clear session
             $request->getSession()->remove(self::SESSION_KEY);
 
-            $this->addFlash('success', 'Carte créée avec succès !');
+            $this->addFlash('success', sprintf(
+                'Carte créée avec succès ! <br><a href="%s" target="_blank" class="alert-link">Voir la carte publique</a>',
+                $publicUrl
+            ));
+
             return $this->redirectToRoute('admin', ['restaurant' => $this->getUser()->getSlug()]);
         }
 
@@ -193,6 +208,7 @@ class CarteWizardController extends AbstractController
     private function createCarteFromWizardData(CarteWizardData $data): Carte
     {
         $carte = new Carte();
+        $carte->setName($data->name);
         $carte->setValidFrom($data->validFrom);
         $carte->setValidTo($data->validTo);
         $carte->setRestaurant($data->restaurant);
@@ -231,6 +247,63 @@ class CarteWizardController extends AbstractController
         }
 
         return $carte;
+    }
+
+    /**
+     * Process drag-and-drop positions from Step 4 form submission
+     */
+    private function processDragAndDropPositions(Request $request, CarteWizardData $wizardData): void
+    {
+        $sectionsData = $request->request->all('sections');
+        if (empty($sectionsData)) {
+            return;
+        }
+
+        // Create a mapping of old index to new position
+        $sectionPositions = [];
+        foreach ($sectionsData as $oldIndex => $sectionSubmit) {
+            $newPosition = (int)($sectionSubmit['position'] ?? $oldIndex);
+            $sectionPositions[$oldIndex] = $newPosition;
+        }
+
+        // Sort sections by their new positions
+        $sortedSections = $wizardData->sections;
+        usort($sortedSections, function($a, $b) use ($sectionPositions, $wizardData) {
+            $indexA = array_search($a, $wizardData->sections, true);
+            $indexB = array_search($b, $wizardData->sections, true);
+            return ($sectionPositions[$indexA] ?? 0) <=> ($sectionPositions[$indexB] ?? 0);
+        });
+
+        // Reorganize selected variants according to new section order and item positions
+        $newSelectedVariants = [];
+        foreach ($sortedSections as $newSectionIndex => $section) {
+            $oldSectionIndex = array_search($section, $wizardData->sections, true);
+
+            // Get items data for this section
+            $itemsData = $sectionsData[$oldSectionIndex]['items'] ?? [];
+
+            // Sort items by position
+            $sortedItems = [];
+            foreach ($itemsData as $itemData) {
+                $position = (int)($itemData['position'] ?? 0);
+                $variantId = (int)($itemData['variantId'] ?? 0);
+                if ($variantId > 0) {
+                    $sortedItems[$position] = $variantId;
+                }
+            }
+            ksort($sortedItems);
+
+            $newSelectedVariants[$newSectionIndex] = array_values($sortedItems);
+        }
+
+        // Update wizard data
+        $wizardData->sections = $sortedSections;
+        $wizardData->selectedVariants = $newSelectedVariants;
+
+        // Update section positions
+        foreach ($wizardData->sections as $index => $section) {
+            $section->position = $index;
+        }
     }
 
     /**

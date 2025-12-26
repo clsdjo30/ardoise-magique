@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,6 +27,15 @@ class Step1GeneralInfoType extends AbstractType
         $user = $this->security->getUser();
 
         $builder
+            ->add('name', TextType::class, [
+                'label' => 'Nom de la carte',
+                'required' => true,
+                'help' => 'Donnez un nom à votre carte pour la différencier',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Ex: Carte d\'été, Menu de Noël...',
+                ],
+            ])
             ->add('validFrom', DateType::class, [
                 'label' => 'Date de début',
                 'widget' => 'single_text',

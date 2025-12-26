@@ -1,17 +1,21 @@
 <div class="preview-summary">
     <div class="summary-stats">
         <div class="stat-item">
+            <span class="stat-label">Nom de la carte</span>
+            <span class="stat-value">{{ wizardData.name }}</span>
+        </div>
+        <div class="stat-item">
             <span class="stat-label">Restaurant</span>
-            <span class="stat-value">{{ previewData.restaurant.name }}</span>
+            <span class="stat-value">{{ wizardData.restaurant.name }}</span>
         </div>
         <div class="stat-item">
             <span class="stat-label">Valide du</span>
-            <span class="stat-value">{{ previewData.validFrom|date('d/m/Y') }}</span>
+            <span class="stat-value">{{ wizardData.validFrom|date('d/m/Y') }}</span>
         </div>
-        {% if previewData.validTo %}
+        {% if wizardData.validTo %}
         <div class="stat-item">
             <span class="stat-label">Valide au</span>
-            <span class="stat-value">{{ previewData.validTo|date('d/m/Y') }}</span>
+            <span class="stat-value">{{ wizardData.validTo|date('d/m/Y') }}</span>
         </div>
         {% endif %}
         <div class="stat-item">
@@ -25,61 +29,105 @@
     </div>
 </div>
 
-<div class="preview-content">
-    <h3>Aperçu de la carte</h3>
-
-    {% if previewData.sectionsWithDishes is empty %}
-        <div class="preview-empty">
-            <p>Aucune section n'a été créée pour cette carte.</p>
-        </div>
-    {% else %}
-        {% for sectionData in previewData.sectionsWithDishes %}
-            <div class="preview-section">
-                <div class="preview-section-header">
-                    <h4>{{ sectionData.section.categorie.titre }}</h4>
-                    <span class="preview-section-count">{{ sectionData.count }} plat(s)</span>
-                </div>
-
-                {% if sectionData.section.description %}
-                    <p class="preview-section-description">{{ sectionData.section.description }}</p>
-                {% endif %}
-
-                {% if sectionData.variants is empty %}
-                    <p class="preview-section-empty">Aucun plat dans cette section</p>
-                {% else %}
-                    <div class="preview-dishes">
-                        {% for variant in sectionData.variants %}
-                            <div class="preview-dish">
-                                <div class="preview-dish-info">
-                                    <span class="preview-dish-name">{{ variant.platCatalogue.name }}</span>
-                                    <span class="preview-dish-variant">{{ variant.label }}</span>
-                                </div>
-                                <span class="preview-dish-price">{{ (variant.priceCents / 100)|number_format(2, ',', ' ') }}€</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% endif %}
-</div>
-
-<form method="post" class="preview-form">
-    <div class="form-field">
-        <label class="checkbox-label">
-            <input type="checkbox" name="isPublished" value="1" {{ wizardData.isPublished ? 'checked' : '' }}>
-            <span>Publier immédiatement cette carte</span>
-        </label>
-        <p class="form-help">Si coché, la carte sera visible publiquement</p>
+<form method="post" data-controller="carte-preview">
+    <div class="preview-actions">
+        <button type="button" class="btn btn-sm btn-secondary" data-action="click->carte-preview#expandAll">
+            Tout déplier
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" data-action="click->carte-preview#collapseAll">
+            Tout replier
+        </button>
+        <span class="drag-help">💡 Utilisez les poignées ☰ pour réorganiser</span>
     </div>
 
-    <div class="wizard-navigation">
-        <a href="{{ path('app_carte_wizard', {'step': 'step3'}) }}" class="btn btn-secondary">
-            Retour
-        </a>
-        <button type="submit" class="btn btn-success">
-            ✓ Créer la carte
-        </button>
+    <div class="preview-content">
+        {% if previewData.sections is empty %}
+            <div class="preview-empty">
+                <p>Aucune section n'a été créée pour cette carte.</p>
+            </div>
+        {% else %}
+            <div class="sections-list" data-carte-preview-target="sectionsList">
+                {% for sectionIndex, sectionData in previewData.sections %}
+                <div class="preview-section"
+                     data-carte-preview-target="section"
+                     data-section-index="{{ sectionIndex }}">
+
+                    <!-- Section Header with Drag Handle -->
+                    <div class="section-header">
+                        <span class="section-drag-handle" title="Glisser pour réorganiser">☰</span>
+                        <div class="section-info">
+                            <h4>{{ sectionData.section.categorie.titre }}</h4>
+                            {% if sectionData.section.description %}
+                                <p class="section-description">{{ sectionData.section.description }}</p>
+                            {% endif %}
+                        </div>
+                        <span class="section-count">{{ sectionData.count }} plat(s)</span>
+                        <button type="button"
+                                class="toggle-items"
+                                data-action="click->carte-preview#toggleItems"
+                                aria-expanded="true">
+                            <span class="toggle-icon">▼</span>
+                        </button>
+                    </div>
+
+                    <!-- Hidden input for section position -->
+                    <input type="hidden"
+                           class="section-position"
+                           name="sections[{{ sectionIndex }}][position]"
+                           value="{{ sectionIndex }}">
+
+                    <!-- Items Container (Collapsible) -->
+                    <div class="items-container" data-carte-preview-target="itemsList">
+                        {% if sectionData.items is empty %}
+                            <p class="items-empty">Aucun plat dans cette section</p>
+                        {% else %}
+                            {% for itemIndex, item in sectionData.items %}
+                            <div class="preview-item" data-item-index="{{ itemIndex }}">
+                                <span class="item-drag-handle" title="Glisser pour réorganiser">⋮</span>
+
+                                <div class="item-info">
+                                    <span class="item-name">{{ item.dishName }}</span>
+                                    <span class="item-variant">({{ item.variantLabel }})</span>
+                                </div>
+
+                                <span class="item-price">{{ (item.price / 100)|number_format(2, ',', ' ') }}€</span>
+
+                                <!-- Hidden inputs for this item -->
+                                <input type="hidden"
+                                       name="sections[{{ sectionIndex }}][items][{{ itemIndex }}][variantId]"
+                                       value="{{ item.variantId }}">
+                                <input type="hidden"
+                                       class="item-position"
+                                       name="sections[{{ sectionIndex }}][items][{{ itemIndex }}][position]"
+                                       value="{{ itemIndex }}">
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Publication Options -->
+    <div class="preview-form">
+        <div class="form-field">
+            <label class="checkbox-label">
+                <input type="checkbox" name="isPublished" value="1" {{ wizardData.isPublished ? 'checked' : '' }}>
+                <span>Publier immédiatement cette carte</span>
+            </label>
+            <p class="form-help">Si coché, la carte sera visible publiquement</p>
+        </div>
+
+        <div class="wizard-navigation">
+            <a href="{{ path('app_carte_wizard', {'step': 'step3'}) }}" class="btn btn-secondary">
+                ← Retour
+            </a>
+            <button type="submit" class="btn btn-success">
+                ✓ Créer la carte
+            </button>
+        </div>
     </div>
 </form>
 
@@ -116,6 +164,28 @@
     color: #111827;
 }
 
+.preview-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #fef3c7;
+    border-radius: 6px;
+    border: 1px solid #fbbf24;
+}
+
+.drag-help {
+    margin-left: auto;
+    font-size: 0.875rem;
+    color: #92400e;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
 .preview-content {
     background: white;
     border: 1px solid #e5e7eb;
@@ -124,84 +194,168 @@
     margin-bottom: 2rem;
 }
 
-.preview-content > h3 {
-    margin: 0 0 1.5rem 0;
-    color: #111827;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 0.75rem;
+.sections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .preview-section {
-    margin-bottom: 2rem;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s ease;
 }
 
-.preview-section-header {
+.preview-section:hover {
+    border-color: #667eea;
+}
+
+.section-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
 }
 
-.preview-section-header h4 {
+.section-drag-handle {
+    font-size: 1.5rem;
+    cursor: grab;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.section-drag-handle:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.section-drag-handle:active {
+    cursor: grabbing;
+}
+
+.section-info {
+    flex: 1;
+}
+
+.section-info h4 {
     margin: 0;
-    color: #111827;
     font-size: 1.125rem;
 }
 
-.preview-section-count {
+.section-description {
+    margin: 0.25rem 0 0 0;
     font-size: 0.875rem;
-    color: #6b7280;
-    background: #f3f4f6;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+.section-count {
+    font-size: 0.875rem;
+    background: rgba(255, 255, 255, 0.2);
     padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+}
+
+.toggle-items {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 0.5rem;
     border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.preview-section-description {
-    color: #6b7280;
-    margin: 0 0 1rem 0;
-    font-style: italic;
+.toggle-items:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
-.preview-section-empty {
-    color: #9ca3af;
-    font-style: italic;
+.toggle-icon {
+    font-size: 1rem;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.items-container {
     padding: 1rem;
-    text-align: center;
-}
-
-.preview-dishes {
+    background: white;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    transition: all 0.3s ease;
+    max-height: 1000px;
+    overflow: hidden;
 }
 
-.preview-dish {
+.items-container.collapsed {
+    max-height: 0;
+    padding: 0 1rem;
+}
+
+.items-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.preview-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     padding: 1rem;
     background: #f9fafb;
     border: 1px solid #e5e7eb;
+    border-left: 4px solid #667eea;
     border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
-.preview-dish-info {
+.preview-item:hover {
+    background: #f3f4f6;
+    transform: translateX(5px);
+}
+
+.item-drag-handle {
+    font-size: 1.25rem;
+    color: #9ca3af;
+    cursor: grab;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.item-drag-handle:hover {
+    background: #e5e7eb;
+    color: #667eea;
+}
+
+.item-drag-handle:active {
+    cursor: grabbing;
+}
+
+.item-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
 
-.preview-dish-name {
+.item-name {
     font-weight: 600;
     color: #111827;
 }
 
-.preview-dish-variant {
+.item-variant {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: #667eea;
 }
 
-.preview-dish-price {
+.item-price {
     font-size: 1.125rem;
     font-weight: 600;
     color: #059669;
@@ -220,6 +374,10 @@
     padding: 1.5rem;
 }
 
+.form-field {
+    margin-bottom: 1.5rem;
+}
+
 .checkbox-label {
     display: flex;
     align-items: center;
@@ -232,6 +390,12 @@
     width: 1.25rem;
     height: 1.25rem;
     cursor: pointer;
+}
+
+.form-help {
+    margin: 0.5rem 0 0 2rem;
+    font-size: 0.875rem;
+    color: #6b7280;
 }
 
 .btn-success {
@@ -247,5 +411,39 @@
 
 .btn-success:hover {
     background: #059669;
+}
+
+/* SortableJS Classes */
+.sortable-ghost {
+    opacity: 0.4;
+    background: #e0e7ff;
+}
+
+.sortable-chosen {
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.sortable-drag {
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .preview-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .drag-help {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .section-header {
+        flex-wrap: wrap;
+    }
+
+    .preview-item {
+        flex-wrap: wrap;
+    }
 }
 </style>
