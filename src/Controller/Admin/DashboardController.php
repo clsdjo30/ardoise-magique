@@ -127,6 +127,13 @@ class DashboardController extends AbstractDashboardController
                     : ($planConfig['features']['menus_special']['quota'] ?? 0),
                 'period' => 'cette année',
             ],
+            'cards' => [
+                'used' => $this->usageTracker->getCardsUsageThisYear($user),
+                'limit' => $this->featureAccess->isUnlimited($user, 'cards')
+                    ? -1
+                    : ($planConfig['features']['cards']['quota'] ?? 0),
+                'period' => 'cette année',
+            ],
         ];
 
         return $this->render('admin/dashboard.html.twig', [
@@ -140,6 +147,7 @@ class DashboardController extends AbstractDashboardController
             'quotaInfo' => $quotaInfo,
             'canCreateDaily' => $this->featureAccess->canAccessFeature($user, 'menus_daily'),
             'canCreateSpecial' => $this->featureAccess->canAccessFeature($user, 'menus_special'),
+            'canCreateCarte' => $this->featureAccess->canAccessFeature($user, 'cards'),
         ]);
     }
 

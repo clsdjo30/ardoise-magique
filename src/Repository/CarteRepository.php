@@ -93,4 +93,25 @@ class CarteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Count cartes created by user this year
+     */
+    public function countByUserThisYear(User $user): int
+    {
+        $startOfYear = new \DateTimeImmutable('first day of January this year 00:00:00');
+        $endOfYear = new \DateTimeImmutable('last day of December this year 23:59:59');
+
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->join('c.restaurant', 'r')
+            ->where('r.owner = :user')
+            ->andWhere('c.createdAt >= :startDate')
+            ->andWhere('c.createdAt <= :endDate')
+            ->setParameter('user', $user)
+            ->setParameter('startDate', $startOfYear)
+            ->setParameter('endDate', $endOfYear)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

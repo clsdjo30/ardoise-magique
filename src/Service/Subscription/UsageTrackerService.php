@@ -5,11 +5,13 @@ namespace App\Service\Subscription;
 use App\Entity\Ardoise;
 use App\Entity\User;
 use App\Repository\ArdoiseRepository;
+use App\Repository\CarteRepository;
 
 class UsageTrackerService
 {
     public function __construct(
         private ArdoiseRepository $ardoiseRepository,
+        private CarteRepository $carteRepository,
         private PlanConfigurationLoader $planConfig
     ) {
     }
@@ -60,12 +62,11 @@ class UsageTrackerService
     }
 
     /**
-     * Get cards usage for current year (future feature)
+     * Get cards usage for current year
      */
     public function getCardsUsageThisYear(User $user): int
     {
-        // Future implementation when Carte entity exists
-        return 0;
+        return $this->carteRepository->countByUserThisYear($user);
     }
 
     /**
