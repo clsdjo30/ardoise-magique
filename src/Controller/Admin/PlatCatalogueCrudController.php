@@ -11,6 +11,8 @@ use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -27,7 +29,16 @@ class PlatCatalogueCrudController extends AbstractCrudController
     {
         return PlatCatalogue::class;
     }
-
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action
+                    ->setLabel('Ajouter un Nouveau Plat')
+                    ->setCssClass('btn btn-primary action-new')
+                    ->setHtmlAttributes(['title' => 'Créer un nouveau Plat']);
+            });
+    }
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
@@ -37,6 +48,8 @@ class PlatCatalogueCrudController extends AbstractCrudController
             ->setPageTitle('new', 'Nouveau Plat')
             ->setPageTitle('edit', 'Édition Plat')
             ->setDefaultSort(['createdAt' => 'DESC'])
+            ->setPaginatorPageSize(10)
+            ->overrideTemplate('crud/index', 'admin/crud/plat_index.html.twig')
             ->setFormThemes([
                 '@EasyAdmin/crud/form_theme.html.twig',
             ]);

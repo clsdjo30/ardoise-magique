@@ -1,0 +1,56 @@
+{#
+    Component: Action Card
+    Description: Quick action card (clickable or locked)
+
+    Parameters:
+    - icon: string - Icon to display
+    - title: string - Action title
+    - description: string - Action description
+    - url: string - Link URL (if not locked)
+    - isLocked: boolean - Whether the action is locked
+    - lockMessage: string - Message to display when locked (optional)
+#}
+{% if isLocked|default(false) %}
+    <div class="action-card action-card--locked">
+        <div class="action-card__icon-container action-card__icon-container--locked">
+            <span class="action-card__icon">🔒</span>
+        </div>
+        <div class="action-card__text">
+            <h3 class="action-card__title">{{ title }}</h3>
+            <p class="action-card__description">{{ lockMessage|default('Fonctionnalité verrouillée') }}</p>
+        </div>
+    </div>
+{% else %}
+    <a href="{{ url }}" class="action-card action-card--active">
+        <div class="action-card__icon-container">
+            {# Ici, on suppose que {{ icon }} contient l'image ou le SVG de l'icône #}
+            <span class="action-card__icon">{{ icon }}</span>
+        </div>
+        <div class="action-card__text">
+            <h3 class="action-card__title">{{ title }}</h3>
+            <p class="action-card__description">{{ description }}</p>
+        </div>
+        <div class="action-card__arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+    </a>
+{% endif %}
+{# {% if isLocked|default(false) %}
+	<div class="action-card action-card--locked">
+		<div class="action-card__content">
+			<div class="action-card__icon action-card__icon--locked">🔒</div>
+			<h3 class="action-card__title">{{ title }}</h3>
+			<p class="action-card__description">{{ lockMessage|default('🔒 Fonctionnalité verrouillée') }}</p>
+		</div>
+	</div>
+{% else %}
+	<a href="{{ url }}" class="action-card action-card--active">
+		<div class="action-card__content">
+			<div class="action-card__icon">{{ icon }}</div>
+			<divclass="action-card__text">
+				<h3 class="action-card__title">{{ title }}</h3>
+				<p class="action-card__description">{{ description }}</p>
+			</div>
+		</div>
+	</a>
+{% endif %} #}

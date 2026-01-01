@@ -1,0 +1,58 @@
+{#
+    Component: Upgrade CTA
+    Description: Premium upgrade call-to-action banner
+
+    Parameters:
+    - title: string - CTA title
+    - price: string - Price display
+    - priceNote: string - Price additional note (optional)
+    - features: array - List of features
+    - buttonText: string - Button text
+    - buttonUrl: string - Button URL
+    - theme: string - Color theme (premium, starter)
+#}
+
+<div class="upgrade-cta upgrade-cta--{{ theme|default('premium') }}">
+    <div class="upgrade-cta__content">
+        <div class="upgrade-cta__header">
+            <div class="upgrade-cta__icon">
+                {% if theme == 'premium' %}
+                    👑
+                {% else %}
+                    🚀
+                {% endif %}
+            </div>
+            <div class="upgrade-cta__title-block">
+                <h2 class="upgrade-cta__title">{{ title }}</h2>
+                <div class="upgrade-cta__price">
+                    <span class="upgrade-cta__price-amount">{{ price }}</span>
+                    {% if priceNote is defined and priceNote %}
+                        <span class="upgrade-cta__price-note">{{ priceNote }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="upgrade-cta__features">
+            <div class="upgrade-cta__features-grid">
+                {% for feature in features %}
+                    <div class="upgrade-cta__feature">
+                        <span class="upgrade-cta__feature-check">✓</span>
+                        <span class="upgrade-cta__feature-text">{{ feature }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="upgrade-cta__action">
+            <a href="{{ buttonUrl }}" class="upgrade-cta__button">
+                {% if theme == 'premium' %}
+                    👑
+                {% else %}
+                    🚀
+                {% endif %}
+                {{ buttonText }}
+            </a>
+        </div>
+    </div>
+</div>

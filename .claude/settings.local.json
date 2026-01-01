@@ -12,7 +12,8 @@
       "Bash(dir:*)",
       "Bash(findstr:*)",
       "Bash(composer show:*)",
-      "WebFetch(domain:yoandev.co)"
+      "WebFetch(domain:yoandev.co)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

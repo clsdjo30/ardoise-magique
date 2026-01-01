@@ -83,6 +83,9 @@ plans:
       - magazine
       - marche
       - rafine
+      - scroll
+      - timeline
+      - flipcards
 
   PREMIUM:
     name: 'Premium'
@@ -132,6 +135,9 @@ plans:
       - magazine
       - marche
       - rafine
+      - scroll
+      - timeline
+      - flipcards
       # + futurs templates premium seront ajoutés ici
 
 upgrade_messages:

@@ -1,12 +1,12 @@
 {% form_theme form 'form/collection_theme.html.twig' %}
 
-{{ form_start(form, {'attr': {'class': 'onboarding-form'}}) }}
+{{ form_start(form, {'attr': {'class': 'wizard-form wizard-step-2'}}) }}
 
-<div class="sections-help">
+<div class="step2-help">
     <p>Créez les sections qui composeront votre carte (Entrées, Plats, Desserts, etc.). Vous pourrez ajouter les plats à chaque section à l'étape suivante.</p>
 </div>
 
-<div class="sections-container">
+<div class="step2-sections-container">
     {{ form_row(form.sections) }}
 </div>
 
@@ -22,75 +22,3 @@
 
 {{ form_end(form) }}
 
-<style>
-.sections-help {
-    background: #f3f4f6;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-
-.sections-help p {
-    margin: 0;
-    color: #6b7280;
-}
-
-.sections-container {
-    margin: 1.5rem 0;
-}
-
-.sections-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1rem 0;
-}
-
-.section-item {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    padding: 1rem;
-}
-
-.section-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.section-drag-handle {
-    cursor: move;
-    font-size: 1.25rem;
-    color: #9ca3af;
-}
-
-.section-number {
-    font-weight: 600;
-    color: #374151;
-    flex: 1;
-}
-
-.btn-delete {
-    background: #fee2e2;
-    color: #dc2626;
-    border: none;
-    border-radius: 4px;
-    padding: 0.25rem 0.5rem;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-delete:hover {
-    background: #fecaca;
-}
-
-.section-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-</style>

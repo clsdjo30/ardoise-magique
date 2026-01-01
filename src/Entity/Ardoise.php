@@ -26,6 +26,9 @@ class Ardoise
     public const TEMPLATE_MARCHE = 'marche';
     public const TEMPLATE_RAFINE = 'rafine';
     public const TEMPLATE_TRADITIONNEL = 'traditionnel';
+    public const TEMPLATE_SCROLL = "scroll";
+    public const TEMPLATE_TIMELINE = "timeline";
+    public const TEMPLATE_FLIPCARDS = "flipcards";
 
     public const TEMPLATES = [
         self::TEMPLATE_BISTROT,
@@ -36,6 +39,9 @@ class Ardoise
         self::TEMPLATE_MARCHE,
         self::TEMPLATE_RAFINE,
         self::TEMPLATE_TRADITIONNEL,
+        self::TEMPLATE_SCROLL,
+        self::TEMPLATE_TIMELINE,
+        self::TEMPLATE_FLIPCARDS,
     ];
 
     #[ORM\Id]

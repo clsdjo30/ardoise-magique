@@ -1,0 +1,57 @@
+{#
+    Component: Stat Card
+    Description: Statistics card with value, trend, and comparison
+
+    Parameters:
+    - label: string - Card label (e.g., "Total Menus")
+    - value: string|number - Main value to display
+    - trend: number|null - Trend percentage (optional, can be positive or negative)
+    - comparison: string|null - Comparison text (e.g., "vs mois dernier")
+    - icon: string|null - Icon to display (optional)
+#}
+
+{# <div class="stat-card">
+    <div class="stat-card__header">
+        <span class="stat-card__label">{{ label }}</span>
+        {% if trend is defined and trend is not null %}
+            <span class="stat-card__trend stat-card__trend--{{ trend >= 0 ? 'positive' : 'negative' }}">
+                {{ trend >= 0 ? '↗' : '↘' }} {{ trend|abs }}%
+            </span>
+        {% endif %}
+    </div>
+
+    <div class="stat-card__value">{{ value }}</div>
+
+    {% if comparison is defined and comparison %}
+        <div class="stat-card__comparison">{{ comparison }}</div>
+    {% endif %}
+</div> #}
+
+<div class="stat-card">
+    <div class="stat-card__main">
+        <div class="stat-card__info">
+            <span class="stat-card__label">{{ label }}</span>
+            <div class="stat-card__value-container">
+                <h2 class="stat-card__value">{{ value }}</h2>
+                {% if trend is defined and trend is not null %}
+                    <span class="stat-card__trend stat-card__trend--{{ trend >= 0 ? 'positive' : 'negative' }}">
+                        <span class="stat-card__trend-icon">{{ trend >= 0 ? '↑' : '↓' }}</span>
+                        {{ trend|abs }}%
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if icon is defined and icon %}
+            <div class="stat-card__icon-wrapper">
+                {{ icon|raw }}
+            </div>
+        {% endif %}
+    </div>
+
+    {% if comparison is defined and comparison %}
+        <div class="stat-card__footer">
+            <span class="stat-card__comparison">{{ comparison }}</span>
+        </div>
+    {% endif %}
+</div>

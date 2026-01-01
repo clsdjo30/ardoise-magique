@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ restaurant.name }} - Menu du Jour</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('styles/public/templates/flipcards.css') }}">
+</head>
+<body>
+
+    <!-- Header Sticky - Fiche Restaurant -->
+    <header class="restaurant-header sticky-header">
+        <div class="header-container">
+            <div class="header-left">
+                <div class="restaurant-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <div class="restaurant-info">
+                    <h1 class="restaurant-name">{{ restaurant.name }}</h1>
+                    <p class="restaurant-tagline">{{ ardoise.titre }}</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="menu-toggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content - Flip Cards -->
+    <main class="main-content">
+        <div class="cards-container">
+
+            <div class="flip-hint">
+                <i class="fas fa-hand-pointer"></i>
+                <span>Touchez les cartes pour découvrir les détails</span>
+            </div>
+
+            <!-- CARTE 1 : Entrée -->
+            <div class="flip-card" data-category="entree">
+                <div class="flip-card-inner">
+                    <!-- RECTO -->
+                    <div class="flip-card-front">
+                        <div class="card-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-category">Entrée</span>
+                            {% if ardoise.dailyEntree %}
+                                <h2 class="card-title">{{ ardoise.dailyEntree|nl2br }}</h2>
+                            {% else %}
+                                <h2 class="card-title">Notre entrée du jour</h2>
+                            {% endif %}
+                        </div>
+                        <div class="card-flip-indicator">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Retourner</span>
+                        </div>
+                    </div>
+
+                    <!-- VERSO -->
+                    <div class="flip-card-back">
+                        <div class="card-back-header">
+                            <i class="fas fa-leaf"></i>
+                            <h3>Entrée</h3>
+                        </div>
+                        <div class="card-back-content">
+                            <p class="card-description">
+                                Une entrée fraîche et légère pour commencer votre repas en beauté.
+                                Préparée avec des produits de saison soigneusement sélectionnés.
+                            </p>
+                            <div class="card-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-seedling"></i>
+                                    <span>Frais & Bio</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Fait maison</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-flip-indicator">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Retourner</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARTE 2 : Plat Principal -->
+            <div class="flip-card" data-category="plat">
+                <div class="flip-card-inner">
+                    <!-- RECTO -->
+                    <div class="flip-card-front">
+                        <div class="card-icon">
+                            <i class="fas fa-drumstick-bite"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-category">Plat Principal</span>
+                            {% if ardoise.dailyPlat %}
+                                <h2 class="card-title">{{ ardoise.dailyPlat|nl2br }}</h2>
+                            {% else %}
+                                <h2 class="card-title">Notre plat du jour</h2>
+                            {% endif %}
+                        </div>
+                        <div class="card-flip-indicator">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Retourner</span>
+                        </div>
+                    </div>
+
+                    <!-- VERSO -->
+                    <div class="flip-card-back">
+                        <div class="card-back-header">
+                            <i class="fas fa-drumstick-bite"></i>
+                            <h3>Plat Principal</h3>
+                        </div>
+                        <div class="card-back-content">
+                            <p class="card-description">
+                                Notre plat signature du jour, généreusement servi et mijoté avec passion.
+                                Un équilibre parfait entre saveurs traditionnelles et créativité moderne.
+                            </p>
+                            <div class="card-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-fire"></i>
+                                    <span>Cuisson parfaite</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Fait avec amour</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-flip-indicator">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Retourner</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARTE 3 : Dessert -->
+            <div class="flip-card" data-category="dessert">
+                <div class="flip-card-inner">
+                    <!-- RECTO -->
+                    <div class="flip-card-front">
+                        <div class="card-icon">
+                            <i class="fas fa-ice-cream"></i>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-category">Dessert</span>
+                            {% if ardoise.dailyDessert %}
+                                <h2 class="card-title">{{ ardoise.dailyDessert|nl2br }}</h2>
+                            {% else %}
+                                <h2 class="card-title">Notre dessert du jour</h2>
+                            {% endif %}
+                        </div>
+                        <div class="card-flip-indicator">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Retourner</span>
+                        </div>
+                    </div>
+
+                    <!-- VERSO -->
+                    <div class="flip-card-back">
+                        <div class="card-back-header">
+                            <i class="fas fa-ice-cream"></i>
+                            <h3>Dessert</h3>
+                        </div>
+                        <div class="card-back-content">
+                            <p class="card-description">
+                                Une touche sucrée pour terminer votre repas en beauté.
+                                Nos desserts maison sont préparés quotidiennement par notre pâtissier.
+                            </p>
+                            <div class="card-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-cookie-bite"></i>
+                                    <span>Fait minute</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-star"></i>
+                                    <span>Signature du chef</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-flip-indicator">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Retourner</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Sticky - Tarifs -->
+    <footer class="pricing-footer sticky-footer">
+        <div class="pricing-container">
+            <button class="pricing-toggle" id="pricingToggle">
+                <i class="fas fa-euro-sign"></i>
+                <span>Nos Tarifs</span>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </button>
+
+            <div class="pricing-content" id="pricingContent">
+                <div class="pricing-grid">
+                    {% if ardoise.pricePj %}
+                    <div class="pricing-item">
+                        <div class="pricing-label">Plat Seul</div>
+                        <div class="pricing-value">{{ ardoise.pricePj }}€</div>
+                    </div>
+                    {% endif %}
+
+                    {% if ardoise.pricePd %}
+                    <div class="pricing-item pricing-featured">
+                        <div class="pricing-badge">Populaire</div>
+                        <div class="pricing-label">Formule 2 Plats</div>
+                        <div class="pricing-sublabel">Entrée + Plat ou Plat + Dessert</div>
+                        <div class="pricing-value">{{ ardoise.pricePd }}€</div>
+                    </div>
+                    {% endif %}
+
+                    {% if ardoise.priceEpd %}
+                    <div class="pricing-item">
+                        <div class="pricing-label">Formule Complète</div>
+                        <div class="pricing-sublabel">Entrée + Plat + Dessert</div>
+                        <div class="pricing-value">{{ ardoise.priceEpd }}€</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <p class="pricing-note">
+                    <i class="fas fa-info-circle"></i>
+                    Produits frais & de saison
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-copyright">
+            <p>&copy; 2025 {{ restaurant.name }} - Tous droits réservés</p>
+        </div>
+    </footer>
+
+    <script>
+        // Flip Cards Interaction
+        const flipCards = document.querySelectorAll('.flip-card');
+
+        flipCards.forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
+        });
+
+        // Pricing Toggle
+        const pricingToggle = document.getElementById('pricingToggle');
+        const pricingContent = document.getElementById('pricingContent');
+        const pricingFooter = document.querySelector('.pricing-footer');
+
+        pricingToggle.addEventListener('click', () => {
+            pricingFooter.classList.toggle('expanded');
+
+            // Rotation de l'icône
+            const toggleIcon = pricingToggle.querySelector('.toggle-icon');
+            if (pricingFooter.classList.contains('expanded')) {
+                toggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                toggleIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Animation au chargement
+        window.addEventListener('load', () => {
+            document.querySelector('.restaurant-header').classList.add('loaded');
+
+            // Animation séquentielle des cartes
+            flipCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, index * 200);
+            });
+
+            // Animation du hint après les cartes
+            setTimeout(() => {
+                document.querySelector('.flip-hint').classList.add('visible');
+            }, flipCards.length * 200 + 300);
+        });
+
+        // Smooth scroll pour compenser le header sticky
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('.sticky-header');
+            const main = document.querySelector('.main-content');
+
+            if (header && main) {
+                const headerHeight = header.offsetHeight;
+                main.style.paddingTop = `${headerHeight + 20}px`;
+            }
+        });
+
+        // Fermer le pricing au scroll
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScrollY && pricingFooter.classList.contains('expanded')) {
+                pricingFooter.classList.remove('expanded');
+                const toggleIcon = pricingToggle.querySelector('.toggle-icon');
+                toggleIcon.style.transform = 'rotate(0deg)';
+            }
+            lastScrollY = window.scrollY;
+        });
+    </script>
+
+</body>
+</html>

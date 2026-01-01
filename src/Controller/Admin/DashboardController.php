@@ -34,8 +34,21 @@ class DashboardController extends AbstractDashboardController
             ->addJsFile('js/form.js')
             ->addJsFile('js/template-selector.js')
             ->addJsFile('js/collection-field.js')
-            ->addCssFile('styles/admin.css')
-            ->addCssFile('styles/template-selector.css');
+            ->addCssFile('styles/admin/components/template-selector.css')
+            // Dashboard layout CSS (fixed sidebar & header)
+            ->addCssFile('styles/admin/components/dashboard-layout.css')
+            ->addCssFile('styles/admin/components/sidebar-theme.css')
+            // Dashboard components CSS
+            ->addCssFile('styles/admin/components/header-welcome.css')
+            ->addCssFile('styles/admin/components/stat-card.css')
+            ->addCssFile('styles/admin/components/quota-card.css')
+            ->addCssFile('styles/admin/components/action-card.css')
+            ->addCssFile('styles/admin/components/recent-contents-table.css')
+            ->addCssFile('styles/admin/components/upgrade-cta.css')
+            ->addCssFile('styles/admin/components/crud-actions.css')
+            ->addCssFile('styles/admin/components/plan.css')
+            ->addCssFile('styles/admin/components/collection-menu.css')
+            ->addCssFile('styles/admin/components/form-customizations.css');
     }
 
     /**
@@ -155,7 +168,8 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('L\'Ardoise Magique - Gestion')
-            ->setFaviconPath('favicon.ico');
+            ->setFaviconPath('favicon.ico')
+            ->disableDarkMode(true);
     }
 
 

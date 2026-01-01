@@ -16,6 +16,8 @@ use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -52,10 +54,34 @@ class SpecialMenuCrudController extends AbstractCrudController
             ->setPageTitle('new', 'Nouveau Menu Spécial')
             ->setPageTitle('edit', 'Edition Menu Spécial')
             ->setDefaultSort(['id' => 'DESC'])
+            ->overrideTemplate('crud/index', 'admin/crud/menu_index.html.twig')
             ->setFormThemes([
                 'admin/form/template_choice.html.twig',
                 '@EasyAdmin/crud/form_theme.html.twig',
             ]);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action
+                    ->setLabel('Ajouter un Nouveau Menu Spécial')
+                    ->setCssClass('btn btn-primary action-new')
+                    ->setHtmlAttributes(['title' => 'Créer un nouveau menu spécial']);
+            })
+            ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
+                return $action
+                    ->setLabel('Enregistrer')
+                    ->setCssClass('btn btn-primary action-new')
+                    ->setHtmlAttributes(['title' => 'enregistrer']);
+            })
+            ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
+                return $action
+                    ->setLabel('Enregistrer et Créer un autre Menu')
+                    ->setCssClass('btn btn-primary action-another')
+                    ->setHtmlAttributes(['title' => 'enregistrer']);
+            });
     }
 
     public function configureFields(string $pageName): iterable
@@ -64,7 +90,7 @@ class SpecialMenuCrudController extends AbstractCrudController
 
             //MENU SPECIAL
             FormField::addTab('Généralités du Menu Spécial'),
-            FormField::addPanel('Tarifs et Informations Générales')->addCssClass('panel-classy bg-secondary-500 p-3 mb-4 mt-4'),
+            FormField::addPanel('Tarifs et Informations Générales')->addCssClass('panel-classy'),
 
             TextField::new('titre', 'Titre du menu')
                 ->setHelp('Ex: Menu de Noël 2024, Menu Saint-Valentin')
@@ -80,7 +106,7 @@ class SpecialMenuCrudController extends AbstractCrudController
 
 
             FormField::addFieldset("Personnalisez l'affichage de votre menu")
-                ->setCssClass('panel-classy bg-sidebar-200 p-3 mb-4 mt-4e'),
+                ->setCssClass('panel-classy'),
         ];
 
         // Filter templates based on user's plan
@@ -127,7 +153,7 @@ class SpecialMenuCrudController extends AbstractCrudController
 
             // Deuxieme Tab - MLes Entrées
             FormField::addTab('Vos Entrées'),
-            FormField::addPanel('Ajouter ici vos entrées au menu spécial')->addCssClass('panel-classy bg-success-200 p-3 mb-4 mt-4'),
+            FormField::addPanel('Ajouter ici vos entrées au menu spécial')->addCssClass('panel-classy'),
             CollectionField::new('entree', 'Composition du menu')
                 ->setColumns(12)
                 ->setEntryIsComplex(true)
@@ -144,7 +170,7 @@ class SpecialMenuCrudController extends AbstractCrudController
 
             // Troisieme Tab - Les Plats
             FormField::addTab('Vos Plats'),
-            FormField::addPanel('Ajouter ici vos plats au menu spécial')->addCssClass('panel-classy bg-danger-200 p-3 mb-4 mt-4'),
+            FormField::addPanel('Ajouter ici vos plats au menu spécial')->addCssClass('panel-classy'),
             CollectionField::new('plat', 'Plats de la composition du menu')
                 ->setColumns(12)
                 ->setEntryType(PlatType::class)
@@ -160,7 +186,7 @@ class SpecialMenuCrudController extends AbstractCrudController
 
             // Quatrieme Tab - Les Desserts
             FormField::addTab('Vos Dessert'),
-            FormField::addPanel('Ajouter ici vos desserts au menu spécial')->addCssClass('panel-classy bg-rose-400 p-3 mb-4 mt-4'),
+            FormField::addPanel('Ajouter ici vos desserts au menu spécial')->addCssClass('panel-classy'),
             CollectionField::new('dessert', 'Desserts de la composition du menu')
                 ->setColumns(12)
                 ->setEntryType(DessertType::class)
@@ -175,9 +201,8 @@ class SpecialMenuCrudController extends AbstractCrudController
 
             // Cinquieme Tab - Les supplements
             FormField::addTab('Supplement'),
-            FormField::addPanel('Ajouter ici les supplements au menu spécial')->addCssClass('panel-classy bg-accent-300 p-3 mb-4 mt-4'),
+            FormField::addPanel('Ajouter ici les supplements au menu spécial')->addCssClass('panel-classy'),
             CollectionField::new('item', 'Suppléments de la composition du menu')
-                ->setColumns(12)
                 ->setEntryType(ArdoiseItemType::class)
                 ->setFormTypeOptions([
                     'by_reference' => false,

@@ -1,0 +1,645 @@
+/* ========================================
+   VARIABLES CSS - PALETTE ÉLÉGANTE
+   ======================================== */
+:root {
+    /* Couleurs */
+    --color-primary: #2c3e50;
+    --color-secondary: #34495e;
+    --color-accent: #d4af37;
+    --color-accent-light: #f4e4b7;
+    --color-bg: #f8f9fa;
+    --color-white: #ffffff;
+    --color-text: #2c3e50;
+    --color-text-light: #7f8c8d;
+    --color-line: #e0e6ed;
+    
+    /* Typographie */
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Montserrat', sans-serif;
+    
+    /* Espacements */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 32px;
+    --spacing-xl: 48px;
+    --spacing-xxl: 64px;
+    
+    /* Timeline */
+    --timeline-width: 4px;
+    --timeline-dot-size: 60px;
+    --timeline-dot-border: 4px;
+    
+    /* Autres */
+    --border-radius: 16px;
+    --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+}
+
+/* ========================================
+   RESET & BASE
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ========================================
+   HEADER / FICHE RESTAURANT
+   ======================================== */
+.restaurant-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-white);
+    padding: var(--spacing-xxl) var(--spacing-md);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: headerFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes headerFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.restaurant-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.restaurant-header::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.header-content {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.header-icon {
+    font-size: 3.5em;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-md);
+    animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.header-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5em, 7vw, 4.5em);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: 1px;
+}
+
+.header-subtitle {
+    font-size: clamp(1.1em, 3vw, 1.5em);
+    font-weight: 300;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.95;
+}
+
+.header-divider {
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+    margin: var(--spacing-lg) auto;
+}
+
+.header-description {
+    font-size: 1.05em;
+    line-height: 1.8;
+    opacity: 0.9;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   TIMELINE CONTAINER
+   ======================================== */
+.timeline-container {
+    max-width: 1200px;
+    margin: var(--spacing-xxl) auto;
+    padding: var(--spacing-xxl) var(--spacing-md);
+    position: relative;
+}
+
+/* Ligne centrale de la timeline */
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: var(--timeline-width);
+    background: linear-gradient(
+        to bottom,
+        var(--color-accent) 0%,
+        var(--color-accent) calc(var(--scroll-progress, 0) * 100%),
+        var(--color-line) calc(var(--scroll-progress, 0) * 100%),
+        var(--color-line) 100%
+    );
+    transform: translateX(-50%);
+    transition: background 0.3s ease;
+}
+
+/* ========================================
+   TIMELINE ITEMS
+   ======================================== */
+.timeline-item {
+    position: relative;
+    margin-bottom: var(--spacing-xxl);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all var(--transition);
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animation différée pour chaque item */
+.timeline-item[data-step="1"] {
+    transition-delay: 0.1s;
+}
+
+.timeline-item[data-step="2"] {
+    transition-delay: 0.2s;
+}
+
+.timeline-item[data-step="3"] {
+    transition-delay: 0.3s;
+}
+
+/* Point/Dot central avec icône */
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--timeline-dot-size);
+    height: var(--timeline-dot-size);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+    border: var(--timeline-dot-border) solid var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition);
+}
+
+.timeline-item.visible .timeline-dot {
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% {
+        box-shadow: var(--shadow-md), 0 0 0 0 rgba(212, 175, 55, 0.4);
+    }
+    50% {
+        box-shadow: var(--shadow-md), 0 0 0 15px rgba(212, 175, 55, 0);
+    }
+}
+
+.timeline-dot i {
+    font-size: 1.5em;
+    color: var(--color-white);
+}
+
+/* ========================================
+   TIMELINE CONTENT (Cartes)
+   ======================================== */
+.timeline-content {
+    width: 45%;
+    position: relative;
+}
+
+/* Positionnement gauche/droite */
+.timeline-left {
+    margin-left: 0;
+    margin-right: auto;
+    padding-right: calc(var(--timeline-dot-size) / 2 + var(--spacing-lg));
+}
+
+.timeline-right {
+    margin-left: auto;
+    margin-right: 0;
+    padding-left: calc(var(--timeline-dot-size) / 2 + var(--spacing-lg));
+}
+
+/* Carte de plat */
+.timeline-card {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.timeline-item.visible .timeline-card {
+    box-shadow: var(--shadow-md);
+}
+
+.timeline-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Flèche pointant vers le dot */
+.timeline-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 12px solid transparent;
+}
+
+.timeline-left .timeline-card::before {
+    right: -24px;
+    transform: translateY(-50%);
+    border-left-color: var(--color-white);
+}
+
+.timeline-right .timeline-card::before {
+    left: -24px;
+    transform: translateY(-50%);
+    border-right-color: var(--color-white);
+}
+
+/* Badge numéro + label */
+.card-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.badge-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+    color: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.badge-label {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+/* Titre du plat */
+.card-main {
+    margin-bottom: var(--spacing-md);
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5em, 3vw, 2.2em);
+    font-weight: 600;
+    color: var(--color-primary);
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Icône décorative en arrière-plan */
+.card-decoration {
+    position: absolute;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 4em;
+    color: var(--color-accent);
+    opacity: 0.05;
+}
+
+/* ========================================
+   TIMELINE END (Point final)
+   ======================================== */
+.timeline-end {
+    position: relative;
+    text-align: center;
+    padding-top: var(--spacing-lg);
+}
+
+.timeline-dot-end {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+    border: 4px solid var(--color-white);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 10;
+}
+
+.timeline-dot-end i {
+    font-size: 1.3em;
+    color: var(--color-white);
+}
+
+/* ========================================
+   PRICING SECTION
+   ======================================== */
+.pricing-section {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: var(--spacing-xxl) var(--spacing-md);
+}
+
+.pricing-container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.pricing-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5em, 5vw, 3.5em);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.pricing-subtitle {
+    text-align: center;
+    font-size: 1.1em;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-xl);
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.pricing-card {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
+    position: relative;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+.pricing-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-accent-light);
+}
+
+.pricing-featured {
+    border-color: var(--color-accent);
+    background: linear-gradient(135deg, #ffffff 0%, #fffef8 100%);
+}
+
+.pricing-ribbon {
+    position: absolute;
+    top: 20px;
+    right: -35px;
+    background: var(--color-accent);
+    color: var(--color-white);
+    padding: 5px 40px;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.pricing-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.pricing-icon i {
+    font-size: 1.8em;
+    color: var(--color-white);
+}
+
+.pricing-name {
+    font-family: var(--font-heading);
+    font-size: 1.6em;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.pricing-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    margin: var(--spacing-lg) 0;
+}
+
+.price-value {
+    font-family: var(--font-heading);
+    font-size: 3.5em;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+}
+
+.price-currency {
+    font-size: 1.8em;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.pricing-description {
+    color: var(--color-text-light);
+    font-size: 0.95em;
+    line-height: 1.6;
+}
+
+.pricing-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    background: rgba(212, 175, 55, 0.08);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--color-accent);
+}
+
+.pricing-note i {
+    color: var(--color-accent);
+    font-size: 1.2em;
+}
+
+.pricing-note p {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 0.95em;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+.footer {
+    background: var(--color-primary);
+    color: var(--color-white);
+    text-align: center;
+    padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.footer p {
+    margin: var(--spacing-xs) 0;
+}
+
+.footer-tagline {
+    font-size: 0.9em;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE FIRST
+   ======================================== */
+
+/* Mobile : timeline centrée, pas d'alternance */
+@media (max-width: 768px) {
+    .timeline-line {
+        left: 30px;
+    }
+    
+    .timeline-content {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+        margin-right: 0 !important;
+        padding-left: var(--spacing-lg) !important;
+        padding-right: 0 !important;
+    }
+    
+    .timeline-dot {
+        left: 30px;
+        transform: translate(-50%, -50%);
+    }
+    
+    .timeline-card::before {
+        left: calc(-1 * var(--spacing-lg) - 24px) !important;
+        right: auto !important;
+        border-left-color: transparent !important;
+        border-right-color: var(--color-white) !important;
+    }
+    
+    .timeline-dot-end {
+        margin-left: -20px;
+    }
+    
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-ribbon {
+        font-size: 0.65em;
+        padding: 4px 35px;
+    }
+}
+
+/* Tablettes */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .timeline-content {
+        width: 42%;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+    .timeline-content {
+        width: 45%;
+    }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+    .restaurant-header {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+    
+    .header-icon {
+        font-size: 2.5em;
+    }
+    
+    .timeline-container {
+        padding: var(--spacing-xl) var(--spacing-sm);
+    }
+    
+    .timeline-item {
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .card-title {
+        font-size: 1.4em;
+    }
+}

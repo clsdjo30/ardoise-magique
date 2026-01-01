@@ -1,159 +1,201 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
+{% block configured_head_contents %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+{% endblock %}
+
 {% block page_title %}Nos Plans d'Abonnement{% endblock %}
 
 {% block main %}
-<div class="container my-5">
-    <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold mb-3">Choisissez votre plan</h1>
-        <p class="lead text-muted">Des solutions adaptées à tous vos besoins</p>
-    </div>
-
-    <div class="row g-4 justify-content-center">
+<div class="plans-page">
+    {# Plans Grid #}
+    <div class="plans-grid">
         {% for code, plan in plans %}
-        <div class="col-lg-4 col-md-6">
-            <div class="card shadow-sm h-100 {% if code == currentPlanCode %}border-primary border-3{% endif %}">
-                {% if code == currentPlanCode %}
-                <div class="card-header bg-primary text-white text-center py-2">
-                    <small class="fw-bold">VOTRE PLAN ACTUEL</small>
+        <div class="plan-card plan-card--{{ code|lower }} {% if code == currentPlanCode %}plan-card--current{% endif %}">
+            {# Current Plan Badge #}
+            {% if code == currentPlanCode %}
+            <div class="plan-card__badge">
+                Votre plan actuel
+            </div>
+            {% endif %}
+
+            {# Plan Header #}
+            <div class="plan-card__header">
+                <h3 class="plan-card__name">{{ plan.name }}</h3>
+                <div class="plan-card__price">
+                    <div class="plan-card__price-amount">
+                        {% if plan.price == 0 %}
+                            Gratuit
+                        {% else %}
+                            {{ plan.price }}€
+                        {% endif %}
+                    </div>
+                    {% if plan.price > 0 %}
+                    <div class="plan-card__price-period">
+                        par {{ plan.interval == 'month' ? 'mois' : 'an' }}
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
+            </div>
 
-                <div class="card-body d-flex flex-column">
-                    <div class="text-center mb-4">
-                        <h3 class="card-title fw-bold mb-3">{{ plan.name }}</h3>
-                        <div class="display-4 fw-bold mb-2">
-                            {% if plan.price == 0 %}
-                                Gratuit
+            {# Plan Body #}
+            <div class="plan-card__body">
+                <ul class="plan-card__features">
+                    {# Menus du Jour #}
+                    <li class="plan-card__feature {% if not plan.features.menus_daily.enabled %}plan-card__feature--disabled{% endif %}">
+                        <span class="plan-card__feature-icon {% if plan.features.menus_daily.enabled %}plan-card__feature-icon--check{% else %}plan-card__feature-icon--cross{% endif %}">
+                            {% if plan.features.menus_daily.enabled %}
+                                <i class="fas fa-check"></i>
                             {% else %}
-                                {{ plan.price }}€
+                                <i class="fas fa-times"></i>
                             {% endif %}
-                        </div>
-                        {% if plan.price > 0 %}
-                        <p class="text-muted">
-                            par {{ plan.interval == 'month' ? 'mois' : 'an' }}
-                        </p>
-                        {% endif %}
-                    </div>
-
-                    <ul class="list-unstyled mb-4 flex-grow-1">
-                        {# Menus du Jour #}
-                        {% if plan.features.menus_daily.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            {% if plan.features.menus_daily.quota == -1 %}
-                                <strong>Menus du jour illimités</strong>
+                        </span>
+                        <span class="plan-card__feature-text">
+                            {% if plan.features.menus_daily.enabled %}
+                                {% if plan.features.menus_daily.quota == -1 %}
+                                    <strong>Menus du jour illimités</strong>
+                                {% else %}
+                                    <strong>{{ plan.features.menus_daily.quota }} menus du jour</strong> / mois
+                                {% endif %}
                             {% else %}
-                                <strong>{{ plan.features.menus_daily.quota }} menus du jour</strong> / mois
+                                Menus du jour
                             {% endif %}
-                        </li>
-                        {% else %}
-                        <li class="mb-2">
-                            <i class="fas fa-times text-danger me-2"></i>
-                            <span class="text-muted">Menus du jour</span>
-                        </li>
-                        {% endif %}
+                        </span>
+                    </li>
 
-                        {# Menus Spéciaux #}
-                        {% if plan.features.menus_special.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            {% if plan.features.menus_special.quota == -1 %}
-                                <strong>Menus spéciaux illimités</strong>
+                    {# Menus Spéciaux #}
+                    <li class="plan-card__feature {% if not plan.features.menus_special.enabled %}plan-card__feature--disabled{% endif %}">
+                        <span class="plan-card__feature-icon {% if plan.features.menus_special.enabled %}plan-card__feature-icon--check{% else %}plan-card__feature-icon--cross{% endif %}">
+                            {% if plan.features.menus_special.enabled %}
+                                <i class="fas fa-check"></i>
                             {% else %}
-                                <strong>{{ plan.features.menus_special.quota }} menus spéciaux</strong> / an
+                                <i class="fas fa-times"></i>
                             {% endif %}
-                        </li>
-                        {% else %}
-                        <li class="mb-2">
-                            <i class="fas fa-times text-danger me-2"></i>
-                            <span class="text-muted">Menus spéciaux</span>
-                        </li>
-                        {% endif %}
+                        </span>
+                        <span class="plan-card__feature-text">
+                            {% if plan.features.menus_special.enabled %}
+                                {% if plan.features.menus_special.quota == -1 %}
+                                    <strong>Menus spéciaux illimités</strong>
+                                {% else %}
+                                    <strong>{{ plan.features.menus_special.quota }} menus spéciaux</strong> / an
+                                {% endif %}
+                            {% else %}
+                                Menus spéciaux
+                            {% endif %}
+                        </span>
+                    </li>
 
-                        {# Templates #}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
+                    {# Templates #}
+                    <li class="plan-card__feature">
+                        <span class="plan-card__feature-icon plan-card__feature-icon--check">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="plan-card__feature-text">
                             <strong>{{ plan.allowed_templates|length }} template(s)</strong> de design
-                        </li>
+                        </span>
+                    </li>
 
-                        {# Directory #}
-                        {% if plan.features.directory.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
+                    {# Directory #}
+                    <li class="plan-card__feature {% if not plan.features.directory.enabled %}plan-card__feature--disabled{% endif %}">
+                        <span class="plan-card__feature-icon {% if plan.features.directory.enabled %}plan-card__feature-icon--check{% else %}plan-card__feature-icon--cross{% endif %}">
+                            {% if plan.features.directory.enabled %}
+                                <i class="fas fa-check"></i>
+                            {% else %}
+                                <i class="fas fa-times"></i>
+                            {% endif %}
+                        </span>
+                        <span class="plan-card__feature-text">
                             Listing dans l'annuaire
-                        </li>
-                        {% else %}
-                        <li class="mb-2">
-                            <i class="fas fa-times text-danger me-2"></i>
-                            <span class="text-muted">Annuaire</span>
-                        </li>
-                        {% endif %}
+                        </span>
+                    </li>
 
-                        {# Custom Designs #}
-                        {% if plan.features.custom_designs.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
+                    {# Custom Designs #}
+                    {% if plan.features.custom_designs.enabled %}
+                    <li class="plan-card__feature">
+                        <span class="plan-card__feature-icon plan-card__feature-icon--check">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="plan-card__feature-text">
                             Personnalisation des designs
-                        </li>
-                        {% endif %}
+                        </span>
+                    </li>
+                    {% endif %}
 
-                        {# Premium Designs #}
-                        {% if plan.features.premium_designs.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
+                    {# Premium Designs #}
+                    {% if plan.features.premium_designs.enabled %}
+                    <li class="plan-card__feature">
+                        <span class="plan-card__feature-icon plan-card__feature-icon--check">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="plan-card__feature-text">
                             Designs premium exclusifs
-                        </li>
-                        {% endif %}
+                        </span>
+                    </li>
+                    {% endif %}
 
-                        {# QR Code #}
-                        {% if plan.features.qr_code.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
+                    {# QR Code #}
+                    {% if plan.features.qr_code.enabled %}
+                    <li class="plan-card__feature">
+                        <span class="plan-card__feature-icon plan-card__feature-icon--check">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="plan-card__feature-text">
                             Génération de QR Codes
-                        </li>
-                        {% endif %}
+                        </span>
+                    </li>
+                    {% endif %}
 
-                        {# Social Share #}
-                        {% if plan.features.social_share.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
+                    {# Social Share #}
+                    {% if plan.features.social_share.enabled %}
+                    <li class="plan-card__feature">
+                        <span class="plan-card__feature-icon plan-card__feature-icon--check">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="plan-card__feature-text">
                             Partage sur les réseaux sociaux
-                        </li>
-                        {% endif %}
+                        </span>
+                    </li>
+                    {% endif %}
 
-                        {# Priority Support #}
-                        {% if plan.features.priority_support.enabled %}
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
+                    {# Priority Support #}
+                    {% if plan.features.priority_support.enabled %}
+                    <li class="plan-card__feature">
+                        <span class="plan-card__feature-icon plan-card__feature-icon--check">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="plan-card__feature-text">
                             Support prioritaire
-                        </li>
-                        {% endif %}
-                    </ul>
+                        </span>
+                    </li>
+                    {% endif %}
+                </ul>
 
-                    <div class="text-center mt-auto">
-                        {% if code == currentPlanCode %}
-                            <button class="btn btn-outline-primary w-100" disabled>
-                                Plan actuel
-                            </button>
-                        {% else %}
-                            <button class="btn btn-primary w-100" disabled>
-                                Prochainement disponible
-                            </button>
-                            <small class="text-muted d-block mt-2">
-                                Paiement en ligne bientôt disponible
-                            </small>
-                        {% endif %}
-                    </div>
+                {# Plan Footer #}
+                <div class="plan-card__footer">
+                    {% if code == currentPlanCode %}
+                        <button class="plan-card__button plan-card__button--outline" disabled>
+                            Plan actuel
+                        </button>
+                    {% else %}
+                        <button class="plan-card__button plan-card__button--primary" disabled>
+                            Prochainement disponible
+                        </button>
+                        <small class="plan-card__button-note">
+                            Paiement en ligne bientôt disponible
+                        </small>
+                    {% endif %}
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 
-    <div class="text-center mt-5">
-        <a href="{{ path('app_admin_dashboard') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Retour au dashboard
+    {# Back Button #}
+    <div class="plans-back">
+        <a href="{{ path('app_admin_dashboard') }}" class="plans-back__button">
+            <i class="fas fa-arrow-left"></i>
+            <span>Retour au dashboard</span>
         </a>
     </div>
 </div>

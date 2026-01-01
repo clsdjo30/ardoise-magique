@@ -1,6 +1,7 @@
 import '../stimulus_bootstrap.js';
 import '../styles/public/app.scss';
 
+
 import initModal from './components/modal.js';
 import initDropdown from './components/dropdown.js';
 import initTabs from './components/tabs.js';

@@ -21,3 +21,5 @@
 @use './registration';
 @use './onboarding';
 @use './tarifs.scss';
+@use '../admin/components/carte-wizard.scss';
+@use '../admin/components/carte-wizard-step-2.scss';

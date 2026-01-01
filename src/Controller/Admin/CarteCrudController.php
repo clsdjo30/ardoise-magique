@@ -110,7 +110,12 @@ class CarteCrudController extends AbstractCrudController
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
                 return $action->setIcon('fa fa-edit');
             })
-            ->disable(Action::NEW); // No direct creation - must use wizard
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action
+                    ->setLabel('Nouveau Menu du Jour')
+                    ->setCssClass('btn btn-primary action-new')
+                    ->setHtmlAttributes(['title' => 'Créer un nouveau menu du jour']);
+            });
     }
 
     public function createIndexQueryBuilder(

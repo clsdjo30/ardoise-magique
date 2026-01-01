@@ -2,7 +2,7 @@
 
 {% block configured_head_contents %}
 	{{ parent() }}
-	<link rel="stylesheet" href="{{ asset('styles/admin/admin-theme.css') }}">
+	<link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
 	<script src="{{ asset('js/restaurant-modal.js') }}" defer></script>
 {% endblock %}
 
@@ -15,568 +15,245 @@
         }) %}
 	{% endif %}
 
-	<div class="container-fluid am-dashboard py-4">
+	<div class="am-dashboard py-4">
 
         {% if is_granted('ROLE_SUPER_ADMIN') %}
-            {{include('partials/admin/_admin_dashboard.html.twig')}}
+            {# Super Admin Dashboard - Keep existing admin view #}
+            {{ include('partials/admin/_admin_dashboard.html.twig') }}
+
         {% elseif is_granted('ROLE_ADMIN') %}
+			{# ========================================
+			   RESTAURANT OWNER DASHBOARD
+			   ======================================== #}
 
-		{# ========================================
-		   SECTION 1: HEADER - Carte d'identité
-		   ======================================== #}
-		<header class="am-hero card border-0 shadow-sm mb-4">
-			<div class="card-body">
-				<div class="d-flex justify-content-between align-items-start mb-3">
-					<div>
-						<h1 class="h3 mb-1">👋 Bonjour {{ app.user.firstname }} !</h1>
-						<p class="text-muted mb-0">
-							{% if userRestaurants|length == 1 %}
-								Restaurant : <strong>{{ userRestaurants|first.name }}</strong>
-							{% else %}
-								<strong>{{ userRestaurants|length }}</strong> restaurants
-							{% endif %}
-						</p>
+			{# SECTION 1: Welcome Header #}
+			{{ include('admin/partials/header-welcome.html.twig', {
+				userName: app.user.firstname,
+				planCode: planCode,
+				planName: planName
+			}) }}
+
+			{# SECTION 2: Statistics Cards #}
+			<section class="am-section">
+				<div class="row g-3 stats-grid">
+					{# Total Menus Card #}
+					<div class="col-6 col-lg-3">
+						{{ include('admin/partials/stat-card.html.twig', {
+							label: 'Total Menus',
+							value: totalMenus,
+							trend: 12,
+						}) }}
 					</div>
-					<div class="d-flex gap-2 align-items-center">
-						{% if planCode is defined %}
-							<span class="badge
-								{% if planCode == 'PREMIUM' %}bg-warning text-dark
-								{% elseif planCode == 'STARTER' %}bg-primary
-								{% else %}bg-secondary{% endif %}
-								px-3 py-2">
-								{% if planCode == 'PREMIUM' %}⭐{% elseif planCode == 'STARTER' %}🚀{% else %}🆓{% endif %}
-								{{ planName }}
-							</span>
-						{% endif %}
-						<button class="btn btn-sm btn-outline-secondary" id="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
-							<i class="fa fa-circle-half-stroke" id="theme-icon"></i>
-						</button>
+
+					{# Published Menus Card #}
+					<div class="col-6 col-lg-3">
+						{{ include('admin/partials/stat-card.html.twig', {
+							label: 'Menus Publiés',
+							value: menusPublies,
+							trend: 8
+						}) }}
+					</div>
+
+					{# Publication Rate Card #}
+					<div class="col-6 col-lg-3">
+						{% set pubRate = totalMenus > 0 ? ((menusPublies / totalMenus * 100)|round) : 0 %}
+						{{ include('admin/partials/stat-card.html.twig', {
+							label: 'Taux Publication',
+							value: pubRate ~ '%'
+						}) }}
+					</div>
+
+					{# Restaurants Card #}
+					<div class="col-6 col-lg-3">
+						{{ include('admin/partials/stat-card.html.twig', {
+							label: 'Restaurants',
+							value: userRestaurants|length
+						}) }}
 					</div>
 				</div>
+			</section>
 
-				<div class="d-flex flex-wrap gap-2">
-					<a href="{{ path('app_subscription_current') }}" class="btn btn-sm btn-outline-primary">
-						<i class="fa fa-id-card me-1"></i>
-						Gérer mon abonnement
-					</a>
-					<a href="{{ ea_url().setController('App\\Controller\\Admin\\RestaurantCrudController') }}" class="btn btn-sm btn-outline-secondary">
-						<i class="fa fa-hotel me-1"></i>
-						Mes restaurants
-					</a>
-				</div>
-			</div>
-		</header>
-
-		{# ========================================
-		   SECTION 2: USAGE - Quotas et limites
-		   ======================================== #}
-		{% if quotaInfo is defined %}
-		<section class="mb-4">
-			<div class="d-flex align-items-center justify-content-between mb-3">
-				<h2 class="h5 mb-0">
-					<i class="fa fa-chart-line me-2 text-primary"></i>
-					Mon utilisation
+			{# SECTION 4: Quick Actions #}
+			<section class="am-section">
+				<h2 class="am-section-title">
+					<span class="am-section-icon">⚡</span>
+					Actions Rapides
 				</h2>
-			</div>
 
-			<div class="row g-3">
-				{# Menus du Jour #}
-				<div class="col-md-4">
-					<div class="card h-100 border-0 shadow-sm">
-						<div class="card-header bg-primary bg-opacity-10 border-0">
-							<h6 class="mb-0 text-primary">
-								<i class="fa fa-bowl-rice me-2"></i>
-								Menus du Jour
-							</h6>
-						</div>
-						<div class="card-body">
-							{% set dailyQuota = quotaInfo.daily_menus %}
+				<div class="row g-3">
+					{# Create Daily Menu #}
+					<div class="col-12 col-md-4">
+						{{ include('admin/partials/action-card.html.twig', {
+							icon: '🍽️',
+							title: 'Créer un Menu du Jour',
+							description: 'Ajoutez le menu du jour de votre restaurant',
+							url: ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new'),
+							isLocked: not canCreateDaily|default(false),
+							lockMessage: 'Quota atteint'
+						}) }}
+					</div>
 
-							{% if dailyQuota.limit == -1 %}
-								<div class="text-center py-3">
-									<div class="display-6 text-success mb-2">♾️</div>
-									<p class="text-success fw-bold mb-1">Illimité</p>
-									<p class="text-muted small mb-0">{{ dailyQuota.used }} créés {{ dailyQuota.period }}</p>
-								</div>
-							{% else %}
-								{% set percentage = dailyQuota.limit > 0 ? ((dailyQuota.used / dailyQuota.limit * 100)|round) : 0 %}
-								<div class="mb-3">
-									<div class="d-flex justify-content-between align-items-center mb-2">
-										<span class="small text-muted">Utilisés {{ dailyQuota.period }}</span>
-										<span class="fw-bold">{{ dailyQuota.used }} / {{ dailyQuota.limit }}</span>
-									</div>
-									<div class="progress" style="height: 8px;">
-										<div class="progress-bar
-											{% if percentage >= 100 %}bg-danger
-											{% elseif percentage >= 80 %}bg-warning
-											{% else %}bg-success{% endif %}"
-											style="width: {{ percentage }}%">
-										</div>
-									</div>
-								</div>
+					{# Create Special Menu #}
+					<div class="col-12 col-md-4">
+						{{ include('admin/partials/action-card.html.twig', {
+							icon: '🎉',
+							title: 'Créer un Menu Spécial',
+							description: 'Créez un menu pour une occasion spéciale',
+							url: ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new'),
+							isLocked: not canCreateSpecial|default(false),
+							lockMessage: '🔒 Fonctionnalité verrouillée'
+						}) }}
+					</div>
 
-								{% if percentage >= 100 %}
-									<div class="alert alert-danger mb-0 py-2 small">
-										<i class="fa fa-exclamation-triangle me-1"></i>
-										<strong>Quota atteint!</strong>
-										<a href="{{ path('app_subscription_plans') }}" class="alert-link">Passer à Starter</a>
-									</div>
-								{% elseif percentage >= 80 %}
-									<div class="alert alert-warning mb-0 py-2 small">
-										<i class="fa fa-info-circle me-1"></i>
-										Bientôt à la limite
-									</div>
-								{% endif %}
-							{% endif %}
-						</div>
+					{# Create Restaurant Card #}
+					<div class="col-12 col-md-4">
+						{{ include('admin/partials/action-card.html.twig', {
+							icon: '📖',
+							title: 'Créer une Carte Restaurant',
+							description: 'Créez une carte complète avec sections',
+							url: path('app_carte_wizard'),
+							isLocked: not canCreateCarte|default(false),
+							lockMessage: '🔒 Fonctionnalité verrouillée'
+						}) }}
 					</div>
 				</div>
+			</section>
 
-				{# Menus Spéciaux #}
-				<div class="col-md-4">
-					<div class="card h-100 border-0 shadow-sm">
-						<div class="card-header bg-info bg-opacity-10 border-0">
-							<h6 class="mb-0 text-info">
-								<i class="fa fa-star me-2"></i>
-								Menus Spéciaux
-							</h6>
-						</div>
-						<div class="card-body">
-							{% if canCreateSpecial is defined and not canCreateSpecial %}
-								<div class="text-center py-3">
-									<div class="display-6 mb-2">🔒</div>
-									<p class="fw-bold mb-1">Fonctionnalité Premium</p>
-									<p class="text-muted small mb-3">Disponible avec le plan Starter</p>
-									<a href="{{ path('app_subscription_plans') }}" class="btn btn-sm btn-primary">
-										Découvrir les plans
-									</a>
-								</div>
-							{% else %}
-								{% set specialQuota = quotaInfo.special_menus %}
+			{# SECTION 5: Recent Contents #}
+			{% if menus is not empty %}
+				<section class="am-section">
+					{# Prepare recent contents data #}
+					{% set recentContents = [] %}
+					{% for menu in menus|slice(0, 5) %}
+						{% set recentContents = recentContents|merge([{
+							type: menu.type,
+							name: menu.titre,
+							restaurant: menu.restaurant.name,
+							date: menu.createdAt|date('d déc. Y'),
+							status: menu.status
+						}]) %}
+					{% endfor %}
 
-								{% if specialQuota.limit == -1 %}
-									<div class="text-center py-3">
-										<div class="display-6 text-success mb-2">♾️</div>
-										<p class="text-success fw-bold mb-1">Illimité</p>
-										<p class="text-muted small mb-0">{{ specialQuota.used }} créés {{ specialQuota.period }}</p>
-									</div>
-								{% else %}
-									{% set percentage = specialQuota.limit > 0 ? ((specialQuota.used / specialQuota.limit * 100)|round) : 0 %}
-									<div class="mb-3">
-										<div class="d-flex justify-content-between align-items-center mb-2">
-											<span class="small text-muted">Utilisés {{ specialQuota.period }}</span>
-											<span class="fw-bold">{{ specialQuota.used }} / {{ specialQuota.limit }}</span>
-										</div>
-										<div class="progress" style="height: 8px;">
-											<div class="progress-bar
-												{% if percentage >= 100 %}bg-danger
-												{% elseif percentage >= 80 %}bg-warning
-												{% else %}bg-success{% endif %}"
-												style="width: {{ percentage }}%">
-											</div>
-										</div>
-									</div>
-
-									{% if percentage >= 100 %}
-										<div class="alert alert-danger mb-0 py-2 small">
-											<i class="fa fa-exclamation-triangle me-1"></i>
-											<strong>Quota atteint!</strong>
-											<a href="{{ path('app_subscription_plans') }}" class="alert-link">Passer à Premium</a>
-										</div>
-									{% elseif percentage >= 80 %}
-										<div class="alert alert-warning mb-0 py-2 small">
-											<i class="fa fa-info-circle me-1"></i>
-											Bientôt à la limite
-										</div>
-									{% endif %}
-								{% endif %}
-							{% endif %}
-						</div>
-					</div>
-				</div>
-
-				{# Cartes Restaurant #}
-				<div class="col-md-4">
-					<div class="card h-100 border-0 shadow-sm">
-						<div class="card-header bg-warning bg-opacity-10 border-0">
-							<h6 class="mb-0 text-warning">
-								<i class="fa fa-book me-2"></i>
-								Cartes Restaurant
-							</h6>
-						</div>
-						<div class="card-body">
-							{% if canCreateCarte is defined and not canCreateCarte %}
-								<div class="text-center py-3">
-									<div class="display-6 mb-2">🔒</div>
-									<p class="fw-bold mb-1">Fonctionnalité Premium</p>
-									<p class="text-muted small mb-3">Disponible avec le plan Premium</p>
-									<a href="{{ path('app_subscription_plans') }}" class="btn btn-sm btn-warning">
-										Passer à Premium
-									</a>
-								</div>
-							{% elseif quotaInfo.cards is defined %}
-								{% set cardsQuota = quotaInfo.cards %}
-
-								{% if cardsQuota.limit == -1 %}
-									<div class="text-center py-3">
-										<div class="display-6 text-success mb-2">♾️</div>
-										<p class="text-success fw-bold mb-1">Illimité</p>
-										<p class="text-muted small mb-0">{{ cardsQuota.used }} créées {{ cardsQuota.period }}</p>
-									</div>
-								{% else %}
-									{% set percentage = cardsQuota.limit > 0 ? ((cardsQuota.used / cardsQuota.limit * 100)|round) : 0 %}
-									<div class="mb-3">
-										<div class="d-flex justify-content-between align-items-center mb-2">
-											<span class="small text-muted">Utilisées {{ cardsQuota.period }}</span>
-											<span class="fw-bold">{{ cardsQuota.used }} / {{ cardsQuota.limit }}</span>
-										</div>
-										<div class="progress" style="height: 8px;">
-											<div class="progress-bar
-												{% if percentage >= 100 %}bg-danger
-												{% elseif percentage >= 80 %}bg-warning
-												{% else %}bg-success{% endif %}"
-												style="width: {{ percentage }}%">
-											</div>
-										</div>
-									</div>
-
-									{% if percentage >= 100 %}
-										<div class="alert alert-danger mb-0 py-2 small">
-											<i class="fa fa-exclamation-triangle me-1"></i>
-											Quota atteint!
-										</div>
-									{% elseif percentage >= 80 %}
-										<div class="alert alert-warning mb-0 py-2 small">
-											<i class="fa fa-info-circle me-1"></i>
-											Bientôt à la limite
-										</div>
-									{% endif %}
-								{% endif %}
-							{% else %}
-								<div class="text-center py-3">
-									<p class="text-muted mb-0">Aucune carte créée</p>
-								</div>
-							{% endif %}
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		{% endif %}
-
-		{# ========================================
-		   SECTION 3: ACTIONS RAPIDES
-		   ======================================== #}
-		<section class="mb-4">
-			<div class="d-flex align-items-center justify-content-between mb-3">
-				<h2 class="h5 mb-0">
-					<i class="fa fa-bolt me-2 text-warning"></i>
-					Actions rapides
-				</h2>
-			</div>
-
-			<div class="row g-3">
-				{# Menu du Jour #}
-				<div class="col-md-4">
-					{% if canCreateDaily is defined and canCreateDaily %}
-						<a href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}"
-						   class="card text-decoration-none h-100 border-0 shadow-sm hover-lift">
-							<div class="card-body text-center py-4">
-								<div class="display-4 mb-3">🍽️</div>
-								<h5 class="card-title">Créer un Menu du Jour</h5>
-								<p class="card-text text-muted small">Menu quotidien rapide</p>
-							</div>
-						</a>
-					{% else %}
-						<div class="card border-0 shadow-sm h-100 bg-light">
-							<div class="card-body text-center py-4 opacity-50">
-								<div class="display-4 mb-3">🔒</div>
-								<h5 class="card-title">Menu du Jour</h5>
-								<p class="card-text text-muted small">Quota atteint</p>
-							</div>
-						</div>
-					{% endif %}
-				</div>
-
-				{# Menu Spécial #}
-				<div class="col-md-4">
-					{% if canCreateSpecial is defined and canCreateSpecial %}
-						<a href="{{ ea_url().setController('App\\Controller\\Admin\\SpecialMenuCrudController').setAction('new') }}"
-						   class="card text-decoration-none h-100 border-0 shadow-sm hover-lift">
-							<div class="card-body text-center py-4">
-								<div class="display-4 mb-3">🎉</div>
-								<h5 class="card-title">Créer un Menu Spécial</h5>
-								<p class="card-text text-muted small">Menu événementiel</p>
-							</div>
-						</a>
-					{% else %}
-						<a href="{{ path('app_subscription_plans') }}"
-						   class="card text-decoration-none h-100 border-0 shadow-sm bg-light">
-							<div class="card-body text-center py-4">
-								<div class="display-4 mb-3">🔒</div>
-								<h5 class="card-title">Menu Spécial</h5>
-								<p class="card-text text-muted small">Passer à Starter pour débloquer</p>
-							</div>
-						</a>
-					{% endif %}
-				</div>
-
-				{# Carte Restaurant #}
-				<div class="col-md-4">
-					{% if canCreateCarte is defined and canCreateCarte %}
-						<a href="{{ path('app_carte_wizard') }}"
-						   class="card text-decoration-none h-100 border-0 shadow-sm hover-lift">
-							<div class="card-body text-center py-4">
-								<div class="display-4 mb-3">✨</div>
-								<h5 class="card-title">Créer une Carte</h5>
-								<p class="card-text text-muted small">Carte complète avec sections</p>
-							</div>
-						</a>
-					{% else %}
-						<a href="{{ path('app_subscription_plans') }}"
-						   class="card text-decoration-none h-100 border-0 shadow-sm bg-light">
-							<div class="card-body text-center py-4">
-								<div class="display-4 mb-3">🔒</div>
-								<h5 class="card-title">Carte Restaurant</h5>
-								<p class="card-text text-muted small">Passer à Premium pour débloquer</p>
-							</div>
-						</a>
-					{% endif %}
-				</div>
-			</div>
-		</section>
-
-		{# ========================================
-		   SECTION 4: MES DERNIERS CONTENUS
-		   ======================================== #}
-		<section class="mb-4">
-			<div class="d-flex align-items-center justify-content-between mb-3">
-				<h2 class="h5 mb-0">
-					<i class="fa fa-clock-rotate-left me-2 text-primary"></i>
-					Mes derniers contenus
-				</h2>
-				<a href="#all-contents" class="btn btn-sm btn-outline-primary">Voir tout →</a>
-			</div>
-
-			{% if recentContents is defined and recentContents|length > 0 %}
-				<div class="card border-0 shadow-sm">
-					<div class="table-responsive">
-						<table class="table table-hover align-middle mb-0">
-							<thead class="table-light">
-								<tr>
-									<th class="text-uppercase small text-muted">Type</th>
-									<th class="text-uppercase small text-muted">Titre</th>
-									<th class="text-uppercase small text-muted">Statut</th>
-									<th class="text-uppercase small text-muted">Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for content in recentContents|slice(0, 5) %}
-									<tr>
-										<td>
-											{% if content.type == 'menu_daily' %}
-												<span class="badge bg-primary">🍽️ Menu</span>
-											{% elseif content.type == 'menu_special' %}
-												<span class="badge bg-info">🎉 Spécial</span>
-											{% elseif content.type == 'carte' %}
-												<span class="badge bg-warning text-dark">🃏 Carte</span>
-											{% endif %}
-										</td>
-										<td class="fw-semibold">{{ content.title }}</td>
-										<td>
-											{% if content.published %}
-												<span class="badge bg-success">✅ Publié</span>
-											{% else %}
-												<span class="badge bg-secondary">📝 Brouillon</span>
-											{% endif %}
-										</td>
-										<td>
-											<div class="btn-group btn-group-sm">
-												{% if content.published and content.url is defined %}
-													<a href="{{ content.url }}" target="_blank" class="btn btn-outline-success" title="Voir">
-														<i class="fa fa-eye"></i>
-													</a>
-													<button type="button" class="btn btn-outline-primary" onclick="navigator.clipboard.writeText('{{ content.url }}')" title="Copier">
-														<i class="fa fa-copy"></i>
-													</button>
-												{% endif %}
-												{% if content.editUrl is defined %}
-													<a href="{{ content.editUrl }}" class="btn btn-outline-secondary" title="Éditer">
-														<i class="fa fa-edit"></i>
-													</a>
-												{% endif %}
-											</div>
-										</td>
-									</tr>
-								{% endfor %}
-							</tbody>
-						</table>
-					</div>
-				</div>
-			{% else %}
-				<div class="card border-0 shadow-sm">
-					<div class="card-body text-center py-5">
-						<div class="display-4 mb-3 text-muted">📋</div>
-						<p class="text-muted mb-3">Aucun contenu créé pour le moment</p>
-						<a href="{{ ea_url().setController('App\\Controller\\Admin\\DailyMenuCrudController').setAction('new') }}" class="btn btn-primary">
-							Créer mon premier menu
-						</a>
-					</div>
-				</div>
+					{{ include('admin/partials/recent-contents-table.html.twig', {
+						contents: recentContents
+					}) }}
+				</section>
 			{% endif %}
-		</section>
 
-		{# ========================================
-		   SECTION 5: UPGRADE CTA (si FREE ou STARTER)
-		   ======================================== #}
-		{% if planCode is defined and planCode != 'PREMIUM' %}
-		<section class="mb-4">
-			<div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-				<div class="card-body text-white p-4">
-					{% if planCode == 'FREE' %}
-						<div class="row align-items-center">
-							<div class="col-md-8">
-								<h3 class="h4 mb-3">🚀 Débloquez plus de fonctionnalités</h3>
-								<p class="mb-3">Passez à <strong>STARTER (9,90€/mois)</strong> et bénéficiez de :</p>
-								<ul class="mb-3">
-									<li>✓ Menus du jour <strong>ILLIMITÉS</strong></li>
-									<li>✓ 10 Menus spéciaux/an</li>
-									<li>✓ 8 designs au choix</li>
-									<li>✓ Personnalisation des couleurs</li>
-									<li>✓ Présence dans l'annuaire</li>
-								</ul>
-								<p class="small opacity-75 mb-0">Ou passez à PREMIUM (19,90€/mois) pour tout débloquer !</p>
-							</div>
-							<div class="col-md-4 text-center">
-								<a href="{{ path('app_subscription_plans') }}" class="btn btn-light btn-lg px-4">
-									<i class="fa fa-rocket me-2"></i>
-									Voir les offres
-								</a>
-							</div>
-						</div>
-					{% elseif planCode == 'STARTER' %}
-						<div class="row align-items-center">
-							<div class="col-md-8">
-								<h3 class="h4 mb-3">⭐ Passez à Premium pour aller plus loin</h3>
-								<p class="mb-3">Pour seulement 10€ de plus/mois <strong>(19,90€)</strong>, débloquez :</p>
-								<ul class="mb-0">
-									<li>✓ Menus spéciaux <strong>ILLIMITÉS</strong></li>
-									<li>✓ Création de <strong>CARTES</strong> restaurant complètes</li>
-									<li>✓ QR Code pour impression</li>
-									<li>✓ Partage automatique sur les réseaux sociaux</li>
-									<li>✓ Designs premium exclusifs</li>
-									<li>✓ Support prioritaire</li>
-								</ul>
-							</div>
-							<div class="col-md-4 text-center">
-								<a href="{{ path('app_subscription_plans') }}" class="btn btn-warning btn-lg px-4">
-									<i class="fa fa-star me-2"></i>
-									Découvrir Premium
-								</a>
-							</div>
-						</div>
-					{% endif %}
+            {# SECTION 3: Quota Tracking #}
+			<section class="am-section">
+				<h2 class="am-section-title">
+					<span class="am-section-icon">📊</span>
+					Suivi des Quotas
+				</h2>
+
+				<div class="row g-3">
+					{# Daily Menus Quota #}
+					<div class="col-12 col-md-4">
+						{% if quotaInfo.daily_menus is defined %}
+							{% set dailyQuota = quotaInfo.daily_menus %}
+							{{ include('admin/partials/quota-card.html.twig', {
+								icon: '🍽️',
+								title: 'Menus du Jour',
+								isLocked: not canCreateDaily|default(false),
+								isUnlimited: dailyQuota.limit == -1,
+								used: dailyQuota.used,
+								limit: dailyQuota.limit,
+								period: dailyQuota.period,
+								upgradeUrl: path('app_subscription_plans'),
+								color: 'green'
+							}) }}
+						{% endif %}
+					</div>
+
+					{# Special Menus Quota #}
+					<div class="col-12 col-md-4">
+						{% if quotaInfo.special_menus is defined %}
+							{% set specialQuota = quotaInfo.special_menus %}
+							{{ include('admin/partials/quota-card.html.twig', {
+								icon: '🎉',
+								title: 'Menus Spéciaux',
+								isLocked: not canCreateSpecial|default(false),
+								isUnlimited: specialQuota.limit == -1,
+								used: specialQuota.used,
+								limit: specialQuota.limit,
+								period: specialQuota.period,
+								upgradeUrl: path('app_subscription_plans'),
+								color: 'blue'
+							}) }}
+						{% endif %}
+					</div>
+
+					{# Cards Quota #}
+					<div class="col-12 col-md-4">
+						{% if quotaInfo.cards is defined %}
+							{% set cardsQuota = quotaInfo.cards %}
+							{{ include('admin/partials/quota-card.html.twig', {
+								icon: '📖',
+								title: 'Cartes Restaurant',
+								isLocked: not canCreateCarte|default(false),
+								isUnlimited: cardsQuota.limit == -1,
+								used: cardsQuota.used,
+								limit: cardsQuota.limit,
+								period: cardsQuota.period,
+								upgradeUrl: path('app_subscription_plans'),
+								color: 'yellow'
+							}) }}
+						{% endif %}
+					</div>
 				</div>
+			</section>
+
+			{# SECTION 6: Upgrade CTA #}
+			{% if planCode is defined %}
+				<section class="am-section">
+					{% if planCode == 'FREE' %}
+						{# Upgrade to STARTER #}
+						{{ include('admin/partials/upgrade-cta.html.twig', {
+							title: 'Débloquez plus de fonctionnalités',
+							price: '9,90€/mois',
+							features: [
+								'Menus du jour ILLIMITÉS',
+								'10 Menus spéciaux/an',
+								'Thèmes et styles avancés',
+								'Export PDF haute qualité'
+							],
+							buttonText: 'Découvrir Starter',
+							buttonUrl: path('app_subscription_plans'),
+							theme: 'starter'
+						}) }}
+
+					{% elseif planCode == 'STARTER' %}
+						{# Upgrade to PREMIUM #}
+						{{ include('admin/partials/upgrade-cta.html.twig', {
+							title: 'Passez à Premium pour aller plus loin',
+							price: '19,90€/mois',
+							priceNote: '(+10€)',
+							features: [
+								'Création de CARTES complètes',
+								'Catalogue de plats illimité',
+								'Gestion multi-sections',
+								'QR Code pour impression',
+								'Statistiques avancées'
+							],
+							buttonText: 'Passer à Premium',
+							buttonUrl: path('app_subscription_plans'),
+							theme: 'premium'
+						}) }}
+					{% endif %}
+				</section>
+			{% endif %}
+
+		{% else %}
+			{# Fallback for other roles #}
+			<div class="alert alert-warning">
+				Vous n'avez pas les permissions nécessaires pour accéder à ce dashboard.
 			</div>
-		</section>
 		{% endif %}
 
-		{# ========================================
-		   SECTION 6: TOUS LES MENUS (existant)
-		   ======================================== #}
-		<div class="am-section" id="all-contents">
-			<div class="am-card">
-				<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-					<div>
-						<h2 class="h5 mb-1">
-							<i class="fa fa-clipboard-list me-2 text-primary"></i>
-							Tous mes contenus
-						</h2>
-						<div class="text-muted small">Lien public uniquement si "Publié" est actif.</div>
-					</div>
-				</div>
-				{% if menus is defined and menus|length > 0 %}
-					<div class="table-responsive">
-						<table class="table table-hover align-middle mb-0">
-							<thead class="table-light">
-								<tr>
-									<th class="text-uppercase small text-muted">Type</th>
-									<th class="text-uppercase small text-muted">Titre</th>
-									{% if is_granted('ROLE_SUPER_ADMIN') %}
-										<th class="text-uppercase small text-muted">Restaurant</th>
-									{% endif %}
-									<th class="text-uppercase small text-muted">Statut</th>
-									<th class="text-uppercase small text-muted">Lien</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for menu in menus %}
-									{% set rowUrl = url('app_show_menu', {
-                                        restaurant: menu.owner.slug,
-                                        slug: menu.slug
-                                    }) %}
-									<tr>
-										<td>
-											{% if menu.type == 'DAILY' %}
-												<span class="badge bg-primary">
-													<i class="fa fa-sun me-1"></i>
-													Jour
-												</span>
-											{% else %}
-												<span class="badge bg-info">
-													<i class="fa fa-star me-1"></i>
-													Spécial
-												</span>
-											{% endif %}
-										</td>
-										<td class="fw-semibold">{{ menu.titre }}</td>
-										{% if is_granted('ROLE_SUPER_ADMIN') %}
-											<td><small class="text-muted">{{ menu.restaurant.name }}</small></td>
-										{% endif %}
-										<td>
-											{% if menu.status %}
-												<span class="badge bg-success">
-													<i class="fa fa-check me-1"></i>
-													Publié
-												</span>
-											{% else %}
-												<span class="badge bg-secondary">
-													<i class="fa fa-moon me-1"></i>
-													Brouillon
-												</span>
-											{% endif %}
-										</td>
-										<td>
-											<div class="input-group input-group-sm">
-												<input type="text" class="form-control" value="{{ rowUrl }}" id="url-{{ menu.id }}" readonly>
-												<button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('url-{{ menu.id }}')" title="Copier le lien" {% if not menu.status %} disabled {% endif %}>
-													<i class="fa fa-copy"></i>
-												</button>
-												<a href="{{ rowUrl }}" class="btn {{ menu.status ? 'btn-outline-success' : 'btn-outline-secondary disabled' }}" target="_blank" title="Voir le menu" {% if not menu.status %} aria-disabled="true" tabindex="-1" {% endif %}>
-													<i class="fa fa-external-link-alt"></i>
-												</a>
-											</div>
-										</td>
-									</tr>
-								{% endfor %}
-							</tbody>
-						</table>
-					</div>
-				{% else %}
-					<div class="text-center py-5">
-						<div class="display-4 mb-3 text-muted">📋</div>
-						<p class="mb-3 text-muted">Aucun contenu pour le moment.</p>
-						<p class="text-muted small">Lancez un menu du jour ou un special pour commencer.</p>
-					</div>
-				{% endif %}
-			</div>
-		</div>
-
-        {% endif %}
 	</div>
 
-	{# Modal de sélection de restaurant (inchangé) #}
-	{% if userRestaurants|length > 1 %}
+    {% if userRestaurants|length > 1 %}
 	<div class="modal fade" id="restaurantSelectionModal" tabindex="-1" aria-labelledby="restaurantSelectionModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
@@ -613,6 +290,7 @@
 		</div>
 	</div>
 	{% endif %}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -626,10 +304,11 @@
 			if (!input) return;
 
 			input.select();
-			input.setSelectionRange(0, 99999);
+			input.setSelectionRange(0, 99999); // For mobile devices
 
 			try {
 				navigator.clipboard.writeText(input.value).then(() => {
+					// Visual feedback
 					const btn = event.target.closest('button');
 					if (btn) {
 						const originalHTML = btn.innerHTML;
@@ -644,7 +323,9 @@
 						}, 1500);
 					}
 				}).catch(err => {
+					// Fallback for older browsers
 					document.execCommand('copy');
+					console.log('Lien copié (fallback)');
 				});
 			} catch (err) {
 				console.error('Erreur lors de la copie:', err);
@@ -652,35 +333,56 @@
 		}
 
 		/**
-		 * Theme management
+		 * Copy the first published menu URL
+		 */
+		function copyFirstPublicUrl() {
+			const publishedUrlInput = document.getElementById('published-url');
+			if (publishedUrlInput) {
+				copyToClipboard('published-url');
+			}
+		}
+
+		/**
+		 * Initialize theme from user preference or system preference
 		 */
 		function initTheme() {
 			const savedTheme = localStorage.getItem('am-theme');
 			const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 			const theme = savedTheme || systemTheme;
+
 			document.documentElement.setAttribute('data-bs-theme', theme);
 		}
 
+		/**
+		 * Update theme toggle button icon
+		 */
 		function updateThemeIcon() {
 			const currentTheme = document.documentElement.getAttribute('data-bs-theme');
 			const icon = document.getElementById('theme-icon');
+
 			if (icon) {
 				icon.className = currentTheme === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
 			}
 		}
 
+		/**
+		 * Toggle between light and dark theme
+		 */
 		function toggleTheme() {
 			const currentTheme = document.documentElement.getAttribute('data-bs-theme');
 			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
 			document.documentElement.setAttribute('data-bs-theme', newTheme);
 			localStorage.setItem('am-theme', newTheme);
 			updateThemeIcon();
 		}
 
+		// Initialize theme on page load
 		document.addEventListener('DOMContentLoaded', () => {
 			initTheme();
 			updateThemeIcon();
 
+			// Listen for system theme changes
 			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
 				if (!localStorage.getItem('am-theme')) {
 					document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
@@ -688,17 +390,7 @@
 				}
 			});
 		});
+
+		// Restaurant modal is handled by restaurant-modal.js
 	</script>
-
-	<style>
-		/* Hover effect for action cards */
-		.hover-lift {
-			transition: transform 0.2s ease, box-shadow 0.2s ease;
-		}
-
-		.hover-lift:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-		}
-	</style>
 {% endblock %}

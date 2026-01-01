@@ -1,0 +1,175 @@
+/* ============================================
+   Component: Upgrade CTA - Modern Refinement
+   ============================================ */
+
+:root {
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upgrade-cta {
+    border-radius: 1.25rem; /* Plus arrondi pour la modernité */
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+/* Thème Premium : Or doux et élégant */
+.upgrade-cta--premium {
+    background: linear-gradient(145deg, #fffcf0 0%, #fef3c7 100%);
+    color: #92400e;
+}
+
+/* Thème Starter : Bleu aérien */
+.upgrade-cta--starter {
+    background: linear-gradient(145deg, #f0f7ff 0%, #e0e7ff 100%);
+    color: #1e40af;
+}
+
+.upgrade-cta__content {
+    position: relative;
+    z-index: 2;
+}
+
+.upgrade-cta__header {
+    display: flex;
+    align-items: center; /* Centrage vertical pour plus d'équilibre */
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.upgrade-cta__icon {
+    font-size: 2.25rem;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px); /* Effet verre moderne */
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+}
+
+.upgrade-cta__title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.025em; /* Typo plus serrée = plus moderne */
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+}
+
+.upgrade-cta__price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.upgrade-cta__price-amount {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.upgrade-cta__price-note {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+    font-weight: 600;
+}
+
+.upgrade-cta__features {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 1rem;
+}
+
+.upgrade-cta__features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.upgrade-cta__feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+}
+
+.upgrade-cta__feature-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.upgrade-cta__action {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.upgrade-cta__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    border-radius: 9999px; /* Style "Pill" ultra-moderne */
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    border: none;
+}
+
+/* Bouton Premium */
+.upgrade-cta--premium .upgrade-cta__button {
+    background: #0f172a; /* Contraste fort : bouton sombre sur fond clair */
+    color: #ffffff;
+}
+
+/* Bouton Starter */
+.upgrade-cta--starter .upgrade-cta__button {
+    background: #1e40af;
+    color: #ffffff;
+}
+
+.upgrade-cta__button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Éléments de décoration abstraits au lieu de simples cercles */
+.upgrade-cta::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    right: -5%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+    filter: blur(40px);
+    z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .upgrade-cta { padding: 1.5rem; }
+    .upgrade-cta__header { flex-direction: column; align-items: flex-start; }
+    .upgrade-cta__price-amount { font-size: 2rem; }
+    .upgrade-cta__action { justify-content: stretch; }
+    .upgrade-cta__button { width: 100%; justify-content: center; }
+}
