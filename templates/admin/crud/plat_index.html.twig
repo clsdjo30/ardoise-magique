@@ -202,14 +202,12 @@
                                         {% endif %}
                                         {% set deleteAction = entity.actions.get('delete') %}
                                         {% if deleteAction %}
-                                            <a href="{{ deleteAction.linkUrl }}"
-                                               class="btn btn-outline-danger"
-                                               data-bs-toggle="tooltip"
-                                               data-bs-placement="top"
-                                               title="Supprimer ce plat"
-                                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce plat ?')">
-                                                <i class="fa fa-fire delete"></i>
-                                            </a>
+                                            <form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
+                                                <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
+                                                <button type="submit" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer ce plat" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce plat ?')">
+                                                    <i class="fa fa-fire delete"></i>
+                                                </button>
+                                            </form>
                                         {% endif %}
                                     </div>
                                 </td>
@@ -249,14 +247,12 @@
                                                     {% endif %}
                                                     {% set deleteAction = entity.actions.get('delete') %}
                                                     {% if deleteAction %}
-                                                        <a href="{{ deleteAction.linkUrl }}"
-                                                           class="btn btn-outline-danger"
-                                                           data-bs-toggle="tooltip"
-                                                           data-bs-placement="top"
-                                                           title="Supprimer ce plat"
-                                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce plat ?')">
-                                                            <i class="fa fa-fire delete"></i> Supprimer
-                                                        </a>
+                                                        <form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
+                                                            <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
+                                                            <button type="submit" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer ce plat" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce plat ?')">
+                                                                <i class="fa fa-fire delete"></i> Supprimer
+                                                            </button>
+                                                        </form>
                                                     {% endif %}
                                                 </div>
                                             </div>

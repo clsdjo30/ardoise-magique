@@ -2,7 +2,7 @@
 
 {% block configured_head_contents %}
 	{{ parent() }}
-	<link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🍽️</text></svg>">
 	<script src="{{ asset('js/restaurant-modal.js') }}" defer></script>
 {% endblock %}
 
@@ -119,23 +119,20 @@
 				</div>
 			</section>
 
-			{# SECTION 5: Recent Contents #}
+			{# SECTION 5: Recent Menus #}
 			{% if menus is not empty %}
 				<section class="am-section">
-					{# Prepare recent contents data #}
-					{% set recentContents = [] %}
-					{% for menu in menus|slice(0, 5) %}
-						{% set recentContents = recentContents|merge([{
-							type: menu.type,
-							name: menu.titre,
-							restaurant: menu.restaurant.name,
-							date: menu.createdAt|date('d déc. Y'),
-							status: menu.status
-						}]) %}
-					{% endfor %}
-
 					{{ include('admin/partials/recent-contents-table.html.twig', {
-						contents: recentContents
+						menus: menus
+					}) }}
+				</section>
+			{% endif %}
+
+			{# SECTION 6: Recent Cartes (PREMIUM only) #}
+			{% if planCode == 'PREMIUM' and cartes is defined and cartes is not empty %}
+				<section class="am-section">
+					{{ include('admin/partials/recent-cartes-table.html.twig', {
+						cartes: cartes
 					}) }}
 				</section>
 			{% endif %}

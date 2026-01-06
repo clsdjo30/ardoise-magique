@@ -39,6 +39,11 @@ class CarteWizardData
 
     public string $currentStep = 'step1';
 
+    /**
+     * ID de la carte en mode édition (null en mode création)
+     */
+    public ?int $carteId = null;
+
     public function __construct()
     {
         // Initialize with current date by default

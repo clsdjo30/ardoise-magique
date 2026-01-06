@@ -173,6 +173,7 @@ body.ea[data-ea-sidebar-width="wide"] .main-content {
     /* Show sidebar when toggled */
     body.ea.ea-mobile-sidebar-visible .sidebar-wrapper {
         transform: translateX(0);
+        pointer-events: auto; /* Ensure sidebar is clickable */
     }
 
     /* Full width content on mobile - Force override all sidebar width variations */
@@ -195,6 +196,7 @@ body.ea[data-ea-sidebar-width="wide"] .main-content {
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
         z-index: 1035;
+        pointer-events: none; /* Don't block clicks on sidebar */
     }
 
     /* Reduce dashboard padding on mobile */

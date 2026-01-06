@@ -56,13 +56,14 @@ body.wizard-page {
     font-size: type.$font-size-3xl;
     font-weight: type.$font-weight-strong;
     color: colors.$color-surface;
-    margin-left: 0.5rem;
     margin-bottom: spacing.$spacing-xxs;
     letter-spacing: type.$letter-spacing-wider;
+    text-align: center;
 }
 
 .wizard-header p {
     margin: 0;
+    text-align: center;
     font-size: type.$font-size-lg;
     color: colors.$color-surface;
 }
@@ -271,6 +272,166 @@ body.wizard-page {
     transform: rotate(90deg);
 }
 
+/* Bouton de fermeture en mode edition */
+.btn-back-dashboard {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-back-dashboard:hover {
+    background: #4f46e5;
+    transform: translateX(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .btn-back-dashboard {
+        position: static;
+        margin-bottom: 1rem;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ========================================
+   CONFIRMATION MODAL
+   ======================================== */
+
+/* Backdrop de la modal */
+.confirmation-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.confirmation-modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal container */
+.confirmation-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    z-index: 2001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 500px;
+    width: 90%;
+}
+
+.confirmation-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Modal content */
+.confirmation-modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Modal header */
+.confirmation-modal-header {
+    background: colors.$color-gradient-green;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.confirmation-modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: colors.$color-surface;
+    text-align: center;
+}
+
+/* Modal body */
+.confirmation-modal-body {
+    padding: 2rem 1.5rem;
+    text-align: center;
+}
+
+.confirmation-modal-body p {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.confirmation-warning {
+    font-weight: 600;
+    color: #dc3545;
+    margin-top: 1rem;
+}
+
+/* Modal footer */
+.confirmation-modal-footer {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.confirmation-modal-footer .btn {
+    flex: 1;
+    max-width: 180px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .confirmation-modal {
+        width: 95%;
+        max-width: none;
+    }
+
+    .confirmation-modal-footer {
+        flex-direction: column;
+    }
+
+    .confirmation-modal-footer .btn {
+        max-width: none;
+        width: 100%;
+    }
+}
 /* Desktop - Hide responsive header */
 @media (min-width: 1300px) {
     .wizard-container {
@@ -411,7 +572,7 @@ body.wizard-page {
     }
 
     .wizard-body {
-        padding: 1.5rem;
+        padding: 0 !important;
     }
 
     .step-label {

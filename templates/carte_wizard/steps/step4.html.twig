@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<form method="post" data-controller="carte-preview">
+<form method="post" data-controller="carte-preview" data-turbo="false">
     <div class="preview-actions">
         <button type="button" class="btn btn-sm btn-secondary" data-action="click->carte-preview#expandAll">
             Tout déplier
@@ -122,10 +122,18 @@
 
         <div class="wizard-navigation">
             <a href="{{ path('app_carte_wizard', {'step': 'step3'}) }}" class="btn btn-secondary">
-                ← Retour
+                {% if wizardData.carteId is not null %}
+                    ← Modifier vos plats
+                {% else %}
+                    ← Retour
+                {% endif %}
             </a>
             <button type="submit" class="btn btn-success">
-                ✓ Créer la carte
+                {% if wizardData.carteId is not null %}
+                    ✓ Enregistrer les modifications
+                {% else %}
+                    ✓ Créer la carte
+                {% endif %}
             </button>
         </div>
     </div>

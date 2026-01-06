@@ -12,6 +12,7 @@ use App\Form\CarteWizard\CarteWizardData;
 use App\Form\CarteWizard\CarteSectionData;
 use App\Form\CarteWizard\Step1GeneralInfoType;
 use App\Form\CarteWizard\Step2SectionsType;
+use App\Repository\CarteRepository;
 use App\Repository\PlatVariantRepository;
 use App\Service\Carte\CartePreviewService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,6 +30,7 @@ class CarteWizardController extends AbstractController
 
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private CarteRepository $carteRepository,
         private PlatVariantRepository $variantRepository,
         private CartePreviewService $previewService,
         private UrlGeneratorInterface $urlGenerator
@@ -46,11 +48,20 @@ class CarteWizardController extends AbstractController
 
         // Get or create wizard data from session
         $session = $request->getSession();
-        $wizardData = $session->get(self::SESSION_KEY);
+        $carteId = $request->query->getInt('carteId', 0);
 
-        if (!$wizardData instanceof CarteWizardData) {
-            $wizardData = new CarteWizardData();
+        // Check if we're editing an existing carte
+        if ($carteId > 0 && !$session->has(self::SESSION_KEY)) {
+            // Load existing carte data
+            $wizardData = $this->loadCarteIntoWizard($carteId);
             $session->set(self::SESSION_KEY, $wizardData);
+        } else {
+            $wizardData = $session->get(self::SESSION_KEY);
+
+            if (!$wizardData instanceof CarteWizardData) {
+                $wizardData = new CarteWizardData();
+                $session->set(self::SESSION_KEY, $wizardData);
+            }
         }
 
         // Re-attach detached entities from session
@@ -162,36 +173,67 @@ class CarteWizardController extends AbstractController
             // Process drag-and-drop positions from the form
             $this->processDragAndDropPositions($request, $wizardData);
 
-            // Create carte from wizard data
-            $carte = $this->createCarteFromWizardData($wizardData);
+            // Check if we're editing or creating
+            $isEdit = $wizardData->carteId !== null;
 
-            $this->entityManager->persist($carte);
+            if ($isEdit) {
+                // Update existing carte
+                $carte = $this->updateCarteFromWizardData($wizardData);
+            } else {
+                // Create new carte
+                $carte = $this->createCarteFromWizardData($wizardData);
+                $this->entityManager->persist($carte);
+            }
+
             $this->entityManager->flush();
 
-            // Generate public URL
-            $publicUrl = $this->urlGenerator->generate('app_show_carte', [
-                'restaurant' => $this->getUser()->getSlug(),
-                'slug' => $carte->getSlug()
-            ], UrlGeneratorInterface::ABSOLUTE_URL);
+            try {
+                // Generate public URL using the restaurant's owner slug
+                $restaurantOwnerSlug = $carte->getRestaurant()->getOwner()->getSlug();
+                $publicUrl = $this->urlGenerator->generate('app_show_carte', [
+                    'restaurant' => $restaurantOwnerSlug,
+                    'slug' => $carte->getSlug()
+                ], UrlGeneratorInterface::ABSOLUTE_URL);
 
-            // Clear session
+                // Add success flash message with link
+                if ($isEdit) {
+                    $this->addFlash('success', sprintf(
+                        'Carte "%s" mise à jour avec succès ! <a href="%s" target="_blank" class="alert-link text-decoration-underline">Voir la carte</a>',
+                        $carte->getName(),
+                        $publicUrl
+                    ));
+                } else {
+                    $this->addFlash('success', sprintf(
+                        'Carte "%s" créée avec succès ! <a href="%s" target="_blank" class="alert-link text-decoration-underline">Voir la carte</a>',
+                        $carte->getName(),
+                        $publicUrl
+                    ));
+                }
+            } catch (\Exception $e) {
+                // If URL generation fails, still show a message
+                $this->addFlash('warning', sprintf(
+                    'Carte "%s" %s avec succès ! (Erreur lors de la génération du lien: %s)',
+                    $carte->getName(),
+                    $isEdit ? 'mise à jour' : 'créée',
+                    $e->getMessage()
+                ));
+            }
+
+            // Clear wizard session data
             $request->getSession()->remove(self::SESSION_KEY);
 
-            $this->addFlash('success', sprintf(
-                'Carte créée avec succès ! <br><a href="%s" target="_blank" class="alert-link">Voir la carte publique</a>',
-                $publicUrl
-            ));
-
-            return $this->redirectToRoute('admin', ['restaurant' => $this->getUser()->getSlug()]);
+            return $this->redirectToRoute('admin', ['restaurant' => $carte->getRestaurant()->getOwner()->getSlug()]);
         }
+
+        $isEditMode = $wizardData->carteId !== null;
 
         return $this->render('carte_wizard/wizard.html.twig', [
             'form' => null,
             'currentStep' => 'step4',
             'wizardData' => $wizardData,
             'previewData' => $previewData,
-            'stepTitle' => 'Aperçu de votre carte',
-            'stepDescription' => 'Vérifiez les informations avant de créer votre carte',
+            'stepTitle' => $isEditMode ? 'Aperçu de votre carte modifiée' : 'Aperçu de votre carte',
+            'stepDescription' => $isEditMode ? 'Vérifiez les modifications avant de sauvegarder' : 'Vérifiez les informations avant de créer votre carte',
         ]);
     }
 
@@ -222,6 +264,54 @@ class CarteWizardController extends AbstractController
         $carte->setSlug($baseSlug . '-' . uniqid());
 
         // Create sections
+        foreach ($data->sections as $index => $sectionData) {
+            $section = new CarteSection();
+            $section->setTitre($sectionData->categorie->getTitre());
+            $section->setDescription($sectionData->description);
+            $section->setPosition($index);
+            $section->setCarte($carte);
+
+            // Add items to section
+            $variantIds = $data->selectedVariants[$index] ?? [];
+            foreach ($variantIds as $position => $variantId) {
+                $variant = $this->variantRepository->find($variantId);
+                if ($variant) {
+                    $item = new SectionItem();
+                    $item->setPosition($position);
+                    $item->setCarteSection($section);
+                    $item->setPlatVariant($variant);
+
+                    $section->addItem($item);
+                }
+            }
+
+            $carte->addSection($section);
+        }
+
+        return $carte;
+    }
+
+    private function updateCarteFromWizardData(CarteWizardData $data): Carte
+    {
+        $carte = $this->carteRepository->find($data->carteId);
+
+        if (!$carte) {
+            throw $this->createNotFoundException('Carte non trouvée');
+        }
+
+        // Update basic properties
+        $carte->setName($data->name);
+        $carte->setValidFrom($data->validFrom);
+        $carte->setValidTo($data->validTo);
+        $carte->setRestaurant($data->restaurant);
+        $carte->setIsPublished($data->isPublished);
+
+        // Remove all existing sections (cascade will handle items)
+        foreach ($carte->getSections()->toArray() as $section) {
+            $carte->removeSection($section);
+        }
+
+        // Add new sections
         foreach ($data->sections as $index => $sectionData) {
             $section = new CarteSection();
             $section->setTitre($sectionData->categorie->getTitre());
@@ -334,5 +424,62 @@ class CarteWizardController extends AbstractController
                 }
             }
         }
+    }
+
+    /**
+     * Load an existing carte into wizard data for editing
+     */
+    private function loadCarteIntoWizard(int $carteId): CarteWizardData
+    {
+        $carte = $this->carteRepository->find($carteId);
+
+        if (!$carte) {
+            throw $this->createNotFoundException('Carte non trouvée');
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Security check: user must own the restaurant
+        if (!$this->isGranted('ROLE_SUPER_ADMIN') && $carte->getRestaurant()->getOwner() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à cette carte');
+        }
+
+        // Create wizard data from carte
+        $wizardData = new CarteWizardData();
+        $wizardData->carteId = $carte->getId();
+        $wizardData->name = $carte->getName();
+        $wizardData->validFrom = $carte->getValidFrom();
+        $wizardData->validTo = $carte->getValidTo();
+        $wizardData->restaurant = $carte->getRestaurant();
+        $wizardData->isPublished = $carte->isPublished();
+
+        // Convert sections
+        foreach ($carte->getSections() as $carteSection) {
+            $sectionData = new CarteSectionData();
+            $sectionData->position = $carteSection->getPosition();
+            $sectionData->description = $carteSection->getDescription();
+
+            // Find PlatCategorie by titre
+            // Note: This assumes we can match by titre. If this is not reliable,
+            // you may need to store the categorie_id in CarteSection
+            $categorie = $this->entityManager->getRepository(\App\Entity\PlatCategorie::class)
+                ->findOneBy(['titre' => $carteSection->getTitre()]);
+
+            if ($categorie) {
+                $sectionData->categorie = $categorie;
+            }
+
+            $wizardData->sections[] = $sectionData;
+
+            // Store selected variants for this section
+            $variantIds = [];
+            foreach ($carteSection->getItems() as $item) {
+                $variantIds[] = $item->getPlatVariant()->getId();
+            }
+            $wizardData->selectedVariants[$sectionData->position] = $variantIds;
+        }
+
+        return $wizardData;
     }
 }

@@ -11,17 +11,50 @@
     {% block stylesheets %}
         {{ importmap('app') }}
     {% endblock %}
+
 </head>
-<body class="wizard-page">
+<body class="wizard-page" data-controller="confirmation-modal" data-confirmation-modal-cancel-url-value="{{ path('app_carte_wizard_cancel') }}">
     <div class="wizard-overlay"></div>
+
+    {# Modal de confirmation personnalisée #}
+    <div class="confirmation-modal-backdrop" data-confirmation-modal-target="backdrop" data-action="click->confirmation-modal#closeOnBackdrop"></div>
+    <div class="confirmation-modal" data-confirmation-modal-target="modal">
+        <div class="confirmation-modal-content">
+            <div class="confirmation-modal-header">
+                <h3>Confirmer la fermeture</h3>
+            </div>
+            <div class="confirmation-modal-body">
+                <p>Êtes-vous sûr de vouloir quitter ?</p>
+                <p class="confirmation-warning">Vos modifications seront perdues.</p>
+            </div>
+            <div class="confirmation-modal-footer">
+                <button type="button" class="btn btn-secondary" data-action="click->confirmation-modal#hide">
+                    Annuler
+                </button>
+                <button type="button" class="btn btn-danger" data-action="click->confirmation-modal#confirm">
+                    Quitter sans enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="wizard-container">
         <div class="wizard-header">
-            <button type="button" class="close-wizard" onclick="if(confirm('Êtes-vous sûr de vouloir quitter ? Vos modifications seront perdues.')) window.location.href='{{ path('app_carte_wizard_cancel') }}'">
-                ✕
-            </button>
-            <h1>{% block wizard_title %}Créer une Carte Restaurant{% endblock %}</h1>
-            <p>{% block wizard_description %}Créez votre carte en quelques étapes simples{% endblock %}</p>
+            {% if wizardData.carteId is defined and wizardData.carteId is not null %}
+                {# Mode édition - Bouton retour au dashboard #}
+                <button class="btn-back-dashboard">
+                <a href="{{ path('admin', {restaurant: app.user.slug}) }}" class="">
+                    ← Revenir au dashboard
+                </a>
+                </button>
+            {% else %}
+                {# Mode création - Bouton croix #}
+                <button type="button" class="close-wizard" data-action="click->confirmation-modal#show">
+                    ✕
+                </button>
+            {% endif %}
+            <h1>{% block wizard_title %}{% if wizardData.carteId is defined and wizardData.carteId is not null %}Modifiez votre carte{% else %}Créer une Carte Restaurant{% endif %}{% endblock %}</h1>
+            <p>{% block wizard_description %}{% if wizardData.carteId is defined and wizardData.carteId is not null %}Modifiez les éléments de votre carte{% else %}Créez votre carte en quelques étapes simples{% endif %}{% endblock %}</p>
         </div>
 
         <div class="wizard-progress">

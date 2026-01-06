@@ -1,0 +1,22 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{# Override flash_messages block to display flash messages correctly with Turbo #}
+{% block flash_messages %}
+    {% set allFlashes = app.session.flashBag.peekAll() %}
+
+    {% if allFlashes|length > 0 %}
+        <div id="flash-messages">
+            {% for label, messages in allFlashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message|raw }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        {# Consume the messages so they don't show again on refresh #}
+        {% set _ = app.flashes %}
+    {% endif %}
+{% endblock %}

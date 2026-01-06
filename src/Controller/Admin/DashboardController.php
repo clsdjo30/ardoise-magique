@@ -10,6 +10,7 @@ use App\Entity\Subscription;
 use App\Entity\User;
 use App\Entity\PlatCategorie;
 use App\Repository\ArdoiseRepository;
+use App\Repository\CarteRepository;
 use App\Service\Subscription\FeatureAccessService;
 use App\Service\Subscription\UsageTrackerService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -24,6 +25,7 @@ class DashboardController extends AbstractDashboardController
 {
     public function __construct(
         private ArdoiseRepository $ardoiseRepository,
+        private CarteRepository $carteRepository,
         private FeatureAccessService $featureAccess,
         private UsageTrackerService $usageTracker
     ) {}
@@ -34,10 +36,12 @@ class DashboardController extends AbstractDashboardController
             ->addJsFile('js/form.js')
             ->addJsFile('js/template-selector.js')
             ->addJsFile('js/collection-field.js')
+            ->addJsFile('js/mobile-sidebar-close.js')
             ->addCssFile('styles/admin/components/template-selector.css')
             // Dashboard layout CSS (fixed sidebar & header)
             ->addCssFile('styles/admin/components/dashboard-layout.css')
             ->addCssFile('styles/admin/components/sidebar-theme.css')
+            ->addCssFile('styles/admin/components/flash-messages-fix.css')
             // Dashboard components CSS
             ->addCssFile('styles/admin/components/header-welcome.css')
             ->addCssFile('styles/admin/components/stat-card.css')
@@ -121,6 +125,18 @@ class DashboardController extends AbstractDashboardController
         usort($menus, fn($a, $b) => $b->getId() <=> $a->getId());
         $publishedMenu = $this->getFirstPublishedMenu($menus);
 
+        // Récupérer les cartes de l'utilisateur (similaire aux menus)
+        $cartes = [];
+        foreach ($restaurants as $restaurant) {
+            $restaurantCartes = $this->carteRepository->findBy(
+                ['restaurant' => $restaurant],
+                ['id' => 'DESC']
+            );
+            $cartes = array_merge($cartes, $restaurantCartes);
+        }
+        // Trier toutes les cartes par ID décroissant
+        usort($cartes, fn($a, $b) => $b->getId() <=> $a->getId());
+
         // Subscription information
         $planCode = $user->getPlanCode();
         $planConfig = $this->featureAccess->getCurrentPlan($user);
@@ -153,6 +169,7 @@ class DashboardController extends AbstractDashboardController
             'totalMenus' => $totalMenus,
             'menusPublies' => $menusPublies,
             'menus' => $menus,
+            'cartes' => $cartes,
             'publishedMenu' => $publishedMenu,
             'userRestaurants' => $restaurants,
             'planCode' => $planCode,
@@ -184,7 +201,8 @@ class DashboardController extends AbstractDashboardController
             ->setDateFormat('dd/MM/yyyy')
             ->setTimeFormat('HH:mm')
             ->setDateTimeFormat('dd/MM/yyyy HH:mm')
-            ->setTimezone('Europe/Paris');
+            ->setTimezone('Europe/Paris')
+            ->overrideTemplate('layout', 'admin/layout.html.twig');
     }
 
     public function configureMenuItems(): iterable
@@ -276,9 +294,9 @@ class DashboardController extends AbstractDashboardController
                 ? 'Créer un Menu'
                 : sprintf('Créer un Menu (%d restants)', $remaining);
 
-            yield MenuItem::linkToCrud($label, 'fa fa-plus', Ardoise::class)
-                ->setController(SpecialMenuCrudController::class)
-                ->setAction('new');
+            // yield MenuItem::linkToCrud($label, 'fa fa-plus', Ardoise::class)
+            //     ->setController(SpecialMenuCrudController::class)
+            //     ->setAction('new');
         } else {
             yield MenuItem::linkToRoute('Menus Spéciaux 🔒', 'fa fa-lock', 'app_subscription_plans');
         }
@@ -294,7 +312,7 @@ class DashboardController extends AbstractDashboardController
                 ->setController(\App\Controller\Admin\PlatCatalogueCrudController::class),
         ]);
          yield MenuItem::subMenu('Edition de Carte', 'fa fa-pencil-alt')->setSubItems([
-            MenuItem::linkToCrud('Cartes', 'fa fa-list', \App\Entity\Carte::class),
+            MenuItem::linkToCrud('Mes Cartes', 'fa fa-list', \App\Entity\Carte::class),
             MenuItem::linkToUrl('Créer une Carte', 'fa fa-magic', $this->generateUrl('app_carte_wizard'))
          ]);
 

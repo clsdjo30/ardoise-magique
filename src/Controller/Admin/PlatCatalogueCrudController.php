@@ -32,6 +32,13 @@ class PlatCatalogueCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action
+                    ->setIcon('fa fa-fire')
+                    ->addCssClass('btn btn-outline-danger')
+                    ->displayAsButton()
+                    ->setHtmlAttributes(['onclick' => 'return confirm("Êtes-vous sûr de vouloir supprimer ce plat ?")']);
+            })
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action
                     ->setLabel('Ajouter un Nouveau Plat')

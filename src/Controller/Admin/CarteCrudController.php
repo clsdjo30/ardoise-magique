@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -20,7 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CarteCrudController extends AbstractCrudController
@@ -43,7 +44,8 @@ class CarteCrudController extends AbstractCrudController
             ->setPageTitle('index', 'Mes Cartes')
             ->setPageTitle('edit', 'Éditer la Carte')
             ->setPageTitle('detail', 'Détails de la Carte')
-            ->setDefaultSort(['validFrom' => 'DESC']);
+            ->setDefaultSort(['validFrom' => 'DESC'])
+            ->overrideTemplate('crud/index', 'admin/crud/carte_index.html.twig');
     }
 
     public function configureFields(string $pageName): iterable
@@ -66,21 +68,6 @@ class CarteCrudController extends AbstractCrudController
         yield BooleanField::new('isPublished', 'Publiée')
             ->setHelp('La carte est-elle visible publiquement ?');
 
-        // Lien public
-        yield UrlField::new('publicUrl', 'Lien Public')
-            ->onlyOnIndex()
-            ->formatValue(function ($value, Carte $carte) {
-                if (!$carte->isPublished()) {
-                    return null;
-                }
-
-                return $this->urlGenerator->generate('app_show_carte', [
-                    'restaurant' => $carte->getRestaurant()->getOwner()->getSlug(),
-                    'slug' => $carte->getSlug()
-                ], UrlGeneratorInterface::ABSOLUTE_URL);
-            })
-            ->setTemplatePath('admin/field/carte_public_url.html.twig');
-
         yield TextField::new('slug', 'Identifiant')
             ->onlyOnDetail()
             ->setHelp('Identifiant unique de la carte');
@@ -97,25 +84,45 @@ class CarteCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        // Custom action to view the carte (future: public URL)
-        $viewAction = Action::new('view', 'Voir', 'fa fa-eye')
-            ->linkToCrudAction(Action::DETAIL);
+
+
+        // Custom action to edit via wizard
+        $editAction = Action::new('editWizard', 'Éditer', 'fa fa-edit')
+            ->linkToCrudAction('edit');
+
+        // Custom action to create via wizard
+        $createAction = Action::new('createWizard', 'Créer une Carte')
+            ->linkToRoute('app_carte_wizard')
+            ->createAsGlobalAction()
+            ->setCssClass('btn btn-primary action-new');
 
         return $actions
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_INDEX, $viewAction)
+            ->add(Crud::PAGE_INDEX, $editAction)
+            ->add(Crud::PAGE_INDEX, $createAction)
+            ->remove(Crud::PAGE_INDEX, Action::EDIT)
+            ->remove(Crud::PAGE_INDEX, Action::NEW)
             ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
-                return $action->setIcon('fa fa-trash')->addCssClass('btn btn-danger');
-            })
-            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
-                return $action->setIcon('fa fa-edit');
-            })
-            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action
-                    ->setLabel('Nouveau Menu du Jour')
-                    ->setCssClass('btn btn-primary action-new')
-                    ->setHtmlAttributes(['title' => 'Créer un nouveau menu du jour']);
+                    ->setIcon('fa fa-trash')
+                    ->addCssClass('btn btn-outline-danger')
+                    ->displayAsButton()
+                    ->setHtmlAttributes(['onclick' => 'return confirm("Êtes-vous sûr de vouloir supprimer cette carte ?")']);
             });
+    }
+
+    public function edit(AdminContext $context): RedirectResponse
+    {
+        $carte = $context->getEntity()->getInstance();
+
+        if (!$carte instanceof Carte) {
+            throw new \InvalidArgumentException('L\'entité doit être de type Carte');
+        }
+
+        // Rediriger vers le wizard avec l'ID de la carte, directement à l'étape 3
+        return $this->redirectToRoute('app_carte_wizard', [
+            'carteId' => $carte->getId(),
+            'step' => 'step4'
+        ]);
     }
 
     public function createIndexQueryBuilder(
