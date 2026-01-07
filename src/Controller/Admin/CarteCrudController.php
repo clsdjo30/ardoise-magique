@@ -105,7 +105,6 @@ class CarteCrudController extends AbstractCrudController
                 return $action
                     ->setIcon('fa fa-trash')
                     ->addCssClass('btn btn-outline-danger')
-                    ->displayAsButton()
                     ->setHtmlAttributes(['onclick' => 'return confirm("Êtes-vous sûr de vouloir supprimer cette carte ?")']);
             });
     }

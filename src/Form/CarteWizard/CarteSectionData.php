@@ -9,6 +9,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CarteSectionData
 {
+    /**
+     * ID of the CarteSection entity (null if creating new)
+     */
+    public ?int $id = null;
+
     #[Assert\NotNull(message: 'La catégorie de la section est obligatoire', groups: ['step2'])]
     public ?PlatCategorie $categorie = null;
 

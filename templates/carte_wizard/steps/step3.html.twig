@@ -1,16 +1,16 @@
-<form method="post" data-controller="dish-selector">
-    <div class="dish-selection-help">
-        <p>Ajoutez des plats à vos sections depuis votre bibliothèque. Recherchez et cliquez sur les variantes pour les ajouter.</p>
+<form method="post" data-controller="dish-selector" class="wizard-form wizard-step-3">
+    <div class="step3-help">
+        <p>Sélectionnez les plats à ajouter à chaque section. Cochez les variantes que vous souhaitez inclure dans votre carte.</p>
     </div>
 
     {% for index, section in wizardData.sections %}
         <div class="section-dish-selector"
              data-section-index="{{ index }}"
              data-category-id="{{ section.categorie.id }}">
-            <h3>
+            <div class="section-header">
                 <span class="section-badge">Section {{ index + 1 }}</span>
-                {{ section.categorie.titre }}
-            </h3>
+                <h3>{{ section.categorie.titre }}</h3>
+            </div>
             {% if section.description %}
                 <p class="section-description">{{ section.description }}</p>
             {% endif %}
@@ -24,22 +24,45 @@
                        data-section-index="{{ index }}">
             </div>
 
-            {# Catalog browser #}
-            <div class="dish-catalog" data-dish-selector-target="catalog-{{ index }}">
-                <p class="loading-text">Chargement du catalogue...</p>
+            {# Skeleton loader - visible during loading #}
+            <div class="dish-catalog-skeleton" data-dish-selector-target="skeleton-{{ index }}">
+                <div class="skeleton-item">
+                    <div class="skeleton-checkbox"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-description"></div>
+                        <div class="skeleton-variant"></div>
+                    </div>
+                </div>
+                <div class="skeleton-item">
+                    <div class="skeleton-checkbox"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-description"></div>
+                        <div class="skeleton-variant"></div>
+                    </div>
+                </div>
+                <div class="skeleton-item">
+                    <div class="skeleton-checkbox"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-variant"></div>
+                    </div>
+                </div>
             </div>
 
-            {# Selected dishes #}
-            <div class="selected-dishes" data-dish-selector-target="selected-{{ index }}">
-                <h4>Plats sélectionnés</h4>
-                <div class="selected-list" data-section-index="{{ index }}">
-                    {% if wizardData.selectedVariants[index] is defined %}
-                        {% for variantId in wizardData.selectedVariants[index] %}
-                            <input type="hidden" name="selectedVariants[{{ index }}][]" value="{{ variantId }}">
-                        {% endfor %}
-                    {% endif %}
-                    <p class="empty-state">Aucun plat sélectionné pour cette section</p>
-                </div>
+            {# Catalog with checklist - hidden until loaded #}
+            <div class="dish-catalog hidden" data-dish-selector-target="catalog-{{ index }}">
+                {# Content will be loaded by JavaScript #}
+            </div>
+
+            {# Hidden inputs for selected variants #}
+            <div class="selected-inputs" data-section-index="{{ index }}">
+                {% if wizardData.selectedVariants[index] is defined %}
+                    {% for variantId in wizardData.selectedVariants[index] %}
+                        <input type="hidden" name="selectedVariants[{{ index }}][]" value="{{ variantId }}" data-variant-id="{{ variantId }}">
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     {% endfor %}
@@ -54,177 +77,3 @@
         </button>
     </div>
 </form>
-
-<style>
-.dish-selection-help {
-    background: #f3f4f6;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-
-.dish-selection-help p {
-    margin: 0;
-    color: #6b7280;
-}
-
-.section-dish-selector {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.section-dish-selector h3 {
-    margin: 0 0 0.5rem 0;
-    color: #111827;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.section-badge {
-    background: #3b82f6;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.section-description {
-    color: #6b7280;
-    margin: 0 0 1rem 0;
-}
-
-.dish-search {
-    margin: 1rem 0;
-}
-
-.dish-catalog {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 1rem;
-    min-height: 200px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.loading-text {
-    text-align: center;
-    color: #9ca3af;
-    padding: 2rem;
-}
-
-.dish-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.dish-card:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.dish-card-name {
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 0.25rem;
-}
-
-.dish-card-description {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-bottom: 0.5rem;
-}
-
-.dish-card-variants {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.variant-badge {
-    background: #3b82f6;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.variant-badge:hover {
-    background: #2563eb;
-}
-
-.selected-dishes {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
-}
-
-.selected-dishes h4 {
-    margin: 0 0 1rem 0;
-    color: #111827;
-}
-
-.selected-list {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 1rem;
-    min-height: 100px;
-}
-
-.empty-state {
-    text-align: center;
-    color: #9ca3af;
-    padding: 2rem;
-}
-
-.selected-item {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.selected-item-info {
-    flex: 1;
-}
-
-.selected-item-name {
-    font-weight: 600;
-    color: #111827;
-}
-
-.selected-item-variant {
-    font-size: 0.875rem;
-    color: #6b7280;
-}
-
-.selected-item-remove {
-    background: #fee2e2;
-    color: #dc2626;
-    border: none;
-    border-radius: 4px;
-    padding: 0.25rem 0.5rem;
-    cursor: pointer;
-}
-
-.selected-item-remove:hover {
-    background: #fecaca;
-}
-</style>

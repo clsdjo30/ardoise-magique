@@ -37,12 +37,11 @@ class DashboardController extends AbstractDashboardController
             ->addJsFile('js/template-selector.js')
             ->addJsFile('js/collection-field.js')
             ->addJsFile('js/mobile-sidebar-close.js')
+            ->addJsFile('js/delete-confirmation.js')
             ->addCssFile('styles/admin/components/template-selector.css')
-            // Dashboard layout CSS (fixed sidebar & header)
             ->addCssFile('styles/admin/components/dashboard-layout.css')
             ->addCssFile('styles/admin/components/sidebar-theme.css')
             ->addCssFile('styles/admin/components/flash-messages-fix.css')
-            // Dashboard components CSS
             ->addCssFile('styles/admin/components/header-welcome.css')
             ->addCssFile('styles/admin/components/stat-card.css')
             ->addCssFile('styles/admin/components/quota-card.css')

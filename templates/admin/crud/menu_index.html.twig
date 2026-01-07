@@ -33,6 +33,9 @@
 {% endblock page_actions %}
 
 {% block main %}
+    {# Include delete confirmation modal #}
+    {% include 'admin/partials/delete-confirmation-modal.html.twig' %}
+
     <div class="recent-contents" id="menus-crud-list">
         <div class="recent-contents__table-wrapper">
             {% if entities|length > 0 %}
@@ -119,7 +122,11 @@
                                         {% if deleteAction %}
                                             <form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
                                                 <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
-                                                <button type="submit" class="btn btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce menu ?')">
+                                                <button type="button"
+                                                        class="btn btn-outline-danger"
+                                                        title="Supprimer"
+                                                        data-delete-confirm
+                                                        data-item-name="{{ menu.titre }}">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
@@ -194,7 +201,11 @@
                                                     {% if deleteAction %}
                                                         <form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
                                                             <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
-                                                            <button type="submit" class="btn btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce menu ?')">
+                                                            <button type="button"
+                                                                    class="btn btn-outline-danger"
+                                                                    title="Supprimer"
+                                                                    data-delete-confirm
+                                                                    data-item-name="{{ menu.titre }}">
                                                                 <i class="fa fa-trash"></i> Supprimer
                                                             </button>
                                                         </form>

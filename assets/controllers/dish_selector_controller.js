@@ -2,11 +2,19 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {
+        // Detect if we're in step 3 (checklist mode)
+        this.isChecklistMode = this.element.classList.contains('wizard-step-3');
+
         // Load catalog for all sections on connect
         this.loadAllCatalogs();
 
-        // Restore visual selected items from hidden inputs
-        this.restoreSelectedItems();
+        if (!this.isChecklistMode) {
+            // Restore visual selected items from hidden inputs (step 3 only)
+            this.restoreSelectedItems();
+        } else {
+            // In step 3, restore checkboxes state from hidden inputs
+            this.restoreCheckboxStates();
+        }
     }
 
     async loadAllCatalogs() {
@@ -17,6 +25,24 @@ export default class extends Controller {
             const categoryId = section.dataset.categoryId;
             console.log(`Loading catalog for section ${sectionIndex}, category ${categoryId}`);
             this.loadCatalog(sectionIndex);
+        });
+    }
+
+    restoreCheckboxStates() {
+        const sections = this.element.querySelectorAll('.section-dish-selector');
+        sections.forEach(section => {
+            const sectionIndex = section.dataset.sectionIndex;
+            const inputsContainer = section.querySelector('.selected-inputs');
+            if (!inputsContainer) return;
+
+            const hiddenInputs = inputsContainer.querySelectorAll('input[type="hidden"]');
+            const selectedVariantIds = Array.from(hiddenInputs).map(input => input.value);
+
+            // Store selected variant IDs for this section
+            if (!this.selectedVariants) {
+                this.selectedVariants = {};
+            }
+            this.selectedVariants[sectionIndex] = selectedVariantIds;
         });
     }
 
@@ -44,8 +70,7 @@ export default class extends Controller {
 
     async fetchAndRenderSelectedVariants(sectionIndex, variantIds, selectedContainer) {
         try {
-            const url = `/api/dish-catalog/variants?ids=${variantIds.join(',')}`;
-            const response = await fetch(url, {
+            const url = `/api/dish-catalog/variants?ids=${variantIds.join(',')}`; const response = await fetch(url, {
                 credentials: 'same-origin'
             });
             const data = await response.json();
@@ -130,37 +155,148 @@ export default class extends Controller {
     renderCatalog(sectionIndex, dishes) {
         console.log(`renderCatalog called for section ${sectionIndex} with ${dishes.length} dishes`);
         const catalogContainer = this.element.querySelector(`[data-dish-selector-target="catalog-${sectionIndex}"]`);
+        const skeletonContainer = this.element.querySelector(`[data-dish-selector-target="skeleton-${sectionIndex}"]`);
+
         if (!catalogContainer) {
             console.warn(`renderCatalog: catalog container not found for section ${sectionIndex}`);
             return;
         }
 
+        // Hide skeleton, show catalog
+        if (skeletonContainer) {
+            skeletonContainer.classList.add('hidden');
+        }
+        catalogContainer.classList.remove('hidden');
+
         if (dishes.length === 0) {
             const sectionElement = this.element.querySelector(`[data-section-index="${sectionIndex}"]`);
             const categoryName = sectionElement ? sectionElement.querySelector('h3').textContent : 'cette catégorie';
-            catalogContainer.innerHTML = `<p class="loading-text">Aucun plat trouvé pour "${categoryName}". Créez des plats de cette catégorie dans votre bibliothèque.</p>`;
+            catalogContainer.innerHTML = `<p class="empty-state">Aucun plat trouvé pour "${categoryName}". Créez des plats de cette catégorie dans votre bibliothèque.</p>`;
             return;
         }
 
         console.log(`renderCatalog: replacing content for section ${sectionIndex}`);
-        catalogContainer.innerHTML = dishes.map(dish => `
-            <div class="dish-card">
-                <div class="dish-card-name">${this.escapeHtml(dish.name)}</div>
-                ${dish.description ? `<div class="dish-card-description">${this.escapeHtml(dish.description)}</div>` : ''}
-                <div class="dish-card-variants">
-                    ${dish.variants.map(variant => `
-                        <span class="variant-badge"
-                              data-action="click->dish-selector#selectVariant"
-                              data-variant-id="${variant.id}"
-                              data-dish-name="${this.escapeHtml(dish.name)}"
-                              data-variant-label="${this.escapeHtml(variant.label)}"
-                              data-section-index="${sectionIndex}">
-                            ${this.escapeHtml(variant.label)} - ${variant.priceEuros.toFixed(2)}€
-                        </span>
-                    `).join('')}
+
+        if (this.isChecklistMode) {
+            // Step 3: Render as checklist
+            catalogContainer.innerHTML = dishes.map(dish => `
+                <div class="dish-card">
+                    <div class="dish-card-name">${this.escapeHtml(dish.name)}</div>
+                    ${dish.description ? `<div class="dish-card-description">${this.escapeHtml(dish.description)}</div>` : ''}
+                    <div class="dish-card-variants">
+                        ${dish.variants.map(variant => {
+                            const isChecked = this.isVariantSelected(sectionIndex, variant.id);
+                            return `
+                                <div class="variant-checkbox-item">
+                                    <input type="checkbox"
+                                           class="variant-checkbox"
+                                           id="variant-${variant.id}"
+                                           data-action="change->dish-selector#toggleVariant"
+                                           data-variant-id="${variant.id}"
+                                           data-dish-name="${this.escapeHtml(dish.name)}"
+                                           data-variant-label="${this.escapeHtml(variant.label)}"
+                                           data-section-index="${sectionIndex}"
+                                           ${isChecked ? 'checked' : ''}>
+                                    <label for="variant-${variant.id}" class="variant-label">
+                                        <span class="variant-name">${this.escapeHtml(variant.label)}</span>
+                                        <span class="variant-price">${variant.priceEuros.toFixed(2)}€</span>
+                                    </label>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        } else {
+            // Old behavior: Render as clickable badges
+            catalogContainer.innerHTML = dishes.map(dish => `
+                <div class="dish-card">
+                    <div class="dish-card-name">${this.escapeHtml(dish.name)}</div>
+                    ${dish.description ? `<div class="dish-card-description">${this.escapeHtml(dish.description)}</div>` : ''}
+                    <div class="dish-card-variants">
+                        ${dish.variants.map(variant => `
+                            <span class="variant-badge"
+                                  data-action="click->dish-selector#selectVariant"
+                                  data-variant-id="${variant.id}"
+                                  data-dish-name="${this.escapeHtml(dish.name)}"
+                                  data-variant-label="${this.escapeHtml(variant.label)}"
+                                  data-section-index="${sectionIndex}">
+                                ${this.escapeHtml(variant.label)} - ${variant.priceEuros.toFixed(2)}€
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    isVariantSelected(sectionIndex, variantId) {
+        if (!this.selectedVariants || !this.selectedVariants[sectionIndex]) {
+            return false;
+        }
+        return this.selectedVariants[sectionIndex].includes(variantId.toString());
+    }
+
+    toggleVariant(event) {
+        const checkbox = event.target;
+        const variantId = checkbox.dataset.variantId;
+        const dishName = checkbox.dataset.dishName;
+        const variantLabel = checkbox.dataset.variantLabel;
+        const sectionIndex = checkbox.dataset.sectionIndex;
+
+        if (checkbox.checked) {
+            this.addVariantToSelection(sectionIndex, variantId);
+        } else {
+            this.removeVariantFromSelection(sectionIndex, variantId);
+        }
+    }
+
+    addVariantToSelection(sectionIndex, variantId) {
+        const sectionElement = this.element.querySelector(`[data-section-index="${sectionIndex}"]`);
+        const inputsContainer = sectionElement.querySelector('.selected-inputs');
+        if (!inputsContainer) return;
+
+        // Check if already selected
+        const existingInput = inputsContainer.querySelector(`input[value="${variantId}"]`);
+        if (existingInput) {
+            return;
+        }
+
+        // Add hidden input
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = `selectedVariants[${sectionIndex}][]`;
+        input.value = variantId;
+        input.dataset.variantId = variantId;
+        inputsContainer.appendChild(input);
+
+        // Update selected variants array
+        if (!this.selectedVariants) {
+            this.selectedVariants = {};
+        }
+        if (!this.selectedVariants[sectionIndex]) {
+            this.selectedVariants[sectionIndex] = [];
+        }
+        this.selectedVariants[sectionIndex].push(variantId.toString());
+    }
+
+    removeVariantFromSelection(sectionIndex, variantId) {
+        const sectionElement = this.element.querySelector(`[data-section-index="${sectionIndex}"]`);
+        const inputsContainer = sectionElement.querySelector('.selected-inputs');
+        if (!inputsContainer) return;
+
+        // Remove hidden input
+        const input = inputsContainer.querySelector(`input[value="${variantId}"]`);
+        if (input) {
+            input.remove();
+        }
+
+        // Update selected variants array
+        if (this.selectedVariants && this.selectedVariants[sectionIndex]) {
+            this.selectedVariants[sectionIndex] = this.selectedVariants[sectionIndex].filter(
+                id => id !== variantId.toString()
+            );
+        }
     }
 
     selectVariant(event) {
@@ -241,8 +377,15 @@ export default class extends Controller {
 
     showError(sectionIndex, message) {
         const catalogContainer = this.element.querySelector(`[data-dish-selector-target="catalog-${sectionIndex}"]`);
+        const skeletonContainer = this.element.querySelector(`[data-dish-selector-target="skeleton-${sectionIndex}"]`);
+
+        if (skeletonContainer) {
+            skeletonContainer.classList.add('hidden');
+        }
+
         if (catalogContainer) {
-            catalogContainer.innerHTML = `<p class="loading-text" style="color: #dc2626;">${message}</p>`;
+            catalogContainer.classList.remove('hidden');
+            catalogContainer.innerHTML = `<p class="empty-state" style="color: #dc2626;">${message}</p>`;
         }
     }
 

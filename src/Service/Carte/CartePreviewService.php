@@ -30,14 +30,16 @@ class CartePreviewService
             // Build items array with details for the template
             $items = [];
             if (!empty($variantIds)) {
-                foreach ($variantIds as $variantId) {
+                foreach ($variantIds as $position => $variantId) {
                     $variant = $this->variantRepository->find($variantId);
                     if ($variant) {
                         $items[] = [
+                            'id' => null, // Will be set if editing existing carte
                             'variantId' => $variant->getId(),
                             'dishName' => $variant->getPlatCatalogue()->getName(),
                             'variantLabel' => $variant->getLabel(),
                             'price' => $variant->getPriceCents(),
+                            'position' => $position,
                         ];
                         $totalDishes++;
                     }

@@ -188,25 +188,37 @@ class CarteWizardController extends AbstractController
             $this->entityManager->flush();
 
             try {
-                // Generate public URL using the restaurant's owner slug
-                $restaurantOwnerSlug = $carte->getRestaurant()->getOwner()->getSlug();
-                $publicUrl = $this->urlGenerator->generate('app_show_carte', [
-                    'restaurant' => $restaurantOwnerSlug,
-                    'slug' => $carte->getSlug()
-                ], UrlGeneratorInterface::ABSOLUTE_URL);
+                // Determine which URL to use based on publication status
+                if ($carte->isPublished()) {
+                    // Use public URL for published cartes
+                    $restaurantOwnerSlug = $carte->getRestaurant()->getOwner()->getSlug();
+                    $carteUrl = $this->urlGenerator->generate('app_show_carte', [
+                        'restaurant' => $restaurantOwnerSlug,
+                        'slug' => $carte->getSlug()
+                    ], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $linkText = 'Voir la carte';
+                } else {
+                    // Use preview URL for unpublished cartes
+                    $carteUrl = $this->urlGenerator->generate('app_carte_preview', [
+                        'id' => $carte->getId()
+                    ], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $linkText = 'Prévisualiser la carte (brouillon)';
+                }
 
                 // Add success flash message with link
                 if ($isEdit) {
                     $this->addFlash('success', sprintf(
-                        'Carte "%s" mise à jour avec succès ! <a href="%s" target="_blank" class="alert-link text-decoration-underline">Voir la carte</a>',
+                        'Carte "%s" mise à jour avec succès ! <a href="%s" target="_blank" class="alert-link text-decoration-underline">%s</a>',
                         $carte->getName(),
-                        $publicUrl
+                        $carteUrl,
+                        $linkText
                     ));
                 } else {
                     $this->addFlash('success', sprintf(
-                        'Carte "%s" créée avec succès ! <a href="%s" target="_blank" class="alert-link text-decoration-underline">Voir la carte</a>',
+                        'Carte "%s" créée avec succès ! <a href="%s" target="_blank" class="alert-link text-decoration-underline">%s</a>',
                         $carte->getName(),
-                        $publicUrl
+                        $carteUrl,
+                        $linkText
                     ));
                 }
             } catch (\Exception $e) {
@@ -240,11 +252,39 @@ class CarteWizardController extends AbstractController
     #[Route('/cancel', name: 'app_carte_wizard_cancel')]
     public function cancel(Request $request): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         // Clear session
         $request->getSession()->remove(self::SESSION_KEY);
 
         $this->addFlash('info', 'Création de carte annulée.');
-        return $this->redirectToRoute('admin', ['restaurant' => $this->getUser()->getSlug()]);
+        return $this->redirectToRoute('admin', ['restaurant' => $user->getSlug()]);
+    }
+
+    #[Route('/preview/{id}', name: 'app_carte_preview', methods: ['GET'])]
+    public function preview(int $id): Response
+    {
+        $carte = $this->carteRepository->find($id);
+
+        if (!$carte) {
+            throw $this->createNotFoundException('Carte non trouvée');
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Security check: user must own the restaurant
+        if (!$this->isGranted('ROLE_SUPER_ADMIN') && $carte->getRestaurant()->getOwner() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à cette carte');
+        }
+
+        // Render the public template with preview mode
+        return $this->render('public/carte.html.twig', [
+            'carte' => $carte,
+            'restaurant' => $carte->getRestaurant(),
+            'previewMode' => true, // Flag to show a banner indicating preview mode
+        ]);
     }
 
     private function createCarteFromWizardData(CarteWizardData $data): Carte
@@ -306,18 +346,39 @@ class CarteWizardController extends AbstractController
         $carte->setRestaurant($data->restaurant);
         $carte->setIsPublished($data->isPublished);
 
-        // Remove all existing sections (cascade will handle items)
-        foreach ($carte->getSections()->toArray() as $section) {
-            $carte->removeSection($section);
+        // Build a map of existing sections by ID
+        $existingSections = [];
+        foreach ($carte->getSections() as $section) {
+            $existingSections[$section->getId()] = $section;
         }
 
-        // Add new sections
+        // Track which sections to keep
+        $sectionsToKeep = [];
+
+        // Update or create sections
         foreach ($data->sections as $index => $sectionData) {
-            $section = new CarteSection();
+            $section = null;
+
+            // If this section has an ID, try to reuse the existing entity
+            if ($sectionData->id !== null && isset($existingSections[$sectionData->id])) {
+                $section = $existingSections[$sectionData->id];
+
+                // Clear existing items
+                foreach ($section->getItems()->toArray() as $item) {
+                    $section->removeItem($item);
+                    $this->entityManager->remove($item);
+                }
+            } else {
+                // Create new section
+                $section = new CarteSection();
+                $section->setCarte($carte);
+                $carte->addSection($section);
+            }
+
+            // Update section properties
             $section->setTitre($sectionData->categorie->getTitre());
             $section->setDescription($sectionData->description);
             $section->setPosition($index);
-            $section->setCarte($carte);
 
             // Add items to section
             $variantIds = $data->selectedVariants[$index] ?? [];
@@ -333,7 +394,15 @@ class CarteWizardController extends AbstractController
                 }
             }
 
-            $carte->addSection($section);
+            $sectionsToKeep[$section->getId()] = true;
+        }
+
+        // Remove sections that are no longer in the wizard data
+        foreach ($carte->getSections()->toArray() as $section) {
+            if (!isset($sectionsToKeep[$section->getId()])) {
+                $carte->removeSection($section);
+                $this->entityManager->remove($section);
+            }
         }
 
         return $carte;
@@ -349,11 +418,17 @@ class CarteWizardController extends AbstractController
             return;
         }
 
-        // Create a mapping of old index to new position
+        // Create a mapping of old index to new position and preserve IDs
         $sectionPositions = [];
+        $sectionIds = [];
         foreach ($sectionsData as $oldIndex => $sectionSubmit) {
             $newPosition = (int)($sectionSubmit['position'] ?? $oldIndex);
             $sectionPositions[$oldIndex] = $newPosition;
+
+            // Preserve section ID if present
+            if (isset($sectionSubmit['id'])) {
+                $sectionIds[$oldIndex] = (int)$sectionSubmit['id'];
+            }
         }
 
         // Sort sections by their new positions
@@ -368,6 +443,11 @@ class CarteWizardController extends AbstractController
         $newSelectedVariants = [];
         foreach ($sortedSections as $newSectionIndex => $section) {
             $oldSectionIndex = array_search($section, $wizardData->sections, true);
+
+            // Preserve the section ID
+            if (isset($sectionIds[$oldSectionIndex])) {
+                $section->id = $sectionIds[$oldSectionIndex];
+            }
 
             // Get items data for this section
             $itemsData = $sectionsData[$oldSectionIndex]['items'] ?? [];
@@ -457,6 +537,7 @@ class CarteWizardController extends AbstractController
         // Convert sections
         foreach ($carte->getSections() as $carteSection) {
             $sectionData = new CarteSectionData();
+            $sectionData->id = $carteSection->getId(); // Store the section ID
             $sectionData->position = $carteSection->getPosition();
             $sectionData->description = $carteSection->getDescription();
 

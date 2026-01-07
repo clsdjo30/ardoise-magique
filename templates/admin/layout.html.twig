@@ -1,5 +1,11 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
 
+{# Load Stimulus controllers via importmap #}
+{% block head_javascript %}
+    {{ parent() }}
+        
+{% endblock %}
+
 {# Override flash_messages block to display flash messages correctly with Turbo #}
 {% block flash_messages %}
     {% set allFlashes = app.session.flashBag.peekAll() %}

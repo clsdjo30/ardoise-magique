@@ -33,10 +33,18 @@
                 </thead>
                 <tbody>
                     {% for carte in cartes %}
-                        {% set rowUrl = url('app_show_carte', {
-                            restaurant: carte.restaurant.owner.slug,
-                            slug: carte.slug
-                        }) %}
+                        {% if carte.isPublished %}
+                            {% set rowUrl = url('app_show_carte', {
+                                restaurant: carte.restaurant.owner.slug,
+                                slug: carte.slug
+                            }) %}
+                            {% set linkLabel = 'Lien public' %}
+                        {% else %}
+                            {% set rowUrl = url('app_carte_preview', {
+                                id: carte.id
+                            }) %}
+                            {% set linkLabel = 'Prévisualiser' %}
+                        {% endif %}
                         <tr class="recent-contents__row" data-carte-id="{{ carte.id }}">
                             {# Header mobile cliquable - visible uniquement sur mobile #}
                             <td class="recent-contents__mobile-header" colspan="100">
@@ -74,14 +82,14 @@
                                     </span>
                                 {% endif %}
                             </td>
-                            <td data-label="Lien public" class="recent-contents__desktop-cell">
+                            <td data-label="{{ linkLabel }}" class="recent-contents__desktop-cell">
                                 <div class="input-group input-group-sm">
                                     <input type="text" class="form-control" value="{{ rowUrl }}" id="carte-url-{{ carte.id }}" readonly>
-                                    <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('carte-url-{{ carte.id }}')" title="Copier le lien" {% if not carte.isPublished %} disabled {% endif %}>
+                                    <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('carte-url-{{ carte.id }}')" title="Copier le lien">
                                         <i class="fa fa-copy"></i>
                                     </button>
-                                    <a href="{{ rowUrl }}" class="btn {{ carte.isPublished ? 'btn-outline-success' : 'btn-outline-secondary disabled' }}" target="_blank" title="Voir la carte" {% if not carte.isPublished %} aria-disabled="true" tabindex="-1" {% endif %}>
-                                        <i class="fa fa-external-link-alt"></i>
+                                    <a href="{{ rowUrl }}" class="btn {{ carte.isPublished ? 'btn-outline-success' : 'btn-outline-warning' }}" target="_blank" title="{{ carte.isPublished ? 'Voir la carte' : 'Prévisualiser (brouillon)' }}">
+                                        <i class="fa {{ carte.isPublished ? 'fa-external-link-alt' : 'fa-eye' }}"></i>
                                     </a>
                                 </div>
                             </td>
@@ -125,14 +133,14 @@
                                         </div>
 
                                         <div class="recent-contents__detail-item">
-                                            <span class="recent-contents__detail-label">Lien public</span>
+                                            <span class="recent-contents__detail-label">{{ linkLabel }}</span>
                                             <div class="input-group input-group-sm">
                                                 <input type="text" class="form-control" value="{{ rowUrl }}" id="carte-url-mobile-{{ carte.id }}" readonly>
-                                                <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('carte-url-mobile-{{ carte.id }}')" title="Copier le lien" {% if not carte.isPublished %} disabled {% endif %}>
+                                                <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('carte-url-mobile-{{ carte.id }}')" title="Copier le lien">
                                                     <i class="fa fa-copy"></i>
                                                 </button>
-                                                <a href="{{ rowUrl }}" class="btn {{ carte.isPublished ? 'btn-outline-success' : 'btn-outline-secondary disabled' }}" target="_blank" title="Voir la carte" {% if not carte.isPublished %} aria-disabled="true" tabindex="-1" {% endif %}>
-                                                    <i class="fa fa-external-link-alt"></i>
+                                                <a href="{{ rowUrl }}" class="btn {{ carte.isPublished ? 'btn-outline-success' : 'btn-outline-warning' }}" target="_blank" title="{{ carte.isPublished ? 'Voir la carte' : 'Prévisualiser (brouillon)' }}">
+                                                    <i class="fa {{ carte.isPublished ? 'fa-external-link-alt' : 'fa-eye' }}"></i>
                                                 </a>
                                             </div>
                                         </div>

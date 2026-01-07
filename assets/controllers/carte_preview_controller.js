@@ -1,211 +1,239 @@
 import { Controller } from '@hotwired/stimulus';
 
-/**
- * Controller for drag-and-drop functionality in Carte Preview (Step 4)
- * Manages:
- * - Section reordering
- * - Item reordering within sections
- * - Collapsible sections
- */
 export default class extends Controller {
     static targets = ['sectionsList', 'section', 'itemsList'];
 
     connect() {
-        console.log('[CartePreview] Controller connected');
+        console.log('Carte Preview Controller connected');
+
+        // Charger SortableJS si pas déjà chargé
         this.loadSortableJS().then(() => {
-            this.initializeSectionsSortable();
-            this.initializeItemsSortables();
-        }).catch(error => {
-            console.error('[CartePreview] Failed to load SortableJS:', error);
+            this.initializeDragAndDrop();
         });
     }
 
     /**
-     * Load SortableJS from CDN if not already loaded
+     * Charge SortableJS depuis le CDN si nécessaire
      */
     loadSortableJS() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if (typeof Sortable !== 'undefined') {
-                console.log('[CartePreview] SortableJS already loaded');
                 resolve();
-                return;
+            } else {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js';
+                script.onload = () => {
+                    console.log('SortableJS chargé depuis CDN');
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.error('Erreur lors du chargement de SortableJS');
+                    resolve(); // On continue même si le chargement échoue
+                };
+                document.head.appendChild(script);
             }
-
-            console.log('[CartePreview] Loading SortableJS from CDN...');
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js';
-            script.onload = () => {
-                console.log('[CartePreview] SortableJS loaded successfully');
-                resolve();
-            };
-            script.onerror = () => {
-                reject(new Error('Failed to load SortableJS'));
-            };
-            document.head.appendChild(script);
         });
     }
 
     /**
-     * Initialize drag-and-drop for sections
+     * Initialise le drag & drop pour les sections et les items
      */
-    initializeSectionsSortable() {
-        if (!this.hasSectionsListTarget) {
-            console.warn('[CartePreview] No sections list found');
+    initializeDragAndDrop() {
+        if (typeof Sortable === 'undefined') {
+            console.error('SortableJS n\'est pas disponible');
             return;
         }
 
-        console.log('[CartePreview] Initializing sections sortable');
-        Sortable.create(this.sectionsListTarget, {
+        // Initialiser le drag & drop pour les sections
+        this.initSectionsDragAndDrop();
+
+        // Initialiser le drag & drop pour les items dans chaque section
+        this.initItemsDragAndDrop();
+    }
+
+    /**
+     * Initialise le drag & drop pour la liste des sections
+     */
+    initSectionsDragAndDrop() {
+        if (!this.hasSectionsListTarget) {
+            console.log('Pas de liste de sections');
+            return;
+        }
+
+        const sectionsList = this.sectionsListTarget;
+
+        // Éviter de réinitialiser si déjà présent
+        if (sectionsList.sortableInstance) {
+            return;
+        }
+
+        console.log('Initialisation du drag & drop pour les sections');
+
+        const sortable = Sortable.create(sectionsList, {
             animation: 150,
             handle: '.section-drag-handle',
             draggable: '.preview-section',
             ghostClass: 'sortable-ghost',
             chosenClass: 'sortable-chosen',
             dragClass: 'sortable-drag',
-            onEnd: () => {
-                this.updateSectionPositions();
+
+            onEnd: (evt) => {
+                console.log('Section déplacée de', evt.oldIndex, 'vers', evt.newIndex);
+                this.updateSectionsPositions();
             }
         });
+
+        sectionsList.sortableInstance = sortable;
+        console.log('✓ Drag & drop activé pour les sections');
     }
 
     /**
-     * Initialize drag-and-drop for items in all sections
+     * Initialise le drag & drop pour les items dans toutes les sections
      */
-    initializeItemsSortables() {
-        if (!this.hasItemsListTarget) {
-            console.warn('[CartePreview] No items lists found');
-            return;
-        }
+    initItemsDragAndDrop() {
+        const sections = this.sectionTargets;
 
-        console.log(`[CartePreview] Initializing items sortable for ${this.itemsListTargets.length} sections`);
-        this.itemsListTargets.forEach((itemsList, index) => {
-            Sortable.create(itemsList, {
+        sections.forEach((section, sectionIndex) => {
+            const itemsContainer = section.querySelector('.items-container');
+
+            if (!itemsContainer) {
+                return;
+            }
+
+            // Vérifier s'il y a des items
+            const items = itemsContainer.querySelectorAll('.preview-item');
+            if (items.length === 0) {
+                return;
+            }
+
+            // Éviter de réinitialiser si déjà présent
+            if (itemsContainer.sortableInstance) {
+                return;
+            }
+
+            console.log(`Initialisation du drag & drop pour les items de la section ${sectionIndex}`);
+
+            const sortable = Sortable.create(itemsContainer, {
                 animation: 150,
                 handle: '.item-drag-handle',
                 draggable: '.preview-item',
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
                 dragClass: 'sortable-drag',
-                onEnd: () => {
-                    this.updateItemPositions(index);
+
+                onEnd: (evt) => {
+                    console.log(`Item déplacé de ${evt.oldIndex} vers ${evt.newIndex} dans la section ${sectionIndex}`);
+                    this.updateItemsPositions(section);
                 }
             });
+
+            itemsContainer.sortableInstance = sortable;
         });
+
+        console.log('✓ Drag & drop activé pour les items');
     }
 
     /**
-     * Update section position hidden inputs after drag
+     * Met à jour les positions des sections après un drag & drop
      */
-    updateSectionPositions() {
-        this.sectionTargets.forEach((section, index) => {
+    updateSectionsPositions() {
+        const sections = this.sectionTargets;
+
+        sections.forEach((section, newPosition) => {
+            // Mettre à jour uniquement la valeur du champ position (pas le name!)
             const positionInput = section.querySelector('.section-position');
             if (positionInput) {
-                positionInput.value = index;
-                console.log(`[CartePreview] Section ${index} position updated`);
+                positionInput.value = newPosition;
             }
 
-            // Also update section index in all item inputs
-            const sectionIndex = section.dataset.sectionIndex;
-            section.dataset.sectionIndex = index;
-
-            // Update all item inputs in this section
-            const items = section.querySelectorAll('.preview-item');
-            items.forEach((item, itemIndex) => {
-                const inputs = item.querySelectorAll('input[name]');
-                inputs.forEach(input => {
-                    // Replace sections[oldIndex] with sections[newIndex]
-                    input.name = input.name.replace(
-                        `sections[${sectionIndex}]`,
-                        `sections[${index}]`
-                    );
-                });
-            });
+            console.log(`Section mise à jour avec nouvelle position: ${newPosition}`);
         });
     }
 
     /**
-     * Update item position hidden inputs after drag
-     * @param {number} sectionIndex - Index of the section containing the items
+     * Met à jour les positions des items dans une section après un drag & drop
      */
-    updateItemPositions(sectionIndex) {
-        const section = this.sectionTargets[sectionIndex];
-        if (!section) return;
-
+    updateItemsPositions(section) {
         const items = section.querySelectorAll('.preview-item');
-        items.forEach((item, index) => {
+
+        items.forEach((item, newPosition) => {
+            // Mettre à jour uniquement la valeur du champ position (pas le name!)
             const positionInput = item.querySelector('.item-position');
             if (positionInput) {
-                positionInput.value = index;
-                console.log(`[CartePreview] Section ${sectionIndex}, Item ${index} position updated`);
+                positionInput.value = newPosition;
             }
 
-            // Update item index in input names
-            const inputs = item.querySelectorAll('input[name*="[items]"]');
-            inputs.forEach(input => {
-                // Replace items][oldIndex] with items][newIndex]
-                input.name = input.name.replace(
-                    /\[items\]\[\d+\]/,
-                    `[items][${index}]`
-                );
-            });
+            console.log(`Item mis à jour avec nouvelle position: ${newPosition}`);
         });
     }
 
     /**
-     * Toggle items visibility (collapse/expand)
-     * @param {Event} event
+     * Déplier toutes les sections
+     */
+    expandAll() {
+        const sections = this.sectionTargets;
+
+        sections.forEach(section => {
+            const toggleButton = section.querySelector('.toggle-items');
+            const itemsContainer = section.querySelector('.items-container');
+
+            if (toggleButton && itemsContainer) {
+                toggleButton.setAttribute('aria-expanded', 'true');
+                itemsContainer.classList.remove('collapsed');
+            }
+        });
+    }
+
+    /**
+     * Replier toutes les sections
+     */
+    collapseAll() {
+        const sections = this.sectionTargets;
+
+        sections.forEach(section => {
+            const toggleButton = section.querySelector('.toggle-items');
+            const itemsContainer = section.querySelector('.items-container');
+
+            if (toggleButton && itemsContainer) {
+                toggleButton.setAttribute('aria-expanded', 'false');
+                itemsContainer.classList.add('collapsed');
+            }
+        });
+    }
+
+    /**
+     * Toggle l'affichage des items d'une section
      */
     toggleItems(event) {
-        event.preventDefault();
         const button = event.currentTarget;
         const section = button.closest('.preview-section');
         const itemsContainer = section.querySelector('.items-container');
-        const icon = button.querySelector('.toggle-icon');
 
-        if (itemsContainer.classList.contains('collapsed')) {
-            itemsContainer.classList.remove('collapsed');
-            icon.textContent = '▼';
-            button.setAttribute('aria-expanded', 'true');
-        } else {
+        if (!itemsContainer) return;
+
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+        button.setAttribute('aria-expanded', !isExpanded);
+
+        if (isExpanded) {
             itemsContainer.classList.add('collapsed');
-            icon.textContent = '▶';
-            button.setAttribute('aria-expanded', 'false');
+        } else {
+            itemsContainer.classList.remove('collapsed');
         }
     }
 
-    /**
-     * Expand all sections
-     */
-    expandAll() {
-        const itemsContainers = this.element.querySelectorAll('.items-container');
-        const toggleButtons = this.element.querySelectorAll('.toggle-items');
+    disconnect() {
+        // Nettoyer les instances Sortable
+        if (this.hasSectionsListTarget && this.sectionsListTarget.sortableInstance) {
+            this.sectionsListTarget.sortableInstance.destroy();
+        }
 
-        itemsContainers.forEach(container => {
-            container.classList.remove('collapsed');
-        });
-
-        toggleButtons.forEach(button => {
-            const icon = button.querySelector('.toggle-icon');
-            if (icon) icon.textContent = '▼';
-            button.setAttribute('aria-expanded', 'true');
-        });
-    }
-
-    /**
-     * Collapse all sections
-     */
-    collapseAll() {
-        const itemsContainers = this.element.querySelectorAll('.items-container');
-        const toggleButtons = this.element.querySelectorAll('.toggle-items');
-
-        itemsContainers.forEach(container => {
-            container.classList.add('collapsed');
-        });
-
-        toggleButtons.forEach(button => {
-            const icon = button.querySelector('.toggle-icon');
-            if (icon) icon.textContent = '▶';
-            button.setAttribute('aria-expanded', 'false');
+        const sections = this.sectionTargets;
+        sections.forEach(section => {
+            const itemsContainer = section.querySelector('.items-container');
+            if (itemsContainer && itemsContainer.sortableInstance) {
+                itemsContainer.sortableInstance.destroy();
+            }
         });
     }
 }

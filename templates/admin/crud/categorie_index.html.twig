@@ -52,6 +52,8 @@
 {% endblock page_actions %}
 
 {% block main %}
+ {# Include delete confirmation modal #}
+{% include 'admin/partials/delete-confirmation-modal.html.twig' %}
     <div class="recent-contents" id="categories-crud-list">
         <div class="recent-contents__table-wrapper">
             {% if entities|length > 0 %}
@@ -92,7 +94,12 @@
                                         {% if deleteAction %}
                                             <form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
                                                 <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
-                                                <button type="submit" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer cette catégorie" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')">
+                                                <button type="submit"
+                                                class="btn btn-outline-danger"
+                                                title="Supprimer cette catégorie"
+                                                data-bs-toggle="tooltip"
+                                                data-delete-confirm
+                                                data-bs-placement="top">
                                                     <i class="fa fa-fire delete"></i>
                                                 </button>
                                             </form>
@@ -121,7 +128,12 @@
                                                     {% if deleteAction %}
                                                         <form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
                                                             <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
-                                                            <button type="submit" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer cette catégorie" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')">
+                                                            <button type="submit"
+                                                            class="btn btn-outline-danger"
+                                                            data-bs-toggle="tooltip"
+                                                            data-delete-confirm
+                                                            data-bs-placement="top"
+                                                             title="Supprimer cette catégorie">
                                                                 <i class="fa fa-fire delete"></i> Supprimer
                                                             </button>
                                                         </form>

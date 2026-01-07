@@ -17,14 +17,14 @@
 
 	<div class="am-dashboard py-4">
 
-        {% if is_granted('ROLE_SUPER_ADMIN') %}
-            {# Super Admin Dashboard - Keep existing admin view #}
-            {{ include('partials/admin/_admin_dashboard.html.twig') }}
+		{% if is_granted('ROLE_SUPER_ADMIN') %}
+			{# Super Admin Dashboard - Keep existing admin view #}
+			{{ include('partials/admin/_admin_dashboard.html.twig') }}
 
-        {% elseif is_granted('ROLE_ADMIN') %}
+		{% elseif is_granted('ROLE_ADMIN') %}
 			{# ========================================
-			   RESTAURANT OWNER DASHBOARD
-			   ======================================== #}
+						   RESTAURANT OWNER DASHBOARD
+						   ======================================== #}
 
 			{# SECTION 1: Welcome Header #}
 			{{ include('admin/partials/header-welcome.html.twig', {
@@ -34,8 +34,8 @@
 			}) }}
 
 			{# SECTION 2: Statistics Cards #}
-			<section class="am-section">
-				<div class="row g-3 stats-grid">
+				<section class="am-section"> <div
+					class="row g-3 stats-grid">
 					{# Total Menus Card #}
 					<div class="col-6 col-lg-3">
 						{{ include('admin/partials/stat-card.html.twig', {
@@ -80,7 +80,8 @@
 					Actions Rapides
 				</h2>
 
-				<div class="row g-3">
+				<div
+					class="row g-3">
 					{# Create Daily Menu #}
 					<div class="col-12 col-md-4">
 						{{ include('admin/partials/action-card.html.twig', {
@@ -137,14 +138,15 @@
 				</section>
 			{% endif %}
 
-            {# SECTION 3: Quota Tracking #}
+			{# SECTION 3: Quota Tracking #}
 			<section class="am-section">
 				<h2 class="am-section-title">
 					<span class="am-section-icon">📊</span>
 					Suivi des Quotas
 				</h2>
 
-				<div class="row g-3">
+				<div
+					class="row g-3">
 					{# Daily Menus Quota #}
 					<div class="col-12 col-md-4">
 						{% if quotaInfo.daily_menus is defined %}
@@ -250,45 +252,44 @@
 
 	</div>
 
-    {% if userRestaurants|length > 1 %}
-	<div class="modal fade" id="restaurantSelectionModal" tabindex="-1" aria-labelledby="restaurantSelectionModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="restaurantSelectionModalLabel">
-						<i class="fa fa-utensils me-2"></i>
-						Sélectionnez un restaurant
-					</h5>
-					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p class="text-muted mb-3">Pour quel restaurant souhaitez-vous créer ce menu ?</p>
-					<div class="list-group">
-						{% for restaurant in userRestaurants %}
-						<button type="button"
-								class="list-group-item list-group-item-action restaurant-choice"
-								data-restaurant-id="{{ restaurant.id }}"
-								data-restaurant-name="{{ restaurant.name }}">
-							<div class="d-flex w-100 justify-content-between align-items-center">
-								<div>
-									<h6 class="mb-1">{{ restaurant.name }}</h6>
-									<small class="text-muted">
-										<i class="fa fa-location-dot me-1"></i>
-										{{ restaurant.city }} ({{ restaurant.zipCode }})
-									</small>
-								</div>
-								<i class="fa fa-chevron-right text-muted"></i>
-							</div>
-						</button>
-						{% endfor %}
+	{% if userRestaurants|length > 1 %}
+		<div class="modal fade" id="restaurantSelectionModal" tabindex="-1" aria-labelledby="restaurantSelectionModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header bg-primary text-white">
+						<h5 class="modal-title" id="restaurantSelectionModalLabel">
+							<i class="fa fa-utensils me-2"></i>
+							Sélectionnez un restaurant
+						</h5>
+						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p class="text-muted mb-3">Pour quel restaurant souhaitez-vous créer ce menu ?</p>
+						<div class="list-group">
+							{% for restaurant in userRestaurants %}
+								<button type="button" class="list-group-item list-group-item-action restaurant-choice" data-restaurant-id="{{ restaurant.id }}" data-restaurant-name="{{ restaurant.name }}">
+									<div class="d-flex w-100 justify-content-between align-items-center">
+										<div>
+											<h6 class="mb-1">{{ restaurant.name }}</h6>
+											<small class="text-muted">
+												<i class="fa fa-location-dot me-1"></i>
+												{{ restaurant.city }}
+												({{ restaurant.zipCode }})
+											</small>
+										</div>
+										<i class="fa fa-chevron-right text-muted"></i>
+									</div>
+								</button>
+							{% endfor %}
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	{% endif %}
 
 {% endblock %}
+
 
 {% block javascripts %}
 	{{ parent() }}
@@ -296,98 +297,98 @@
 		/**
 		 * Copy text to clipboard from input element
 		 */
-		function copyToClipboard(elementId) {
-			const input = document.getElementById(elementId);
-			if (!input) return;
+function copyToClipboard(elementId) {
+const input = document.getElementById(elementId);
+if (! input)
+return;
 
-			input.select();
-			input.setSelectionRange(0, 99999); // For mobile devices
 
-			try {
-				navigator.clipboard.writeText(input.value).then(() => {
-					// Visual feedback
-					const btn = event.target.closest('button');
-					if (btn) {
-						const originalHTML = btn.innerHTML;
-						btn.innerHTML = '<i class="fa fa-check"></i>';
-						btn.classList.add('btn-success');
-						btn.classList.remove('btn-outline-primary');
+input.select();
+input.setSelectionRange(0, 99999); // For mobile devices
 
-						setTimeout(() => {
-							btn.innerHTML = originalHTML;
-							btn.classList.remove('btn-success');
-							btn.classList.add('btn-outline-primary');
-						}, 1500);
-					}
-				}).catch(err => {
-					// Fallback for older browsers
-					document.execCommand('copy');
-					console.log('Lien copié (fallback)');
-				});
-			} catch (err) {
-				console.error('Erreur lors de la copie:', err);
-			}
-		}
+try {
+navigator.clipboard.writeText(input.value).then(() => { // Visual feedback
+const btn = event.target.closest('button');
+if (btn) {
+const originalHTML = btn.innerHTML;
+btn.innerHTML = '<i class="fa fa-check"></i>';
+btn.classList.add('btn-success');
+btn.classList.remove('btn-outline-primary');
 
-		/**
+setTimeout(() => {
+btn.innerHTML = originalHTML;
+btn.classList.remove('btn-success');
+btn.classList.add('btn-outline-primary');
+}, 1500);
+}
+}).catch(err => { // Fallback for older browsers
+document.execCommand('copy');
+console.log('Lien copié (fallback)');
+});
+} catch (err) {
+console.error('Erreur lors de la copie:', err);
+}
+}
+
+/**
 		 * Copy the first published menu URL
 		 */
-		function copyFirstPublicUrl() {
-			const publishedUrlInput = document.getElementById('published-url');
-			if (publishedUrlInput) {
-				copyToClipboard('published-url');
-			}
-		}
+function copyFirstPublicUrl() {
+const publishedUrlInput = document.getElementById('published-url');
+if (publishedUrlInput) {
+copyToClipboard('published-url');
+}
+}
 
-		/**
+/**
 		 * Initialize theme from user preference or system preference
 		 */
-		function initTheme() {
-			const savedTheme = localStorage.getItem('am-theme');
-			const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-			const theme = savedTheme || systemTheme;
+function initTheme() {
+const savedTheme = localStorage.getItem('am-theme');
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const theme = savedTheme || systemTheme;
 
-			document.documentElement.setAttribute('data-bs-theme', theme);
-		}
+document.documentElement.setAttribute('data-bs-theme', theme);
+}
 
-		/**
+/**
 		 * Update theme toggle button icon
 		 */
-		function updateThemeIcon() {
-			const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-			const icon = document.getElementById('theme-icon');
+function updateThemeIcon() {
+const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+const icon = document.getElementById('theme-icon');
 
-			if (icon) {
-				icon.className = currentTheme === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
-			}
-		}
+if (icon) {
+icon.className = currentTheme === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+}
+}
 
-		/**
+/**
 		 * Toggle between light and dark theme
 		 */
-		function toggleTheme() {
-			const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-			const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+function toggleTheme() {
+const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-			document.documentElement.setAttribute('data-bs-theme', newTheme);
-			localStorage.setItem('am-theme', newTheme);
-			updateThemeIcon();
-		}
+document.documentElement.setAttribute('data-bs-theme', newTheme);
+localStorage.setItem('am-theme', newTheme);
+updateThemeIcon();
+}
 
-		// Initialize theme on page load
-		document.addEventListener('DOMContentLoaded', () => {
-			initTheme();
-			updateThemeIcon();
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', () => {
+initTheme();
+updateThemeIcon();
 
-			// Listen for system theme changes
-			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-				if (!localStorage.getItem('am-theme')) {
-					document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
-					updateThemeIcon();
-				}
-			});
-		});
+// Listen for system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+if (!localStorage.getItem('am-theme')) {
+document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+updateThemeIcon();
+}
+});
+});
 
-		// Restaurant modal is handled by restaurant-modal.js
+// Restaurant modal is handled by restaurant-modal.js
 	</script>
 {% endblock %}
