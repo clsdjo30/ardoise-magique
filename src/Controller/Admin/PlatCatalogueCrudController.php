@@ -7,12 +7,14 @@ namespace App\Controller\Admin;
 use App\Entity\PlatCatalogue;
 use App\Entity\User;
 use App\Form\PlatVariantType;
+use App\Repository\SectionItemRepository;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -22,13 +24,63 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlatCatalogueCrudController extends AbstractCrudController
 {
+    public function __construct(
+        private SectionItemRepository $sectionItemRepository,
+        private AdminUrlGenerator $adminUrlGenerator
+    ) {}
+
     public static function getEntityFqcn(): string
     {
         return PlatCatalogue::class;
     }
+
+    public function delete(AdminContext $context): Response
+    {
+        /** @var PlatCatalogue $plat */
+        $plat = $context->getEntity()->getInstance();
+
+        // Check if any variant of this plat is used in a SectionItem
+        $usedInSections = false;
+        $cartesNames = [];
+
+        foreach ($plat->getVariants() as $variant) {
+            $sectionItems = $this->sectionItemRepository->findBy(['platVariant' => $variant]);
+            if (count($sectionItems) > 0) {
+                $usedInSections = true;
+                foreach ($sectionItems as $item) {
+                    $carteName = $item->getCarteSection()?->getCarte()?->getName();
+                    if ($carteName && !in_array($carteName, $cartesNames)) {
+                        $cartesNames[] = $carteName;
+                    }
+                }
+            }
+        }
+
+        if ($usedInSections) {
+            $message = sprintf(
+                'Impossible de supprimer le plat "%s" car il est utilisé dans %s carte(s) : %s. Retirez-le d\'abord de ces cartes.',
+                $plat->getName(),
+                count($cartesNames),
+                implode(', ', $cartesNames)
+            );
+            $this->addFlash('danger', $message);
+
+            $url = $this->adminUrlGenerator
+                ->setController(self::class)
+                ->setAction(Action::INDEX)
+                ->generateUrl();
+
+            return $this->redirect($url);
+        }
+
+        return parent::delete($context);
+    }
+
     public function configureActions(Actions $actions): Actions
     {
         return $actions
