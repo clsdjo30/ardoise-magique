@@ -90,7 +90,7 @@ class DashboardController extends AbstractDashboardController
      * Route personnalisee pour ROLE_USER - affiche /admin/{restaurant-slug}
      * Accessible par tous les utilisateurs authentifies
      */
-    #[Route('/admin/{restaurant}', name: 'admin')]
+    #[Route('/admin/{restaurant}', name: 'admin', requirements: ['restaurant' => '^(?!horaires$)[a-z0-9-]+$'])]
     public function restaurantDashboard(string $restaurant): Response
     {
         /** @var User $user */

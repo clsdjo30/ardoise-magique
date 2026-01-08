@@ -1,0 +1,201 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var entities \EasyCorp\Bundle\EasyAdminBundle\Collection\EntityCollection #}
+{# @var paginator \EasyCorp\Bundle\EasyAdminBundle\Orm\EntityPaginator #}
+{% set ea = ea() %}
+{% extends ea.templatePath('layout') %}
+{% trans_default_domain ea.i18n.translationDomain %}
+
+{% block body_id entities|length > 0 ? 'ea-index-' ~ entities|first.name : '' %}
+{% block body_class 'ea-index' ~ (entities|length > 0 ? ' ea-index-' ~ entities|first.name : '') %}
+
+{% block content_title %}
+    {%- set custom_page_title = ea.crud.customPageTitle('index', null, ea.i18n.translationParameters, ea.i18n.translationDomain) -%}
+    {{- custom_page_title is null
+        ? ea.crud.defaultPageTitle('index', null, ea.i18n.translationParameters)|trans|raw
+        : custom_page_title|trans|raw -}}
+{% endblock %}
+
+{% block page_actions %}
+    {% block global_actions %}
+        {% if global_actions is defined and global_actions|length > 0 %}
+            <div class="global-actions">
+                {% for action in global_actions %}
+                    {{ include(action.templatePath, {action: action}, with_context: false) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock global_actions %}
+{% endblock page_actions %}
+
+{% block main %}
+    {# Flash messages #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                {{ message|raw }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="recent-contents" id="restaurants-crud-list">
+        <div class="recent-contents__table-wrapper">
+            {% if entities|length > 0 %}
+                <table class="recent-contents__table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Adresse</th>
+                            <th>Ville</th>
+                            <th>Horaires</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entity in entities %}
+                            {% set restaurant = entity.instance %}
+                            <tr class="recent-contents__row" data-restaurant-id="{{ restaurant.id }}">
+                                {# Header mobile cliquable #}
+                                <td class="recent-contents__mobile-header" colspan="100">
+                                    <button class="recent-contents__toggle" type="button" data-bs-toggle="collapse" data-bs-target="#restaurant-details-{{ restaurant.id }}" aria-expanded="false">
+                                        <span class="recent-contents__toggle-title">{{ restaurant.name }}</span>
+                                        <i class="fa fa-chevron-down recent-contents__toggle-icon"></i>
+                                    </button>
+                                </td>
+
+                                {# Desktop columns #}
+                                <td data-label="Nom" class="recent-contents__name recent-contents__desktop-cell">
+                                    <strong>{{ restaurant.name }}</strong>
+                                </td>
+                                <td data-label="Adresse" class="recent-contents__desktop-cell">
+                                    {{ restaurant.address }}
+                                </td>
+                                <td data-label="Ville" class="recent-contents__desktop-cell">
+                                    {{ restaurant.zipCode }} {{ restaurant.city }}
+                                </td>
+                                <td data-label="Horaires" class="recent-contents__desktop-cell">
+                                    {% if restaurant.openingHours|length > 0 %}
+                                        <span class="status-badge status-badge--published">
+                                            <i class="fa fa-check me-1"></i>
+                                            {{ restaurant.openingHours|length }} créneaux
+                                        </span>
+                                    {% else %}
+                                        <span class="status-badge status-badge--draft">
+                                            <i class="fa fa-clock me-1"></i>
+                                            Non définis
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td data-label="Actions" class="recent-contents__desktop-cell">
+                                    <div class="btn-group btn-group-sm">
+                                        {% set editAction = entity.actions.get('edit') %}
+                                        {% if editAction %}
+                                            <a href="{{ editAction.linkUrl }}" class="btn btn-outline-primary" title="Modifier les informations de votre restaurant">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% set hoursAction = entity.actions.get('openingHours') %}
+                                        {% if hoursAction %}
+                                            <a href="{{ hoursAction.linkUrl }}" class="btn btn-outline-info" title="Ajouter/Modifier les horaires de votre restaurant">
+                                                <i class="fa fa-clock"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% set deleteAction = entity.actions.get('delete') %}
+                                        {% if deleteAction %}
+                                            <form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
+                                                <input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
+                                                <button type="button"
+                                                        class="btn btn-outline-danger"
+                                                        title="Supprimer"
+                                                        data-delete-confirm
+                                                        data-item-name="{{ restaurant.name }}">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+
+                                {# Mobile details #}
+                                <td class="recent-contents__mobile-details" colspan="100">
+                                    <div class="collapse" id="restaurant-details-{{ restaurant.id }}">
+                                        <div class="recent-contents__details-content">
+                                            <div class="recent-contents__detail-item">
+                                                <span class="recent-contents__detail-label">Adresse</span>
+                                                {{ restaurant.address }}<br>
+                                                {{ restaurant.zipCode }} {{ restaurant.city }}
+                                            </div>
+                                            <div class="recent-contents__detail-item">
+                                                <span class="recent-contents__detail-label">Horaires</span>
+                                                {% if restaurant.openingHours|length > 0 %}
+                                                    <span class="status-badge status-badge--published">
+                                                        <i class="fa fa-check me-1"></i>
+                                                        {{ restaurant.openingHours|length }} créneaux
+                                                    </span>
+                                                {% else %}
+                                                    <span class="status-badge status-badge--draft">
+                                                        <i class="fa fa-clock me-1"></i>
+                                                        Non définis
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="recent-contents__detail-item">
+                                                <span class="recent-contents__detail-label">Actions</span>
+                                                <div class="btn-group btn-group-sm">
+                                                    {% set editAction = entity.actions.get('edit') %}
+                                                    {% if editAction %}
+                                                        <a href="{{ editAction.linkUrl }}" class="btn btn-outline-primary">
+                                                            <i class="fa fa-edit me-1"></i> Modifier
+                                                        </a>
+                                                    {% endif %}
+                                                    {% set hoursAction = entity.actions.get('openingHours') %}
+                                                    {% if hoursAction %}
+                                                        <a href="{{ hoursAction.linkUrl }}" class="btn btn-outline-info">
+                                                            <i class="fa fa-clock me-1"></i> Horaires
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="recent-contents__empty">
+                    <i class="fa fa-store fa-3x mb-3 text-muted"></i>
+                    <p>Aucun restaurant pour le moment.</p>
+                    <a href="{{ ea_url().setAction('new') }}" class="btn btn-primary">
+                        <i class="fa fa-plus me-1"></i>
+                        Ajouter mon premier restaurant
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Pagination #}
+    {% if entities|length > 0 %}
+        <div class="content-panel-footer without-padding without-border">
+            {{ include(ea.templatePath('crud/paginator')) }}
+        </div>
+    {% endif %}
+
+    {# Include delete confirmation modal #}
+    {% include 'admin/partials/delete-confirmation-modal.html.twig' %}
+{% endblock main %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    <script>
+        // Initialize Bootstrap tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+{% endblock body_javascript %}
