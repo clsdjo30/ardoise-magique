@@ -28,11 +28,11 @@
 	</head>
 	<body>
 		{% set nav_links = [
-        { label: 'Accueil', href: path('app_landing'), active: app.request.attributes.get('_route') == 'app_landing' },
-        { label: 'Blog', href: path('app_blog_index'), active: app.request.attributes.get('_route') starts with 'app_blog' },
-        { label: 'Menu', href: '#menu' },
+        { label: 'Fonctionnalités', href: path('app_landing'), active: app.request.attributes.get('_route') == 'app_landing' },
+        { label: 'Visibilité locale', href: '#visibilité locale' },
         {label: 'Tarifs', href: path('app_tarifs'),active: app.request.attributes.get('_route') == 'app_tarifs' },
-        { label: 'Réserver', href: '#booking' }
+        { label: 'Exemples', href: '#exemples' },
+        { label: 'Blog', href: path('app_blog_index'), active: app.request.attributes.get('_route') starts with 'app_blog' },
     ] %}
 
 		{% if app.user %}

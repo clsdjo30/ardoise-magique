@@ -6,10 +6,11 @@
 		<div
 			class="hero__content">
 			{# Tagline with diamonds #}
-			<div class="hero__tagline">
-				<p class="hero__tagline-text">
-					Tous vos menus méritent d’être vus en salle et sur le web.
-				</p>
+			<div
+				class="hero__tagline">
+				{# <p class="hero__tagline-text">
+									Tous vos menus méritent d’être vus avant même que le client ne pousse la porte.
+								</p> #}
 				<div class="hero__diamonds">
 					<span class="hero__diamond"></span>
 					<span class="hero__diamond"></span>
@@ -19,24 +20,24 @@
 
 			{# Main title #}
 			<h1 class="hero__title">
-				L'Ardoise qui attire
+				Vos menus visibles
 				<br>
-				aussi sur
-				<span class="hero__title-highlight">Internet</span>
+				en ligne avant l’arrivée
+				<span class="hero__title-highlight">des Clients</span>
 			</h1>
 
 			{# Description #}
 			<p class="hero__description">
-				Créez et partagez vos menus en ligne aussi facilement que vous écrivez sur votre ardoise.
-			</p>
-			<p class="hero__description">
-				Ardoise Magique prolonge votre communication locale dans le monde digital : vos menus deviennent visibles, partageables et consultables partout.
+				Menus du jour, menus spéciaux et cartes complètes. Un lien. Un QR code. Une visibilité locale.
 			</p>
 
 			{# Call to action buttons #}
 			<div class="hero__cta-wrapper">
 				<a href="#reservation" class="hero__cta hero__cta--secondary">
-					Créer mon menu
+					Créer mon premier menu
+				</a>
+				<a href="#reservation" class="hero__cta hero__cta--secondary">
+					Voir comment ça marche
 				</a>
 			</div>
 		</div>
@@ -51,10 +52,10 @@
 				{# Main image circle #}
 				<div class="hero__image-circle">
 					<img src="{{ asset('images/landing/hero-menu-du-jour-640.webp') }}" srcset="
-						                            {{ asset('images/landing/hero-menu-du-jour-540.webp') }} 540w,
-						                            {{ asset('images/landing/hero-menu-du-jour-640.webp') }} 640w,
-						                            {{ asset('images/landing/hero-menu-du-jour-760.webp') }} 760w
-						                        " sizes="(min-width: 1200px) 380px, (min-width: 768px) 320px, 90vw" alt="Assiette de plats du jour présentée sur une table de restaurant, illustrant un menu du jour attractif." width="380" height="470" loading="eager" fetchpriority="high" decoding="async" class="hero__image">
+												                            {{ asset('images/landing/hero-menu-du-jour-540.webp') }} 540w,
+												                            {{ asset('images/landing/hero-menu-du-jour-640.webp') }} 640w,
+												                            {{ asset('images/landing/hero-menu-du-jour-760.webp') }} 760w
+												                        " sizes="(min-width: 1200px) 380px, (min-width: 768px) 320px, 90vw" alt="Assiette de plats du jour présentée sur une table de restaurant, illustrant un menu du jour attractif." width="380" height="470" loading="eager" fetchpriority="high" decoding="async" class="hero__image">
 				</div>
 
 				<div class="hero__ring hero__ring--inner"></div>
