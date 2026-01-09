@@ -1,0 +1,119 @@
+{#
+    Base template for Special Menus (Menu Spécial)
+    Extends: base_menu.html.twig
+    Variables required: ardoise, restaurant, entrees, plats, desserts, supplements
+#}
+{% extends 'public/base_menu.html.twig' %}
+
+{# Set menu_title from ardoise for SEO #}
+{% set menu_title = ardoise.titre %}
+
+{# Override meta description for special menus #}
+{% block meta_description %}Menu spécial {{ ardoise.titre }} de {{ restaurant.name }} à {{ restaurant.city }}. {% if ardoise.specialGlobalPrice %}Prix : {{ ardoise.specialGlobalPrice|number_format(2, ',', ' ') }} €. {% endif %}{{ restaurant.address }}, {{ restaurant.zipCode }} {{ restaurant.city }}.{% endblock %}
+
+{# Schema.org specific to Special Menu #}
+{% block schema_menu %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    "name": "{{ ardoise.titre|e('js') }}",
+    "description": "Menu spécial",
+    "mainEntityOfPage": {
+        "@type": "Restaurant",
+        "name": "{{ restaurant.name|e('js') }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ restaurant.address|e('js') }}",
+            "addressLocality": "{{ restaurant.city|e('js') }}",
+            "postalCode": "{{ restaurant.zipCode|e('js') }}",
+            "addressCountry": "FR"
+        }
+    }
+    {% if ardoise.specialGlobalPrice %},
+    "offers": {
+        "@type": "Offer",
+        "name": "Menu complet",
+        "price": "{{ ardoise.specialGlobalPrice }}",
+        "priceCurrency": "EUR"
+    }
+    {% endif %},
+    "hasMenuSection": [
+        {% if entrees is not empty %}
+        {
+            "@type": "MenuSection",
+            "name": "Entrées",
+            "hasMenuItem": [
+                {% for entree in entrees %}
+                {
+                    "@type": "MenuItem",
+                    "name": "{{ entree.name|e('js') }}"
+                    {% if entree.description %},
+                    "description": "{{ entree.description|e('js') }}"
+                    {% endif %}
+                    {% if entree.price %},
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "{{ entree.price }}",
+                        "priceCurrency": "EUR"
+                    }
+                    {% endif %}
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }{% if plats is not empty or desserts is not empty %},{% endif %}
+        {% endif %}
+        {% if plats is not empty %}
+        {
+            "@type": "MenuSection",
+            "name": "Plats",
+            "hasMenuItem": [
+                {% for plat in plats %}
+                {
+                    "@type": "MenuItem",
+                    "name": "{{ plat.name|e('js') }}"
+                    {% if plat.description %},
+                    "description": "{{ plat.description|e('js') }}"
+                    {% endif %}
+                    {% if plat.price %},
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "{{ plat.price }}",
+                        "priceCurrency": "EUR"
+                    }
+                    {% endif %}
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }{% if desserts is not empty %},{% endif %}
+        {% endif %}
+        {% if desserts is not empty %}
+        {
+            "@type": "MenuSection",
+            "name": "Desserts",
+            "hasMenuItem": [
+                {% for dessert in desserts %}
+                {
+                    "@type": "MenuItem",
+                    "name": "{{ dessert.name|e('js') }}"
+                    {% if dessert.description %},
+                    "description": "{{ dessert.description|e('js') }}"
+                    {% endif %}
+                    {% if dessert.price %},
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "{{ dessert.price }}",
+                        "priceCurrency": "EUR"
+                    }
+                    {% endif %}
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }
+        {% endif %}
+    ]
+}
+</script>
+{% endblock %}
+
+{# Child templates should override menu_content with their specific design #}

@@ -1,0 +1,330 @@
+{% extends 'public/menus-du-jour/_base_daily.html.twig' %}
+
+{% block menu_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Oswald:wght@300;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block menu_styles %}
+<style>
+/* --- VARIABLES --- */
+:root {
+    --bg-body: #f4f4f4;
+    --bg-card: #ffffff;
+    --text-dark: #2c3e50;
+    --text-grey: #7f8c8d;
+    --accent: #d35400;
+    --border-radius: 8px;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* --- RESET & BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-dark);
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.menu-container {
+    width: 100%;
+    max-width: 700px;
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border-top: 6px solid var(--accent);
+}
+
+/* --- HEADER --- */
+header {
+    padding: 2.5rem 2rem;
+    text-align: center;
+    background-image: radial-gradient(#444 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-color: #fafafa;
+}
+
+.restaurant-name {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1rem;
+    color: var(--text-grey);
+    margin-bottom: 0.5rem;
+}
+
+h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.date-badge {
+    display: inline-block;
+    background: var(--text-dark);
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+/* --- FORMULES (PRIX) --- */
+.formulas {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--text-dark);
+    color: white;
+    flex-wrap: wrap;
+}
+
+.formula-item {
+    text-align: center;
+    padding: 0 1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.formula-item:last-child {
+    border-right: none;
+}
+
+.formula-item span {
+    display: block;
+}
+.formula-desc {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+.formula-price {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--accent);
+}
+
+/* --- CONTENU DU MENU --- */
+.menu-content {
+    padding: 2rem;
+}
+
+.category-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    border-bottom: 2px solid #eee;
+    margin: 2rem 0 1.5rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+}
+
+.category-title:first-of-type {
+    margin-top: 0;
+}
+
+.dish {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.2rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.dish:hover {
+    background-color: #f9f9f9;
+}
+
+.dish-info {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.dish-name {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    display: block;
+    text-align: center;
+}
+
+.dish-ingredients {
+    font-size: 0.9rem;
+    color: var(--text-grey);
+    font-style: normal;
+}
+
+.dish-price-tag {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    white-space: nowrap;
+}
+
+/* Badges (Végétarien, Local, etc.) */
+.badge {
+    font-size: 0.7rem;
+    vertical-align: middle;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.badge-veg {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+.badge-new {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: #fafafa;
+    font-size: 0.85rem;
+    color: var(--text-grey);
+    border-top: 1px solid #eee;
+}
+
+/* --- RESPONSIVE --- */
+@media(max-width: 500px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+    .formulas {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .formula-item {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 1rem;
+    }
+    .formula-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .dish {
+        flex-direction: column;
+    }
+    .dish-price-tag {
+        margin-top: 5px;
+        color: var(--accent);
+    }
+}
+</style>
+{% endblock %}
+
+{% block menu_content %}
+<main class="menu-container">
+    <header>
+        <div class="restaurant-name">Cantine Urbaine & Vins Vivants</div>
+        <h1>{{ restaurant.name }}</h1>
+        <span id="current-date" class="date-badge">{{ ardoise.titre }}</span>
+    </header>
+
+    <div class="formulas">
+        {% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+            <div class="formula-item">
+                <span class="formula-desc">Plat du jour</span>
+                {% if ardoise.pricePj %}
+                    <span class="formula-price">{{ ardoise.pricePj|nl2br }}€</span>
+                {% endif %}
+            </div>
+            <div class="formula-item">
+                <span class="formula-desc">Entrée + Plat</span>
+                <span class="dish-ingredients">ou</span>
+                <span class="formula-desc">Plat + Dessert</span>
+                {% if ardoise.pricePd %}
+                    <span class="formula-price">{{ ardoise.pricePd|nl2br }}€</span>
+                {% endif %}
+            </div>
+            <div class="formula-item">
+                <span class="formula-desc">Formule complète</span>
+                {% if ardoise.priceEpd %}
+                    <span class="formula-price">{{ ardoise.priceEpd|nl2br }}€</span>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="menu-content">
+        <h2 class="category-title">Pour débuter</h2>
+        <article class="dish">
+            <div class="dish-info">
+                {% if ardoise.dailyEntree %}
+                    <span class="dish-name">{{ ardoise.dailyEntree|nl2br }}</span>
+                {% endif %}
+            </div>
+        </article>
+
+        <h2 class="category-title">Le Coeur du Repas</h2>
+        <article class="dish">
+            <div class="dish-info">
+                {% if ardoise.dailyPlat %}
+                    <span class="dish-name">{{ ardoise.dailyPlat|nl2br }}</span>
+                {% endif %}
+            </div>
+            <span class="dish-price-tag"></span>
+        </article>
+
+        <h2 class="category-title">Finir en douceur</h2>
+        <article class="dish">
+            <div class="dish-info">
+                {% if ardoise.dailyDessert %}
+                    <span class="dish-name">{{ ardoise.dailyDessert|nl2br }}</span>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+
+    <footer>
+        <p>Viandes origine France. Produits locaux privilégiés.</p>
+        <p>Prix nets en euros, service compris.</p>
+    </footer>
+</main>
+{% endblock %}
+
+{% block menu_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const dateElement = document.getElementById('current-date');
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+    const today = new Date();
+    const dateString = today.toLocaleDateString('fr-FR', options);
+    const formattedDate = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+    dateElement.textContent = formattedDate;
+});
+</script>
+{% endblock %}

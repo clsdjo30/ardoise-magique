@@ -30,4 +30,40 @@
         <priority>0.6</priority>
     </url>
     {% endfor %}
+
+    {# Directory index #}
+    <url>
+        <loc>{{ url('app_directory_index') }}</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    {# Directory by city #}
+    {% for city in cities %}
+    <url>
+        <loc>{{ url('app_directory_city', {citySlug: city|lower|replace({' ': '-'})}) }}</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    {% endfor %}
+
+    {# Directory by region #}
+    {% for dept in departements %}
+    <url>
+        <loc>{{ url('app_directory_region', {departementSlug: dept|lower|replace({' ': '-'})}) }}</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    {% endfor %}
+
+    {# Restaurant pages #}
+    {% for restaurant in restaurants %}
+    {% if restaurant.slug %}
+    <url>
+        <loc>{{ url('app_directory_restaurant_show', {slug: restaurant.slug}) }}</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    {% endif %}
+    {% endfor %}
 </urlset>

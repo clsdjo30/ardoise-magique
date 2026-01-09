@@ -1,0 +1,479 @@
+{% extends 'base.html.twig' %}
+
+{% block meta_title %}{{ restaurant.name }} - Restaurant à {{ restaurant.city }} | L'Ardoise Magique{% endblock %}
+{% block meta_description %}Découvrez le menu et les horaires de {{ restaurant.name }} à {{ restaurant.city }}. {{ restaurant.address }}, {{ restaurant.zipCode }} {{ restaurant.city }}.{% endblock %}
+
+{% block meta_extra %}
+<meta property="og:title" content="{{ restaurant.name }} - Restaurant à {{ restaurant.city }}">
+<meta property="og:description" content="Consultez les menus et horaires de {{ restaurant.name }}.">
+<meta property="og:type" content="restaurant">
+<meta property="og:url" content="{{ app.request.uri }}">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "{{ restaurant.name|e('js') }}",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ restaurant.address|e('js') }}",
+        "addressLocality": "{{ restaurant.city|e('js') }}",
+        "postalCode": "{{ restaurant.zipCode|e('js') }}"
+        {% if restaurant.departement %},
+        "addressRegion": "{{ restaurant.departement|e('js') }}"
+        {% endif %},
+        "addressCountry": "FR"
+    }
+    {% if restaurant.phoneNumber %},
+    "telephone": "{{ restaurant.phoneNumber|e('js') }}"
+    {% endif %}
+    {% if restaurant.facebookPage %},
+    "sameAs": ["{{ restaurant.facebookPage|e('js') }}"]
+    {% endif %}
+    {% if openingHoursByDay|length > 0 %},
+    "openingHoursSpecification": [
+        {% set ohSpecs = [] %}
+        {% for dayOfWeek, hours in openingHoursByDay %}
+        {% for hour in hours %}
+        {% set ohSpecs = ohSpecs|merge([{
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][dayOfWeek],
+            "opens": hour.opensAt|date('H:i'),
+            "closes": hour.closesAt|date('H:i')
+        }]) %}
+        {% endfor %}
+        {% endfor %}
+        {{ ohSpecs|json_encode|raw }}
+    ]
+    {% endif %}
+    {% if publishedCartes|length > 0 %},
+    "hasMenu": [
+        {% for carte in publishedCartes %}
+        {
+            "@type": "Menu",
+            "name": "{{ carte.name|e('js') }}",
+            "url": "{{ url('app_show_carte', {restaurant: restaurant.owner.slug, slug: carte.slug}) }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+    {% endif %}
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<nav class="directory-breadcrumb l-container" aria-label="Fil d'Ariane" style="padding: 1.5rem 0;">
+    <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="{{ path('app_landing') }}">
+                <span itemprop="name">Accueil</span>
+            </a>
+            <meta itemprop="position" content="1">
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="{{ path('app_directory_index') }}">
+                <span itemprop="name">Annuaire</span>
+            </a>
+            <meta itemprop="position" content="2">
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="{{ path('app_directory_city', {citySlug: restaurant.city|lower|replace({' ': '-'})}) }}">
+                <span itemprop="name">{{ restaurant.city }}</span>
+            </a>
+            <meta itemprop="position" content="3">
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">{{ restaurant.name }}</span>
+            <meta itemprop="position" content="4">
+        </li>
+    </ol>
+</nav>
+
+<header class="restaurant-header">
+    <div class="l-container">
+        <h1 class="restaurant-header__name">{{ restaurant.name }}</h1>
+        <div class="restaurant-header__location">
+            <i class="fas fa-map-marker-alt"></i>
+            <address>
+                {{ restaurant.address }}, {{ restaurant.zipCode }} {{ restaurant.city }}
+                {% if restaurant.departement %} ({{ restaurant.departement }}){% endif %}
+            </address>
+        </div>
+        {% if restaurant.phoneNumber %}
+        <div class="restaurant-header__phone">
+            <i class="fas fa-phone"></i>
+            <a href="tel:{{ restaurant.phoneNumber|replace({' ': '', '-': '', '.': ''}) }}">
+                {{ restaurant.phoneNumber }}
+            </a>
+        </div>
+        {% endif %}
+        {% if restaurant.facebookPage %}
+        <div class="restaurant-header__social">
+            <a href="{{ restaurant.facebookPage }}" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-facebook"></i> Page Facebook
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</header>
+
+{% if openingHoursByDay|length > 0 %}
+<section class="restaurant-hours l-section">
+    <div class="l-container">
+        <h2 class="restaurant-section__title">
+            <i class="fas fa-clock"></i> Horaires d'ouverture
+        </h2>
+        <div class="restaurant-hours__grid">
+            {% for dayOfWeek in 1..7 %}
+                <div class="restaurant-hours__day {{ dayOfWeek == 'now'|date('N') ? 'restaurant-hours__day--today' : '' }}">
+                    <span class="restaurant-hours__day-name">
+                        {{ dayNames[dayOfWeek] }}
+                    </span>
+                    <span class="restaurant-hours__times">
+                        {% if openingHoursByDay[dayOfWeek] is defined %}
+                            {% for hour in openingHoursByDay[dayOfWeek] %}
+                                {{ hour.opensAt|date('H:i') }} - {{ hour.closesAt|date('H:i') }}
+                                {% if hour.label %}({{ hour.label }}){% endif %}
+                                {% if not loop.last %}<br>{% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span class="restaurant-hours__closed">Fermé</span>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if publishedCartes|length > 0 %}
+<section class="restaurant-menus l-section">
+    <div class="l-container">
+        <h2 class="restaurant-section__title">
+            <i class="fas fa-book-open"></i> Nos Cartes
+        </h2>
+        <div class="restaurant-menus__grid">
+            {% for carte in publishedCartes %}
+                <article class="menu-card">
+                    <div class="menu-card__content">
+                        <h3 class="menu-card__title">{{ carte.name }}</h3>
+                        <p class="menu-card__validity">
+                            {% if carte.validTo %}
+                                Du {{ carte.validFrom|date('d/m/Y') }} au {{ carte.validTo|date('d/m/Y') }}
+                            {% else %}
+                                Depuis le {{ carte.validFrom|date('d/m/Y') }}
+                            {% endif %}
+                        </p>
+                        <a href="{{ path('app_show_carte', {restaurant: restaurant.owner.slug, slug: carte.slug}) }}"
+                           class="menu-card__button">
+                            Voir la carte <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if activeArdoises|length > 0 %}
+<section class="restaurant-ardoises l-section">
+    <div class="l-container">
+        <h2 class="restaurant-section__title">
+            <i class="fas fa-chalkboard"></i> Menus du moment
+        </h2>
+        <div class="restaurant-ardoises__grid">
+            {% for ardoise in activeArdoises %}
+                <article class="ardoise-card">
+                    <div class="ardoise-card__badge ardoise-card__badge--{{ ardoise.type|lower }}">
+                        {{ ardoise.type == 'DAILY' ? 'Menu du jour' : 'Menu spécial' }}
+                    </div>
+                    <div class="ardoise-card__content">
+                        <h3 class="ardoise-card__title">{{ ardoise.titre }}</h3>
+                        <a href="{{ path('app_show_menu', {restaurant: restaurant.owner.slug, slug: ardoise.slug}) }}"
+                           class="ardoise-card__button">
+                            Voir le menu <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if publishedCartes|length == 0 and activeArdoises|length == 0 %}
+<section class="restaurant-no-content l-section">
+    <div class="l-container">
+        <div class="restaurant-no-content__message">
+            <i class="fas fa-utensils"></i>
+            <p>Ce restaurant n'a pas encore publié de menu.</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="restaurant-back l-section">
+    <div class="l-container">
+        <a href="{{ path('app_directory_city', {citySlug: restaurant.city|lower|replace({' ': '-'})}) }}" class="restaurant-back__link">
+            <i class="fas fa-arrow-left"></i>
+            Voir les autres restaurants à {{ restaurant.city }}
+        </a>
+    </div>
+</section>
+
+<style>
+.directory-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0.5rem;
+}
+
+.directory-breadcrumb li::after {
+    content: '/';
+    margin-left: 0.5rem;
+    color: #6b4b36;
+}
+
+.directory-breadcrumb li:last-child::after {
+    display: none;
+}
+
+.directory-breadcrumb a {
+    color: #b85c38;
+    text-decoration: none;
+}
+
+.directory-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.directory-breadcrumb span {
+    color: #2f1b0c;
+}
+
+.restaurant-header {
+    background: linear-gradient(135deg, #2f1b0c 0%, #4a3020 100%);
+    color: white;
+    padding: 4rem 0;
+}
+
+.restaurant-header__name {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.restaurant-header__location,
+.restaurant-header__phone,
+.restaurant-header__social {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.restaurant-header__location address {
+    font-style: normal;
+}
+
+.restaurant-header a {
+    color: #c5a059;
+    text-decoration: none;
+}
+
+.restaurant-header a:hover {
+    text-decoration: underline;
+}
+
+.restaurant-section__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #2f1b0c;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.restaurant-section__title i {
+    color: #b85c38;
+}
+
+.l-section {
+    padding: 4rem 0;
+}
+
+.restaurant-hours {
+    background: #fffaf6;
+}
+
+.restaurant-hours__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.restaurant-hours__day {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #d4c4b7;
+}
+
+.restaurant-hours__day--today {
+    background: #b85c38;
+    color: white;
+    border-color: #b85c38;
+}
+
+.restaurant-hours__day-name {
+    font-weight: 600;
+}
+
+.restaurant-hours__closed {
+    color: #999;
+    font-style: italic;
+}
+
+.restaurant-hours__day--today .restaurant-hours__closed {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.restaurant-menus,
+.restaurant-ardoises {
+    background: #fff;
+}
+
+.restaurant-menus__grid,
+.restaurant-ardoises__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.menu-card,
+.ardoise-card {
+    background: #fffaf6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #d4c4b7;
+    transition: all 0.3s ease;
+}
+
+.menu-card:hover,
+.ardoise-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(47, 27, 12, 0.1);
+}
+
+.menu-card__title,
+.ardoise-card__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: #2f1b0c;
+    margin-bottom: 0.5rem;
+}
+
+.menu-card__validity {
+    color: #6b4b36;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.menu-card__button,
+.ardoise-card__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #b85c38;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+}
+
+.menu-card__button:hover,
+.ardoise-card__button:hover {
+    gap: 1rem;
+}
+
+.ardoise-card__badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.ardoise-card__badge--daily {
+    background: #b85c38;
+    color: white;
+}
+
+.ardoise-card__badge--special {
+    background: #4a7a4a;
+    color: white;
+}
+
+.restaurant-no-content {
+    background: #fffaf6;
+}
+
+.restaurant-no-content__message {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b4b36;
+}
+
+.restaurant-no-content__message i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    color: #b85c38;
+    display: block;
+}
+
+.restaurant-back {
+    padding-bottom: 4rem;
+    background: #fff;
+}
+
+.restaurant-back__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #b85c38;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+}
+
+.restaurant-back__link:hover {
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .restaurant-header__name {
+        font-size: 2rem;
+    }
+
+    .restaurant-hours__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .restaurant-menus__grid,
+    .restaurant-ardoises__grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

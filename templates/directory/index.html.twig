@@ -1,0 +1,447 @@
+{% extends 'base.html.twig' %}
+
+{% block meta_title %}{{ pageTitle }} | L'Ardoise Magique{% endblock %}
+{% block meta_description %}Découvrez les menus et cartes des restaurants près de chez vous. {{ currentFilter == 'city' ? 'Restaurants à ' ~ currentValue : (currentFilter == 'region' ? 'Restaurants en ' ~ currentValue : 'Annuaire complet des restaurants') }}.{% endblock %}
+
+{% block meta_extra %}
+<meta property="og:title" content="{{ pageTitle }} | L'Ardoise Magique">
+<meta property="og:description" content="Découvrez les menus et cartes des restaurants près de chez vous.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ app.request.uri }}">
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "{{ pageTitle }}",
+    "description": "Liste des restaurants avec leurs menus disponibles",
+    "numberOfItems": {{ restaurants|length }},
+    "itemListElement": [
+        {% for restaurant in restaurants %}
+        {
+            "@type": "ListItem",
+            "position": {{ loop.index }},
+            "item": {
+                "@type": "Restaurant",
+                "name": "{{ restaurant.name|e('js') }}",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "{{ restaurant.address|e('js') }}",
+                    "addressLocality": "{{ restaurant.city|e('js') }}",
+                    "postalCode": "{{ restaurant.zipCode|e('js') }}"
+                    {% if restaurant.departement %},
+                    "addressRegion": "{{ restaurant.departement|e('js') }}"
+                    {% endif %}
+                }
+                {% if restaurant.slug %},
+                "url": "{{ url('app_directory_restaurant_show', {slug: restaurant.slug}) }}"
+                {% endif %}
+            }
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<section class="directory-hero">
+    <div class="l-container">
+        <nav class="directory-breadcrumb" aria-label="Fil d'Ariane">
+            <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a itemprop="item" href="{{ path('app_landing') }}">
+                        <span itemprop="name">Accueil</span>
+                    </a>
+                    <meta itemprop="position" content="1">
+                </li>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    {% if currentFilter == 'all' %}
+                        <span itemprop="name">Annuaire</span>
+                    {% else %}
+                        <a itemprop="item" href="{{ path('app_directory_index') }}">
+                            <span itemprop="name">Annuaire</span>
+                        </a>
+                    {% endif %}
+                    <meta itemprop="position" content="2">
+                </li>
+                {% if currentFilter != 'all' and currentValue %}
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <span itemprop="name">{{ currentValue }}</span>
+                    <meta itemprop="position" content="3">
+                </li>
+                {% endif %}
+            </ol>
+        </nav>
+
+        <h1 class="directory-hero__title">{{ pageTitle }}</h1>
+        <p class="directory-hero__subtitle">
+            Découvrez les menus et cartes des restaurants près de chez vous
+        </p>
+    </div>
+</section>
+
+<section class="directory-filters">
+    <div class="l-container">
+        <div class="directory-filters__wrapper">
+            <div class="directory-filters__group">
+                <label for="filter-city" class="directory-filters__label">Ville</label>
+                <select id="filter-city" class="directory-filters__select" onchange="filterByCity(this.value)">
+                    <option value="">Toutes les villes</option>
+                    {% for city in cities %}
+                        <option value="{{ city|lower|replace({' ': '-'}) }}"
+                                {{ currentFilter == 'city' and currentValue == city ? 'selected' : '' }}>
+                            {{ city }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="directory-filters__group">
+                <label for="filter-region" class="directory-filters__label">Département</label>
+                <select id="filter-region" class="directory-filters__select" onchange="filterByRegion(this.value)">
+                    <option value="">Tous les départements</option>
+                    {% for dept in departements %}
+                        <option value="{{ dept|lower|replace({' ': '-'}) }}"
+                                {{ currentFilter == 'region' and currentValue == dept ? 'selected' : '' }}>
+                            {{ dept }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% if currentFilter != 'all' %}
+            <a href="{{ path('app_directory_index') }}" class="directory-filters__reset">
+                <i class="fas fa-times"></i> Réinitialiser
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="directory-grid l-section">
+    <div class="l-container">
+        {% if restaurants|length > 0 %}
+            <p class="directory-grid__count">{{ restaurants|length }} restaurant{{ restaurants|length > 1 ? 's' : '' }} trouvé{{ restaurants|length > 1 ? 's' : '' }}</p>
+
+            <div class="directory-grid__wrapper">
+                {% for restaurant in restaurants %}
+                    <article class="restaurant-card">
+                        <div class="restaurant-card__image">
+                            <div class="restaurant-card__skeleton">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                        </div>
+                        <div class="restaurant-card__content">
+                            <h2 class="restaurant-card__name">{{ restaurant.name }}</h2>
+                            <p class="restaurant-card__location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ restaurant.city }}{% if restaurant.departement %}, {{ restaurant.departement }}{% endif %}
+                            </p>
+                            {% if restaurant.slug %}
+                                <a href="{{ path('app_directory_restaurant_show', {slug: restaurant.slug}) }}"
+                                   class="restaurant-card__button">
+                                    Voir l'établissement
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="directory-empty">
+                <i class="fas fa-search"></i>
+                <p>Aucun restaurant trouvé avec les critères sélectionnés.</p>
+                <a href="{{ path('app_directory_index') }}" class="directory-empty__link">
+                    Voir tous les restaurants
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+function filterByCity(citySlug) {
+    if (citySlug) {
+        window.location.href = '{{ path('app_directory_city', {citySlug: '__CITY__'}) }}'.replace('__CITY__', citySlug);
+    } else {
+        window.location.href = '{{ path('app_directory_index') }}';
+    }
+}
+
+function filterByRegion(regionSlug) {
+    if (regionSlug) {
+        window.location.href = '{{ path('app_directory_region', {departementSlug: '__REGION__'}) }}'.replace('__REGION__', regionSlug);
+    } else {
+        window.location.href = '{{ path('app_directory_index') }}';
+    }
+}
+</script>
+
+<style>
+.directory-hero {
+    background: linear-gradient(135deg, #e8dfd6 0%, #d4c4b7 100%);
+    padding: 6rem 0 4rem;
+    margin-bottom: 0;
+    position: relative;
+}
+
+.directory-hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 60%);
+    pointer-events: none;
+}
+
+.directory-hero__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: #b85c38;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(47, 27, 12, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.directory-hero__subtitle {
+    font-size: 1.25rem;
+    color: #6b4b36;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.directory-breadcrumb {
+    padding-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.directory-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0.5rem;
+}
+
+.directory-breadcrumb li::after {
+    content: '/';
+    margin-left: 0.5rem;
+    color: #6b4b36;
+}
+
+.directory-breadcrumb li:last-child::after {
+    display: none;
+}
+
+.directory-breadcrumb a {
+    color: #b85c38;
+    text-decoration: none;
+}
+
+.directory-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.directory-breadcrumb span {
+    color: #2f1b0c;
+}
+
+.directory-filters {
+    background: #fffaf6;
+    padding: 2rem 0;
+    border-bottom: 1px solid #d4c4b7;
+}
+
+.directory-filters__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+}
+
+.directory-filters__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.directory-filters__label {
+    font-weight: 600;
+    color: #2f1b0c;
+    font-size: 0.875rem;
+}
+
+.directory-filters__select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #d4c4b7;
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+    min-width: 200px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.directory-filters__select:focus {
+    outline: none;
+    border-color: #b85c38;
+}
+
+.directory-filters__reset {
+    color: #b85c38;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    transition: opacity 0.3s ease;
+}
+
+.directory-filters__reset:hover {
+    opacity: 0.8;
+}
+
+.directory-grid {
+    padding: 4rem 0;
+    background: #fff;
+}
+
+.directory-grid__count {
+    color: #6b4b36;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.directory-grid__wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.restaurant-card {
+    background: #fffaf6;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(47, 27, 12, 0.1);
+    border: 1px solid #d4c4b7;
+    transition: all 0.3s ease;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(47, 27, 12, 0.14);
+}
+
+.restaurant-card__image {
+    height: 180px;
+    background: linear-gradient(135deg, #f8f3ef 0%, #d4c4b7 100%);
+}
+
+.restaurant-card__skeleton {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: rgba(184, 92, 56, 0.3);
+}
+
+.restaurant-card__content {
+    padding: 1.5rem;
+}
+
+.restaurant-card__name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2f1b0c;
+    margin-bottom: 0.5rem;
+}
+
+.restaurant-card__location {
+    color: #6b4b36;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.restaurant-card__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #b85c38;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+}
+
+.restaurant-card__button:hover {
+    gap: 1rem;
+}
+
+.directory-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b4b36;
+}
+
+.directory-empty i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    color: #b85c38;
+}
+
+.directory-empty__link {
+    color: #b85c38;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.directory-empty__link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .directory-hero__title {
+        font-size: 2.5rem;
+    }
+
+    .directory-filters__wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .directory-filters__select {
+        min-width: 100%;
+    }
+
+    .directory-grid__wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

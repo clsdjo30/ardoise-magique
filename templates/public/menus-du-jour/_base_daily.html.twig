@@ -1,0 +1,84 @@
+{#
+    Base template for Daily Menus (Menu du Jour)
+    Extends: base_menu.html.twig
+    Variables required: ardoise, restaurant
+#}
+{% extends 'public/base_menu.html.twig' %}
+
+{# Set menu_title from ardoise for SEO #}
+{% set menu_title = ardoise.titre %}
+
+{# Override meta description for daily menus #}
+{% block meta_description %}Menu du jour de {{ restaurant.name }} à {{ restaurant.city }}. {% if ardoise.dailyEntree %}Entrée : {{ ardoise.dailyEntree|slice(0, 50) }}{% if ardoise.dailyEntree|length > 50 %}...{% endif %}{% endif %} {{ restaurant.address }}, {{ restaurant.zipCode }} {{ restaurant.city }}.{% endblock %}
+
+{# Schema.org specific to Daily Menu #}
+{% block schema_menu %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    "name": "{{ ardoise.titre|e('js') }}",
+    "description": "Menu du jour",
+    "mainEntityOfPage": {
+        "@type": "Restaurant",
+        "name": "{{ restaurant.name|e('js') }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ restaurant.address|e('js') }}",
+            "addressLocality": "{{ restaurant.city|e('js') }}",
+            "postalCode": "{{ restaurant.zipCode|e('js') }}",
+            "addressCountry": "FR"
+        }
+    },
+    "hasMenuSection": [
+        {% if ardoise.dailyEntree %}
+        {
+            "@type": "MenuSection",
+            "name": "Entrée",
+            "hasMenuItem": {
+                "@type": "MenuItem",
+                "name": "{{ ardoise.dailyEntree|e('js')|replace({'\n': ' ', '\r': ''}) }}"
+            }
+        }{% if ardoise.dailyPlat or ardoise.dailyDessert %},{% endif %}
+        {% endif %}
+        {% if ardoise.dailyPlat %}
+        {
+            "@type": "MenuSection",
+            "name": "Plat du jour",
+            "hasMenuItem": {
+                "@type": "MenuItem",
+                "name": "{{ ardoise.dailyPlat|e('js')|replace({'\n': ' ', '\r': ''}) }}"
+                {% if ardoise.pricePj %},
+                "offers": {
+                    "@type": "Offer",
+                    "price": "{{ ardoise.pricePj }}",
+                    "priceCurrency": "EUR"
+                }
+                {% endif %}
+            }
+        }{% if ardoise.dailyDessert %},{% endif %}
+        {% endif %}
+        {% if ardoise.dailyDessert %}
+        {
+            "@type": "MenuSection",
+            "name": "Dessert",
+            "hasMenuItem": {
+                "@type": "MenuItem",
+                "name": "{{ ardoise.dailyDessert|e('js')|replace({'\n': ' ', '\r': ''}) }}"
+            }
+        }
+        {% endif %}
+    ]
+    {% if ardoise.priceEpd %},
+    "offers": {
+        "@type": "Offer",
+        "name": "Formule complète (Entrée + Plat + Dessert)",
+        "price": "{{ ardoise.priceEpd }}",
+        "priceCurrency": "EUR"
+    }
+    {% endif %}
+}
+</script>
+{% endblock %}
+
+{# Child templates should override menu_content with their specific design #}

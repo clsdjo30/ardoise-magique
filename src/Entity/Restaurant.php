@@ -8,9 +8,11 @@ use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Restaurant
 {
     #[ORM\Id]
@@ -44,6 +46,9 @@ class Restaurant
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $facebookPage = null;
+
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
+    private ?string $slug = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'restaurants')]
     #[ORM\JoinColumn(nullable: false)]
@@ -149,6 +154,28 @@ class Restaurant
     {
         $this->facebookPage = $facebookPage;
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if (!$this->slug && $this->name && $this->city) {
+            $slugger = new AsciiSlugger('fr');
+            $baseSlug = $slugger->slug($this->name . ' ' . $this->city)->lower()->toString();
+            $this->slug = $baseSlug . '-' . substr(uniqid(), -6);
+        }
     }
 
     public function getOwner(): ?User

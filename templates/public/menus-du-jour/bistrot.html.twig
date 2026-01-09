@@ -1,0 +1,215 @@
+{% extends 'public/menus-du-jour/_base_daily.html.twig' %}
+
+{% block menu_head %}
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block menu_styles %}
+<style>
+:root {
+    --ardoise-bg: #2d2d2d;
+    --ardoise-text: #f0f0f0;
+    --accent-color: #a0522d;
+    --border-color: #5a3d2b;
+    --pad: 20px;
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+    background-color: #d1c1a9;
+    color: var(--ardoise-text);
+    margin: 0;
+    padding: 0;
+}
+
+.bistrot-header {
+    background-color: var(--border-color);
+    width: 100%;
+    text-align: center;
+    padding: var(--pad) 0;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.bistrot-header h1 {
+    font-family: 'Roboto Slab', serif;
+    font-size: 3em;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.bistrot-tagline {
+    margin: 5px 0 0;
+    font-style: italic;
+    font-size: 1.1em;
+}
+
+.menu-container {
+    padding: 40px var(--pad);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.menu-board {
+    background-color: var(--ardoise-bg);
+    border: 15px solid var(--border-color);
+    padding: 30px;
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+.board-title {
+    font-family: 'Roboto Slab', serif;
+    text-align: center;
+    font-size: 2.5em;
+    color: var(--accent-color);
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+.dish-category {
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--ardoise-text);
+}
+
+.dish-category:last-of-type {
+    border-bottom: none;
+}
+
+.category-name {
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 0 0 5px;
+}
+
+.dish-name {
+    font-size: 1.8em;
+    font-weight: normal;
+    font-style: italic;
+    margin: 0;
+    line-height: 1.3;
+    color: var(--ardoise-text);
+}
+
+.prices {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 3px solid var(--border-color);
+}
+
+.prices h3 {
+    font-family: 'Roboto Slab', serif;
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 0;
+    color: var(--accent-color);
+}
+
+.prices table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.prices td {
+    padding: 10px 0;
+    font-size: 1.2em;
+    border-bottom: 1px dotted rgba(240, 240, 240, 0.5);
+}
+
+.prices tr:last-child td {
+    border-bottom: none;
+}
+
+.price {
+    font-family: 'Roboto Slab', serif;
+    font-weight: bold;
+    color: var(--accent-color);
+    text-align: right;
+    width: 20%;
+}
+
+.note {
+    text-align: center;
+    font-size: 0.9em;
+    font-style: italic;
+    color: rgba(240, 240, 240, 0.7);
+}
+
+@media(max-width: 600px) {
+    .bistrot-header h1 {
+        font-size: 2.2em;
+    }
+    .board-title {
+        font-size: 2em;
+    }
+    .dish-name {
+        font-size: 1.5em;
+    }
+}
+</style>
+{% endblock %}
+
+{% block menu_content %}
+<header class="bistrot-header">
+    <h1>{{ restaurant.name }}</h1>
+    <p class="bistrot-tagline">{{ ardoise.titre }}</p>
+</header>
+
+<main class="menu-container">
+    <section class="menu-board">
+        <h2 class="board-title">L'Ardoise du Jour</h2>
+
+        {% if ardoise.dailyEntree %}
+        <div class="dish-category entree">
+            <p class="category-name">ENTREE</p>
+            <h3 class="dish-name">{{ ardoise.dailyEntree|nl2br }}</h3>
+        </div>
+        {% endif %}
+
+        {% if ardoise.dailyPlat %}
+        <div class="dish-category plat">
+            <p class="category-name">PLAT DU JOUR</p>
+            <h3 class="dish-name">{{ ardoise.dailyPlat|nl2br }}</h3>
+        </div>
+        {% endif %}
+
+        {% if ardoise.dailyDessert %}
+        <div class="dish-category dessert">
+            <p class="category-name">DESSERT</p>
+            <h3 class="dish-name">{{ ardoise.dailyDessert|nl2br }}</h3>
+        </div>
+        {% endif %}
+
+        {% if ardoise.priceEpd or ardoise.pricePj or ardoise.pricePd %}
+        <div class="prices">
+            <h3>Formules du Midi</h3>
+            <table>
+                {% if ardoise.pricePj %}
+                <tr>
+                    <td>Plat du Jour</td>
+                    <td class="price">{{ ardoise.pricePj|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% endif %}
+                {% if ardoise.pricePd %}
+                <tr>
+                    <td>Entree + Plat ou Plat + Dessert</td>
+                    <td class="price">{{ ardoise.pricePd|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% endif %}
+                {% if ardoise.priceEpd %}
+                <tr>
+                    <td>Formule Complete (E + P + D)</td>
+                    <td class="price">{{ ardoise.priceEpd|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% endif %}
+            </table>
+            <p class="note">Service du midi uniquement. Tous nos plats sont faits maison.</p>
+        </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

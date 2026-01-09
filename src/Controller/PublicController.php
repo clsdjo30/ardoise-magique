@@ -70,10 +70,10 @@ class PublicController extends AbstractController
 
             // Si un template est défini et valide, l'utiliser
             if ($template && in_array($template, Ardoise::TEMPLATES, true)) {
-                $templatePath = sprintf('public/dailys/%s.html.twig', $template);
+                $templatePath = sprintf('public/menus-du-jour/%s.html.twig', $template);
             } else {
                 // Template par défaut si aucun template n'est défini
-                $templatePath = 'public/daily_menu.html.twig';
+                $templatePath = 'public/menus-du-jour/traditionnel.html.twig';
             }
 
             return $this->render($templatePath, [
@@ -98,10 +98,10 @@ class PublicController extends AbstractController
 
             // Si un template est défini et valide, l'utiliser
             if ($template && in_array($template, Ardoise::TEMPLATES, true)) {
-                $templatePath = sprintf('public/specials/%s.html.twig', $template);
+                $templatePath = sprintf('public/menus-speciaux/%s.html.twig', $template);
             } else {
                 // Template par défaut si aucun template n'est défini
-                $templatePath = 'public/special_menu.html.twig';
+                $templatePath = 'public/menus-speciaux/default.html.twig';
             }
 
             return $this->render($templatePath, [
@@ -137,7 +137,7 @@ class PublicController extends AbstractController
         }
 
         // 4. Rendre le template
-        return $this->render('public/carte.html.twig', [
+        return $this->render('public/cartes/default.html.twig', [
             'carte' => $carte,
             'restaurant' => $carte->getRestaurant(),
         ]);
