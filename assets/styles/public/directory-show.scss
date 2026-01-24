@@ -1,0 +1,497 @@
+// ============================================
+// RESTAURANT SHOW PAGE - CHALKBOARD ART NOUVEAU
+// ============================================
+
+.restaurant-show-breadcrumb {
+    background: linear-gradient(180deg, #1a1614 0%, #2d2621 100%);
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+
+    ol {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 0.75rem;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        &::after {
+            content: '›';
+            color: rgba(212, 175, 55, 0.6);
+            font-size: 1.2rem;
+        }
+
+        &:last-child::after {
+            display: none;
+        }
+    }
+
+    a {
+        color: #d4af37;
+        text-decoration: none;
+        font-family: 'Lato', sans-serif;
+        font-weight: 600;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #f4e5c2;
+        }
+    }
+
+    span {
+        color: #faf7f4;
+        font-family: 'Lato', sans-serif;
+        font-weight: 600;
+    }
+}
+
+.restaurant-show-header {
+    position: relative;
+    background: linear-gradient(165deg, #1a1614 0%, #2d2621 50%, #2f1b0c 100%);
+    padding: 5rem 0 4rem;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+        opacity: 0.12;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        background: radial-gradient(ellipse at top right, rgba(212, 175, 55, 0.12) 0%, transparent 60%);
+        pointer-events: none;
+    }
+}
+
+.restaurant-show-header__content {
+    position: relative;
+    z-index: 1;
+    animation: headerSlideIn 1s ease-out backwards;
+}
+
+@keyframes headerSlideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.restaurant-show-header__name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: #faf7f4;
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.2);
+    position: relative;
+    display: inline-block;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 120px;
+        height: 3px;
+        background: linear-gradient(90deg, #d4af37, #f4e5c2, transparent);
+        border-radius: 2px;
+        box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+    }
+}
+
+.restaurant-show-header__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.restaurant-show-header__location,
+.restaurant-show-header__phone,
+.restaurant-show-header__social {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.1rem;
+    color: #e8dfd6;
+
+    i {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(212, 175, 55, 0.15);
+        border: 1.5px solid rgba(212, 175, 55, 0.3);
+        border-radius: 8px;
+        color: #d4af37;
+        font-size: 1rem;
+    }
+
+    address {
+        font-style: normal;
+    }
+
+    a {
+        color: #f4e5c2;
+        text-decoration: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #d4af37;
+        }
+    }
+}
+
+.restaurant-show-section {
+    padding: 5rem 0;
+
+    &:nth-child(even) {
+        background: linear-gradient(180deg, #f8f3ef 0%, #fffaf6 100%);
+    }
+
+    &:nth-child(odd) {
+        background: #fff;
+    }
+}
+
+.restaurant-show-section__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: #2f1b0c;
+    margin: 0 0 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+
+    i {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+        border-radius: 12px;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 16px rgba(184, 92, 56, 0.3);
+    }
+
+    &::after {
+        content: '';
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(184, 92, 56, 0.3), transparent);
+        margin-left: 1rem;
+    }
+}
+
+// Opening Hours
+.restaurant-hours__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.restaurant-hours__day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid #d4c4b7;
+    transition: all 0.3s ease;
+    font-family: 'Lato', sans-serif;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(47, 27, 12, 0.1);
+        border-color: #b85c38;
+    }
+
+    &--today {
+        background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+        color: white;
+        border-color: #b85c38;
+        box-shadow: 0 4px 16px rgba(184, 92, 56, 0.3);
+
+        .restaurant-hours__closed {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+}
+
+.restaurant-hours__day-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.restaurant-hours__times {
+    text-align: right;
+    font-size: 0.95rem;
+}
+
+.restaurant-hours__closed {
+    color: #999;
+    font-style: italic;
+    font-weight: 600;
+}
+
+// Menus & Ardoises Grid
+.restaurant-menus__grid,
+.restaurant-ardoises__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.menu-card,
+.ardoise-card {
+    position: relative;
+    background: #fffaf6;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 2px solid #d4c4b7;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(47, 27, 12, 0.08);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b85c38, #d78a69);
+        border-radius: 16px 16px 0 0;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    &:hover {
+        transform: translateY(-8px) rotate(-1deg);
+        box-shadow: 0 12px 36px rgba(47, 27, 12, 0.15);
+        border-color: #b85c38;
+
+        &::before {
+            opacity: 1;
+        }
+    }
+}
+
+.menu-card__title,
+.ardoise-card__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2f1b0c;
+    margin: 0 0 1rem;
+    line-height: 1.3;
+}
+
+.menu-card__validity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b4b36;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(184, 92, 56, 0.08);
+    border-radius: 8px;
+    width: fit-content;
+
+    i {
+        color: #b85c38;
+    }
+}
+
+.menu-card__button,
+.ardoise-card__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.75rem;
+    background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+    color: white;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(184, 92, 56, 0.3);
+
+    &:hover {
+        transform: translateX(4px);
+        box-shadow: 0 6px 20px rgba(184, 92, 56, 0.4);
+
+        svg {
+            transform: translateX(4px);
+        }
+    }
+
+    svg {
+        transition: transform 0.3s ease;
+    }
+}
+
+.ardoise-card__badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.25rem;
+
+    &--daily {
+        background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(184, 92, 56, 0.3);
+    }
+
+    &--special {
+        background: linear-gradient(135deg, #4a7a4a 0%, #5a9a5a 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(74, 122, 74, 0.3);
+    }
+}
+
+// No Content State
+.restaurant-no-content {
+    text-align: center;
+    padding: 6rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.restaurant-no-content__icon {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e8dfd6 0%, #d4c4b7 100%);
+    border-radius: 50%;
+    box-shadow: 0 12px 36px rgba(47, 27, 12, 0.15);
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -8px;
+        border: 2px dashed rgba(184, 92, 56, 0.3);
+        border-radius: 50%;
+    }
+
+    i {
+        font-size: 4rem;
+        color: rgba(184, 92, 56, 0.6);
+    }
+}
+
+.restaurant-no-content__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #2f1b0c;
+    margin: 0 0 1rem;
+}
+
+.restaurant-no-content__text {
+    font-family: 'Lato', sans-serif;
+    color: #6b4b36;
+    font-size: 1.15rem;
+    margin: 0;
+    line-height: 1.7;
+}
+
+// Back Link
+.restaurant-back {
+    padding: 4rem 0;
+    background: #fff;
+}
+
+.restaurant-back__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: rgba(184, 92, 56, 0.08);
+    border: 2px solid rgba(184, 92, 56, 0.3);
+    border-radius: 12px;
+    color: #b85c38;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: rgba(184, 92, 56, 0.12);
+        border-color: #b85c38;
+        transform: translateX(-4px);
+        box-shadow: 0 4px 16px rgba(184, 92, 56, 0.2);
+
+        i {
+            transform: translateX(-4px);
+        }
+    }
+
+    i {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+    }
+}
+
+@media (max-width: 768px) {
+    .restaurant-show-header {
+        padding: 4rem 0 3rem;
+    }
+
+    .restaurant-show-header__name {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .restaurant-show-section__title {
+        flex-wrap: wrap;
+        font-size: clamp(1.75rem, 6vw, 2.25rem);
+
+        &::after {
+            display: none;
+        }
+    }
+
+    .restaurant-hours__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .restaurant-menus__grid,
+    .restaurant-ardoises__grid {
+        grid-template-columns: 1fr;
+    }
+}

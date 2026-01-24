@@ -1,56 +1,2016 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}L'Ardoise Magique - Gestion de menus pour restaurateurs
+{% block meta_title %}L'Ardoise Magique - Créez vos menus de restaurant en 2 clics
+{% endblock %}
+{% block meta_description %}Arrêtez de perdre 20 minutes chaque matin sur Facebook. Créez, publiez et partagez vos menus du jour en 2 clics. Essai gratuit, sans carte bancaire.
 {% endblock %}
 
 {% block body %}
-{% set testimonials = [
-        {
-            quote: 'Avant, je passais 20 minutes à refaire mon post Facebook chaque matin. Aujourd\'hui, mon menu est prêt et publié en deux clics. C\'est devenu un réflexe.',
-            author: 'Julien, chef à Nîmes'
-        }
-    ] %}
-{# DEBUT SECTION HERO #}
-{{include('partials/_hero-section.html.twig')}}
-{# FIN SECTION HERO #}
 
-{# DEBUT SECTION POURQUOI CETTE APPLICATION#}
-{{include('partials/_marquee.html.twig')}}
-{{include('partials/_ardoise-digital.html.twig')}}
-{# FIN SECTION POURQUOI CETTE APPLICATION#}
+	{# ============================================ #}
+	{# HERO SECTION - Ultra-percutant #}
+	{# ============================================ #}
+		<section class="lp-hero"> <div class="lp-hero__chalk-overlay"></div>
 
-{# DEBUT SECTION COMMENT CA MARCHE #}
-{{include('partials/_how-it-works.html.twig')}}
-{# FIN SECTION COMMENT CA MARCHE #}
+		<svg class="lp-hero__flourish lp-hero__flourish--tl" viewbox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+			<path d="M0,0 Q40,40 80,40 Q120,40 150,0" stroke="currentColor" stroke-width="2" fill="none"/>
+			<circle cx="75" cy="40" r="4" fill="currentColor" opacity="0.4"/>
+		</svg>
 
-{# DEBUT SECTION FONCTIONNALITEES #}
-{{include('partials/_fonctionnalites.html.twig')}}
-{# FIN SECTION FONCTIONNALITEES #}
+		<div class="l-container">
+			<div class="lp-hero__content">
+				<div class="lp-hero__badge">
+					<i class="fas fa-clock"></i>
+					<span>Gagnez 20 minutes chaque matin</span>
+				</div>
 
-{# DEBUT SECTION PRESENTATION ANNUAIRE #}
-{{include('partials/_annuaire.html.twig')}}
-{# FIN SECTION PRESENTATION ANNUAIRE #}
+				<h1 class="lp-hero__title">
+					<span class="lp-hero__title-line">Arrêtez de perdre du temps</span>
+					<span class="lp-hero__title-line">avec vos menus du jour</span>
+				</h1>
 
-{# DEBUT SECTION PRESENTATION VIDEO #}
-{{include('partials/_presentation-video.html.twig')}}
-{# DEBUT SECTION PRESENTATION VIDEO #}
+				<p class="lp-hero__subtitle">
+					Créez, publiez et partagez vos menus de restaurant en
+					<strong>2 clics</strong>.<br>
+					Fini les 20 minutes perdues chaque matin sur Facebook.
+				</p>
 
-{# DEBUT SECTION TEMOIGNAGES #}
-{{include('partials/_testimonials.html.twig')}}
-{# FIN SECTION TEMOIGNAGES #}
+				<div class="lp-hero__cta-group">
+					<a href="{{ path('app_register') }}" class="lp-hero__cta lp-hero__cta--primary">
+						<span>Essayer gratuitement</span>
+						<svg width="20" height="20" viewbox="0 0 20 20" fill="none">
+							<path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</a>
+					<a href="#pricing" class="lp-hero__cta lp-hero__cta--secondary">
+						<span>Voir les tarifs</span>
+					</a>
+				</div>
 
-{# DEBUT SECTION HISTOIRE #}
-{{include('partials/_a-propos.html.twig')}}
-{# FIN SECTION HISTOIRE #}
+				<div class="lp-hero__trust">
+					<i class="fas fa-check-circle"></i>
+					<span>Essai gratuit • Sans carte bancaire • Annulation en 1 clic</span>
+				</div>
+			</div>
 
+			<div class="lp-hero__visual">
+				<div class="lp-hero__device">
+					<div class="lp-hero__device-frame">
+						<img src="{{ asset('images/landing/hero-menu-du-jour-640.webp') }}" alt="Aperçu de l'application L'Ardoise Magique" class="lp-hero__device-screen">
+					</div>
+					<div class="lp-hero__device-shadow"></div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-{% include 'components/_modal.html.twig' with {
-        id: 'contact-modal',
-        title: 'Prendre contact',
-        body: '<p>Laissez-nous vos coordonnées et un membre de l\'équipe vous rappelle rapidement.</p><p>Email : contact@ardoise-magique.fr<br>Téléphone : 01 23 45 67 89</p>',
-        actions: [
-            { label: 'Fermer', variant: 'ghost', attributes: { 'data-modal-close': true } },
-            { label: 'Envoyer un message', variant: 'primary', attributes: { 'data-modal-close': true } }
-        ]
-    } %}
+	{# ============================================ #}
+	{# PROBLEM AGITATION - La douleur #}
+	{# ============================================ #}
+		<section class="lp-problem"> <div class="l-container">
+			<h2 class="lp-section-title lp-section-title--center">
+				Vous reconnaissez-vous ?
+			</h2>
+
+			<div class="lp-problem__grid">
+				<div class="lp-problem__card">
+					<div class="lp-problem__icon">
+						<i class="fas fa-clock"></i>
+					</div>
+					<h3 class="lp-problem__title">20 minutes perdues chaque matin</h3>
+					<p class="lp-problem__text">
+						Refaire le post Facebook, recopier les plats, corriger les fautes...
+						                    C'est toujours le même cirque avant le service.
+					</p>
+				</div>
+
+				<div class="lp-problem__card">
+					<div class="lp-problem__icon">
+						<i class="fas fa-mobile-alt"></i>
+					</div>
+					<h3 class="lp-problem__title">Clients qui appellent pour le menu</h3>
+					<p class="lp-problem__text">
+						"Bonjour, c'est quoi le plat du jour ?"
+						                    10 appels par service, ça coupe votre rythme en cuisine.
+					</p>
+				</div>
+
+				<div class="lp-problem__card">
+					<div class="lp-problem__icon">
+						<i class="fas fa-image"></i>
+					</div>
+					<h3 class="lp-problem__title">Posts illisibles sur Facebook</h3>
+					<p class="lp-problem__text">
+						Photo floue, texte trop petit, design amateur...
+						                    Votre menu mérite mieux que ça.
+					</p>
+				</div>
+			</div>
+
+			<div class="lp-problem__stat">
+				<div class="lp-problem__stat-number">120 heures</div>
+				<div class="lp-problem__stat-text">perdues par an à gérer vos menus manuellement</div>
+			</div>
+		</div>
+	</section>
+
+	{# ============================================ #}
+	{# SOLUTION - Comment ça marche #}
+	{# ============================================ #}
+		<section class="lp-solution"> <div class="l-container">
+			<h2 class="lp-section-title lp-section-title--center">
+				Créez votre menu en 2 clics
+			</h2>
+			<p class="lp-section-subtitle">
+				Simple, rapide, professionnel
+			</p>
+
+			<div class="lp-solution__steps">
+				<div class="lp-solution__step">
+					<div class="lp-solution__step-number">1</div>
+					<div class="lp-solution__step-content">
+						<h3 class="lp-solution__step-title">Créez votre menu</h3>
+						<p class="lp-solution__step-text">
+							Entrée, plat, dessert. Ajoutez vos plats et prix en quelques secondes.
+						</p>
+					</div>
+				</div>
+
+				<div class="lp-solution__arrow">
+					<i class="fas fa-arrow-down"></i>
+				</div>
+
+				<div class="lp-solution__step">
+					<div class="lp-solution__step-number">2</div>
+					<div class="lp-solution__step-content">
+						<h3 class="lp-solution__step-title">Choisissez votre design</h3>
+						<p class="lp-solution__step-text">
+							11 templates professionnels. Trouvez celui qui correspond à votre style.
+						</p>
+					</div>
+				</div>
+
+				<div class="lp-solution__arrow">
+					<i class="fas fa-arrow-down"></i>
+				</div>
+
+				<div class="lp-solution__step">
+					<div class="lp-solution__step-number">3</div>
+					<div class="lp-solution__step-content">
+						<h3 class="lp-solution__step-title">Publiez et partagez</h3>
+						<p class="lp-solution__step-text">
+							Lien unique, QR code, partage automatique. Vos clients voient votre menu en un clin d'œil.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="lp-solution__time">
+				<div class="lp-solution__time-badge">
+					<i class="fas fa-stopwatch"></i>
+					<span>Temps total :
+						<strong>moins de 2 minutes</strong>
+					</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# ============================================ #}
+	{# BENEFITS - Ce que ça change pour vous #}
+	{# ============================================ #}
+		<section class="lp-benefits"> <div class="l-container">
+			<h2 class="lp-section-title lp-section-title--center">
+				Ce qui change dans votre quotidien
+			</h2>
+
+			<div class="lp-benefits__grid">
+				<div class="lp-benefits__card">
+					<div class="lp-benefits__icon">
+						<i class="fas fa-hourglass-end"></i>
+					</div>
+					<h3 class="lp-benefits__title">Gagnez du temps</h3>
+					<p class="lp-benefits__text">
+						<strong>10 minutes le matin</strong>
+						au lieu de 30.
+						                    Concentrez-vous sur votre cuisine, pas sur vos posts Facebook.
+					</p>
+				</div>
+
+				<div class="lp-benefits__card">
+					<div class="lp-benefits__icon">
+						<i class="fas fa-users"></i>
+					</div>
+					<h3 class="lp-benefits__title">Attirez plus de clients</h3>
+					<p class="lp-benefits__text">
+						Menu professionnel, bien présenté, visible sur Google.
+						<strong>+30% de visibilité</strong>
+						pour votre restaurant.
+					</p>
+				</div>
+
+				<div class="lp-benefits__card">
+					<div class="lp-benefits__icon">
+						<i class="fas fa-star"></i>
+					</div>
+					<h3 class="lp-benefits__title">Image professionnelle</h3>
+					<p class="lp-benefits__text">
+						Fini les photos floues. Donnez une
+						<strong>image premium</strong>
+						à votre établissement.
+					</p>
+				</div>
+
+				<div class="lp-benefits__card">
+					<div class="lp-benefits__icon">
+						<i class="fas fa-phone-slash"></i>
+					</div>
+					<h3 class="lp-benefits__title">Moins d'appels</h3>
+					<p class="lp-benefits__text">
+						Vos clients consultent le menu en ligne.
+						                    Vous êtes tranquille pour
+						<strong>travailler sereinement</strong>.
+					</p>
+				</div>
+
+				<div class="lp-benefits__card">
+					<div class="lp-benefits__icon">
+						<i class="fas fa-qrcode"></i>
+					</div>
+					<h3 class="lp-benefits__title">QR code automatique</h3>
+					<p class="lp-benefits__text">
+						Imprimez-le, collez-le en vitrine. Les passants
+						<strong>scannent et découvrent</strong>
+						votre menu.
+					</p>
+				</div>
+
+				<div class="lp-benefits__card">
+					<div class="lp-benefits__icon">
+						<i class="fas fa-sync"></i>
+					</div>
+					<h3 class="lp-benefits__title">Mise à jour instantanée</h3>
+					<p class="lp-benefits__text">
+						Modifiez un plat, changez un prix.
+						<strong>Tout se met à jour automatiquement</strong>
+						partout.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# ============================================ #}
+	{# PRICING - Les offres #}
+	{# ============================================ #}
+		<section class="lp-pricing" id="pricing"> <div class="l-container">
+			<h2 class="lp-section-title lp-section-title--center">
+				Choisissez votre formule
+			</h2>
+			<p class="lp-section-subtitle">
+				Essai gratuit • Changez ou annulez quand vous voulez
+			</p>
+
+			<div
+				class="lp-pricing__grid">
+				{# FREE Plan #}
+				<div class="lp-pricing__card">
+					<div class="lp-pricing__header">
+						<h3 class="lp-pricing__name">Gratuit</h3>
+						<div class="lp-pricing__price">
+							<span class="lp-pricing__amount">0€</span>
+							<span class="lp-pricing__period">pour toujours</span>
+						</div>
+					</div>
+
+					<ul class="lp-pricing__features">
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>10 menus du jour</strong>
+								/ mois</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>1 template de design</span>
+						</li>
+						<li class="lp-pricing__feature lp-pricing__feature--disabled">
+							<i class="fas fa-times"></i>
+							<span>Menus spéciaux</span>
+						</li>
+						<li class="lp-pricing__feature lp-pricing__feature--disabled">
+							<i class="fas fa-times"></i>
+							<span>Annuaire local</span>
+						</li>
+					</ul>
+
+					<a href="{{ path('app_register') }}" class="lp-pricing__cta lp-pricing__cta--outline">
+						Commencer gratuitement
+					</a>
+				</div>
+
+				{# STARTER Plan - RECOMMENDED #}
+				<div class="lp-pricing__card lp-pricing__card--featured">
+					<div class="lp-pricing__badge">
+						<i class="fas fa-star"></i>
+						<span>Le plus populaire</span>
+					</div>
+
+					<div class="lp-pricing__header">
+						<h3 class="lp-pricing__name">Starter</h3>
+						<div class="lp-pricing__price">
+							<span class="lp-pricing__amount">9,90€</span>
+							<span class="lp-pricing__period">/ mois</span>
+						</div>
+					</div>
+
+					<ul class="lp-pricing__features">
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>Menus du jour illimités</strong>
+							</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>10 menus spéciaux</strong>
+								/ an</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>11 templates</strong>
+								de design</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>Annuaire local</strong>
+								pour être trouvé</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>Personnalisation des designs</span>
+						</li>
+					</ul>
+
+					<a href="{{ path('app_register') }}" class="lp-pricing__cta lp-pricing__cta--primary">
+						Essayer 30 jours gratuits
+					</a>
+					<p class="lp-pricing__note">Garantie satisfait ou remboursé</p>
+				</div>
+
+				{# PREMIUM Plan #}
+				<div class="lp-pricing__card">
+					<div class="lp-pricing__header">
+						<h3 class="lp-pricing__name">Premium</h3>
+						<div class="lp-pricing__price">
+							<span class="lp-pricing__amount">19,90€</span>
+							<span class="lp-pricing__period">/ mois</span>
+						</div>
+					</div>
+
+					<ul class="lp-pricing__features">
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>Tout illimité</strong>
+							</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>Menus spéciaux illimités</strong>
+							</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>Designs premium</strong>
+								exclusifs</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>QR Code</strong>
+								automatique</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>Partage social</strong>
+								automatique</span>
+						</li>
+						<li class="lp-pricing__feature">
+							<i class="fas fa-check"></i>
+							<span>
+								<strong>Support prioritaire</strong>
+							</span>
+						</li>
+					</ul>
+
+					<a href="{{ path('app_register') }}" class="lp-pricing__cta lp-pricing__cta--outline">
+						Essayer 30 jours gratuits
+					</a>
+				</div>
+			</div>
+
+			<div class="lp-pricing__guarantee">
+				<div class="lp-pricing__guarantee-icon">
+					<i class="fas fa-shield-alt"></i>
+				</div>
+				<div class="lp-pricing__guarantee-content">
+					<h3 class="lp-pricing__guarantee-title">Garantie satisfait ou remboursé 30 jours</h3>
+					<p class="lp-pricing__guarantee-text">
+						Pas convaincu ? On vous rembourse intégralement sous 30 jours. Sans question, sans délai.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# ============================================ #}
+	{# SOCIAL PROOF - Témoignages #}
+	{# ============================================ #}
+		<section class="lp-testimonials"> <div class="l-container">
+			<h2 class="lp-section-title lp-section-title--center">
+				Ils ont gagné du temps
+			</h2>
+
+			<div class="lp-testimonials__grid">
+				<div class="lp-testimonials__card">
+					<div class="lp-testimonials__stars">
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+					</div>
+					<p class="lp-testimonials__quote">
+						"Avant, je passais 20 minutes à refaire mon post Facebook chaque matin.
+						                    Aujourd'hui, mon menu est prêt et publié en deux clics. C'est devenu un réflexe."
+					</p>
+					<div class="lp-testimonials__author">
+						<div class="lp-testimonials__author-info">
+							<span class="lp-testimonials__author-name">Julien M.</span>
+							<span class="lp-testimonials__author-role">Chef à Nîmes</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="lp-testimonials__card">
+					<div class="lp-testimonials__stars">
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+					</div>
+					<p class="lp-testimonials__quote">
+						"Mes clients adorent le QR code en vitrine. Ils peuvent voir le menu avant même d'entrer.
+						                    J'ai noté +20% de nouveaux clients depuis que je l'utilise."
+					</p>
+					<div class="lp-testimonials__author">
+						<div class="lp-testimonials__author-info">
+							<span class="lp-testimonials__author-name">Sophie D.</span>
+							<span class="lp-testimonials__author-role">Restauratrice à Lyon</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="lp-testimonials__card">
+					<div class="lp-testimonials__stars">
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+						<i class="fas fa-star"></i>
+					</div>
+					<p class="lp-testimonials__quote">
+						"Fini les 10 appels par jour pour demander le plat du jour.
+						                    Les clients consultent le menu en ligne et ça me laisse tranquille en cuisine."
+					</p>
+					<div class="lp-testimonials__author">
+						<div class="lp-testimonials__author-info">
+							<span class="lp-testimonials__author-name">Marc P.</span>
+							<span class="lp-testimonials__author-role">Chef à Marseille</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# ============================================ #}
+	{# FAQ - Anti-objections #}
+	{# ============================================ #}
+		<section class="lp-faq"> <div class="l-container">
+			<h2 class="lp-section-title lp-section-title--center">
+				Questions fréquentes
+			</h2>
+
+			<div class="lp-faq__grid">
+				<div class="lp-faq__item">
+					<h3 class="lp-faq__question">
+						<i class="fas fa-question-circle"></i>
+						C'est vraiment gratuit pour commencer ?
+					</h3>
+					<p class="lp-faq__answer">
+						Oui ! Le plan Gratuit vous permet de créer 10 menus du jour par mois, sans limite de temps.
+						                    Aucune carte bancaire demandée. Vous pouvez passer à un plan payant quand vous voulez.
+					</p>
+				</div>
+
+				<div class="lp-faq__item">
+					<h3 class="lp-faq__question">
+						<i class="fas fa-question-circle"></i>
+						Est-ce que c'est compliqué à utiliser ?
+					</h3>
+					<p class="lp-faq__answer">
+						Pas du tout. Si vous savez poster sur Facebook, vous savez utiliser L'Ardoise Magique.
+						                    Création d'un menu en moins de 2 minutes, interface intuitive, aucune formation nécessaire.
+					</p>
+				</div>
+
+				<div class="lp-faq__item">
+					<h3 class="lp-faq__question">
+						<i class="fas fa-question-circle"></i>
+						Puis-je annuler à tout moment ?
+					</h3>
+					<p class="lp-faq__answer">
+						Absolument. Pas d'engagement, pas de frais cachés. Vous annulez en 1 clic depuis votre tableau de bord.
+						                    Et si vous changez d'avis dans les 30 jours, on vous rembourse.
+					</p>
+				</div>
+
+				<div class="lp-faq__item">
+					<h3 class="lp-faq__question">
+						<i class="fas fa-question-circle"></i>
+						Comment mes clients voient mon menu ?
+					</h3>
+					<p class="lp-faq__answer">
+						Vous obtenez un lien unique (ex: ardoise-magique.fr/votre-restaurant).
+						                    Partagez-le sur Facebook, Instagram, Google, ou imprimez le QR code en vitrine.
+						                    Vos clients cliquent et voient votre menu.
+					</p>
+				</div>
+
+				<div class="lp-faq__item">
+					<h3 class="lp-faq__question">
+						<i class="fas fa-question-circle"></i>
+						Qu'est-ce que l'annuaire local ?
+					</h3>
+					<p class="lp-faq__answer">
+						C'est notre répertoire de restaurants. Les gens qui cherchent "menu du jour près de chez moi"
+						                    tombent sur votre établissement. Gratuit avec les plans Starter et Premium.
+					</p>
+				</div>
+
+				<div class="lp-faq__item">
+					<h3 class="lp-faq__question">
+						<i class="fas fa-question-circle"></i>
+						Puis-je changer de plan plus tard ?
+					</h3>
+					<p class="lp-faq__answer">
+						Oui, à tout moment. Vous pouvez passer du Gratuit au Starter, du Starter au Premium,
+						                    ou redescendre. Vous payez seulement la différence au prorata.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# ============================================ #}
+	{# FINAL CTA - Dernier push #}
+	{# ============================================ #}
+		<section class="lp-final-cta"> <div class="lp-final-cta__chalk-overlay"></div>
+
+		<div class="l-container">
+			<div class="lp-final-cta__content">
+				<h2 class="lp-final-cta__title">
+					Prêt à gagner du temps ?
+				</h2>
+				<p class="lp-final-cta__subtitle">
+					Rejoignez les restaurateurs qui ont arrêté de perdre 20 minutes chaque matin
+				</p>
+
+				<a href="{{ path('app_register') }}" class="lp-final-cta__button">
+					<span>Créer mon compte gratuit</span>
+					<svg width="24" height="24" viewbox="0 0 20 20" fill="none">
+						<path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+
+				<div class="lp-final-cta__trust">
+					<div class="lp-final-cta__trust-item">
+						<i class="fas fa-check"></i>
+						<span>Sans carte bancaire</span>
+					</div>
+					<div class="lp-final-cta__trust-item">
+						<i class="fas fa-check"></i>
+						<span>Essai gratuit</span>
+					</div>
+					<div class="lp-final-cta__trust-item">
+						<i class="fas fa-check"></i>
+						<span>Garantie 30 jours</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<style>
+		/* ===================================================================== */
+		/* LANDING PAGE - MOBILE-FIRST CHALKBOARD ART NOUVEAU */
+		/* Start from 320px mobile, progressive enhancement up to desktop */
+		/* ===================================================================== */
+
+		/* ============================================ */
+		/* BASE MOBILE STYLES (320px - 767px) */
+		/* ============================================ */
+
+		/* Global Utilities - Mobile */
+		.lp-section-title {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.85rem;
+			font-weight: 700;
+			color: #2f1b0c;
+			margin: 0 0 1rem;
+			line-height: 1.3;
+		}
+
+		.lp-section-title--center {
+			text-align: center;
+		}
+
+		.lp-section-subtitle {
+			text-align: center;
+			font-family: 'Lato', sans-serif;
+			font-size: 0.9rem;
+			color: #6b4b36;
+			margin: -0.25rem 0 2rem;
+			font-weight: 400;
+		}
+
+		/* Hero Section - Mobile */
+		.lp-hero {
+			position: relative;
+			background: linear-gradient(165deg, #1a1614 0%, #2d2621 50%, #2f1b0c 100%);
+			padding: 2.5rem 0 2rem;
+			overflow: hidden;
+		}
+
+		.lp-hero__chalk-overlay {
+			position: absolute;
+			inset: 0;
+			background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+			opacity: 0.08;
+			pointer-events: none;
+		}
+
+		.lp-hero__flourish {
+			display: none;
+		}
+
+		.lp-hero .l-container {
+			position: relative;
+			z-index: 1;
+		}
+
+		.lp-hero__visual {
+			margin-bottom: 2rem;
+		}
+
+		.lp-hero__device {
+			position: relative;
+		}
+
+		.lp-hero__device-frame {
+			border-radius: 12px;
+			overflow: hidden;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+		}
+
+		.lp-hero__device-screen {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+
+		.lp-hero__device-shadow {
+			display: none;
+		}
+
+		.lp-hero__content {
+			text-align: center;
+		}
+
+		.lp-hero__badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.6rem 1.2rem;
+			background: rgba(212, 175, 55, 0.15);
+			border: 1.5px solid rgba(212, 175, 55, 0.4);
+			border-radius: 50px;
+			color: #f4e5c2;
+			font-family: 'Lato', sans-serif;
+			font-size: 0.85rem;
+			font-weight: 600;
+			margin-bottom: 1.5rem;
+		}
+
+		.lp-hero__badge i {
+			color: #d4af37;
+			font-size: 0.95rem;
+		}
+
+		.lp-hero__title {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 2rem;
+			font-weight: 700;
+			color: #faf7f4;
+			margin: 0 0 1.5rem;
+			line-height: 1.2;
+			letter-spacing: -0.01em;
+			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+		}
+
+		.lp-hero__title-line {
+			display: block;
+		}
+
+		.lp-hero__subtitle {
+			font-family: 'Lato', sans-serif;
+			font-size: 1.05rem;
+			color: #e8dfd6;
+			line-height: 1.6;
+			margin: 0 0 2rem;
+			font-weight: 400;
+		}
+
+		.lp-hero__subtitle strong {
+			color: #d4af37;
+			font-weight: 700;
+		}
+
+		.lp-hero__cta-group {
+			display: flex;
+			flex-direction: column;
+			gap: 0.85rem;
+			margin-bottom: 1.5rem;
+		}
+
+		.lp-hero__cta {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.65rem;
+			padding: 0.95rem 2rem;
+			font-family: 'Lato', sans-serif;
+			font-weight: 700;
+			font-size: 1rem;
+			text-decoration: none;
+			border-radius: 10px;
+			transition: all 0.25s ease;
+			width: 100%;
+		}
+
+		.lp-hero__cta--primary {
+			background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 100%);
+			color: #2f1b0c;
+			box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+		}
+
+		.lp-hero__cta--primary:active {
+			transform: scale(0.98);
+		}
+
+		.lp-hero__cta--secondary {
+			background: rgba(244, 229, 194, 0.1);
+			color: #f4e5c2;
+			border: 2px solid rgba(212, 175, 55, 0.4);
+		}
+
+		.lp-hero__trust {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			gap: 0.5rem;
+			color: rgba(232, 223, 214, 0.7);
+			font-family: 'Lato', sans-serif;
+			font-size: 0.85rem;
+		}
+
+		.lp-hero__trust i {
+			color: #4a7a4a;
+		}
+
+		/* Problem Section - Mobile */
+		.lp-problem {
+			padding: 3rem 0;
+			background: linear-gradient(180deg, #f8f3ef 0%, #fffaf6 100%);
+		}
+
+		.lp-problem__grid {
+			display: flex;
+			flex-direction: column;
+			gap: 1.5rem;
+			margin-bottom: 2.5rem;
+		}
+
+		.lp-problem__card {
+			background: white;
+			padding: 2rem 1.5rem;
+			border-radius: 12px;
+			border: 2px solid #e8dfd6;
+			text-align: center;
+		}
+
+		.lp-problem__icon {
+			width: 64px;
+			height: 64px;
+			margin: 0 auto 1.25rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: linear-gradient(135deg, rgba(184, 92, 56, 0.1) 0%, rgba(215, 138, 105, 0.05) 100%);
+			border-radius: 50%;
+			border: 2px solid rgba(184, 92, 56, 0.2);
+		}
+
+		.lp-problem__icon i {
+			font-size: 1.75rem;
+			color: #b85c38;
+		}
+
+		.lp-problem__title {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.35rem;
+			font-weight: 700;
+			color: #2f1b0c;
+			margin: 0 0 0.85rem;
+		}
+
+		.lp-problem__text {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			color: #6b4b36;
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		.lp-problem__stat {
+			text-align: center;
+			padding: 2.5rem 1.5rem;
+			background: linear-gradient(135deg, #2f1b0c 0%, #1a1614 100%);
+			border-radius: 16px;
+		}
+
+		.lp-problem__stat-number {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 2.75rem;
+			font-weight: 700;
+			color: #d4af37;
+			margin-bottom: 0.5rem;
+			text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+		}
+
+		.lp-problem__stat-text {
+			font-family: 'Lato', sans-serif;
+			font-size: 1.05rem;
+			color: #e8dfd6;
+			font-weight: 600;
+		}
+
+		/* Solution Section - Mobile */
+		.lp-solution {
+			padding: 3rem 0;
+			background: white;
+		}
+
+		.lp-solution__steps {
+			margin: 0 0 2.5rem;
+		}
+
+		.lp-solution__step {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			padding: 1.75rem 1.5rem;
+			background: linear-gradient(135deg, #fffaf6 0%, #f8f3ef 100%);
+			border-radius: 12px;
+			border: 2px solid #e8dfd6;
+			margin-bottom: 1.25rem;
+		}
+
+		.lp-solution__step-number {
+			flex-shrink: 0;
+			width: 52px;
+			height: 52px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+			border-radius: 50%;
+			color: white;
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.75rem;
+			font-weight: 700;
+			margin-bottom: 1.25rem;
+		}
+
+		.lp-solution__step-title {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.5rem;
+			font-weight: 700;
+			color: #2f1b0c;
+			margin: 0 0 0.65rem;
+		}
+
+		.lp-solution__step-text {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			color: #6b4b36;
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		.lp-solution__arrow {
+			text-align: center;
+			color: #b85c38;
+			font-size: 1.75rem;
+			margin: 0.25rem 0;
+		}
+
+		.lp-solution__time {
+			text-align: center;
+		}
+
+		.lp-solution__time-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.65rem;
+			padding: 0.85rem 1.75rem;
+			background: linear-gradient(135deg, #4a7a4a 0%, #5a9a5a 100%);
+			color: white;
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			border-radius: 50px;
+		}
+
+		.lp-solution__time-badge strong {
+			font-weight: 700;
+		}
+
+		/* Benefits Section - Mobile */
+		.lp-benefits {
+			padding: 3rem 0;
+			background: linear-gradient(180deg, #f8f3ef 0%, #fffaf6 100%);
+		}
+
+		.lp-benefits__grid {
+			display: flex;
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+
+		.lp-benefits__card {
+			background: white;
+			padding: 2rem 1.5rem;
+			border-radius: 12px;
+			border: 2px solid #e8dfd6;
+		}
+
+		.lp-benefits__icon {
+			width: 56px;
+			height: 56px;
+			margin-bottom: 1.25rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: linear-gradient(135deg, rgba(74, 122, 74, 0.1) 0%, rgba(90, 154, 90, 0.05) 100%);
+			border-radius: 10px;
+			border: 2px solid rgba(74, 122, 74, 0.2);
+		}
+
+		.lp-benefits__icon i {
+			font-size: 1.5rem;
+			color: #4a7a4a;
+		}
+
+		.lp-benefits__title {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.35rem;
+			font-weight: 700;
+			color: #2f1b0c;
+			margin: 0 0 0.85rem;
+		}
+
+		.lp-benefits__text {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			color: #6b4b36;
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		.lp-benefits__text strong {
+			color: #4a7a4a;
+			font-weight: 700;
+		}
+
+		/* Pricing Section - Mobile */
+		.lp-pricing {
+			padding: 3rem 0;
+			background: white;
+		}
+
+		.lp-pricing__grid {
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+			margin-bottom: 2.5rem;
+		}
+
+		.lp-pricing__card {
+			background: #fffaf6;
+			padding: 2rem 1.5rem;
+			border-radius: 16px;
+			border: 2px solid #e8dfd6;
+			position: relative;
+		}
+
+		.lp-pricing__card--featured {
+			background: linear-gradient(165deg, #2f1b0c 0%, #1a1614 100%);
+			border-color: #d4af37;
+			box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
+		}
+
+		.lp-pricing__card--featured .lp-pricing__name,
+		.lp-pricing__card--featured .lp-pricing__amount,
+		.lp-pricing__card--featured .lp-pricing__period {
+			color: #faf7f4;
+		}
+
+		.lp-pricing__card--featured .lp-pricing__feature {
+			color: #e8dfd6;
+		}
+
+		.lp-pricing__card--featured .lp-pricing__feature i {
+			color: #d4af37;
+		}
+
+		.lp-pricing__card--featured .lp-pricing__header {
+			border-bottom-color: rgba(212, 175, 55, 0.3);
+		}
+
+		.lp-pricing__card--featured .lp-pricing__feature {
+			border-bottom-color: rgba(212, 175, 55, 0.2);
+		}
+
+		.lp-pricing__badge {
+			position: absolute;
+			top: -14px;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			align-items: center;
+			gap: 0.4rem;
+			padding: 0.45rem 1.25rem;
+			background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 100%);
+			color: #2f1b0c;
+			font-family: 'Lato', sans-serif;
+			font-size: 0.75rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			border-radius: 16px;
+		}
+
+		.lp-pricing__header {
+			margin-bottom: 1.75rem;
+			padding-bottom: 1.75rem;
+			border-bottom: 2px solid rgba(232, 223, 214, 0.3);
+		}
+
+		.lp-pricing__name {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.75rem;
+			font-weight: 700;
+			color: #2f1b0c;
+			margin: 0 0 0.85rem;
+		}
+
+		.lp-pricing__price {
+			display: flex;
+			align-items: baseline;
+			gap: 0.4rem;
+		}
+
+		.lp-pricing__amount {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 2.75rem;
+			font-weight: 700;
+			color: #b85c38;
+			line-height: 1;
+		}
+
+		.lp-pricing__card--featured .lp-pricing__amount {
+			color: #d4af37;
+		}
+
+		.lp-pricing__period {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.9rem;
+			color: #6b4b36;
+			font-weight: 600;
+		}
+
+		.lp-pricing__features {
+			list-style: none;
+			padding: 0;
+			margin: 0 0 1.75rem;
+		}
+
+		.lp-pricing__feature {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.65rem;
+			padding: 0.65rem 0;
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			color: #2f1b0c;
+			border-bottom: 1px solid rgba(232, 223, 214, 0.3);
+		}
+
+		.lp-pricing__feature:last-child {
+			border-bottom: none;
+		}
+
+		.lp-pricing__feature i {
+			color: #4a7a4a;
+			font-size: 1rem;
+			flex-shrink: 0;
+			margin-top: 2px;
+		}
+
+		.lp-pricing__feature--disabled {
+			opacity: 0.4;
+		}
+
+		.lp-pricing__feature--disabled i {
+			color: #999;
+		}
+
+		.lp-pricing__cta {
+			display: block;
+			text-align: center;
+			padding: 1rem 1.75rem;
+			font-family: 'Lato', sans-serif;
+			font-weight: 700;
+			font-size: 1rem;
+			text-decoration: none;
+			border-radius: 10px;
+			transition: all 0.25s ease;
+		}
+
+		.lp-pricing__cta--primary {
+			background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 100%);
+			color: #2f1b0c;
+			box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+		}
+
+		.lp-pricing__cta--primary:active {
+			transform: scale(0.98);
+		}
+
+		.lp-pricing__cta--outline {
+			background: transparent;
+			color: #b85c38;
+			border: 2px solid #b85c38;
+		}
+
+		.lp-pricing__card--featured .lp-pricing__cta--outline {
+			color: #d4af37;
+			border-color: #d4af37;
+		}
+
+		.lp-pricing__note {
+			text-align: center;
+			font-family: 'Lato', sans-serif;
+			font-size: 0.85rem;
+			color: rgba(232, 223, 214, 0.7);
+			margin: 0.65rem 0 0;
+			font-style: italic;
+		}
+
+		.lp-pricing__guarantee {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			gap: 1.25rem;
+			padding: 1.75rem 1.5rem;
+			background: linear-gradient(135deg, rgba(74, 122, 74, 0.08) 0%, rgba(90, 154, 90, 0.05) 100%);
+			border-radius: 12px;
+			border: 2px solid rgba(74, 122, 74, 0.2);
+		}
+
+		.lp-pricing__guarantee-icon {
+			flex-shrink: 0;
+			width: 56px;
+			height: 56px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: linear-gradient(135deg, #4a7a4a 0%, #5a9a5a 100%);
+			border-radius: 50%;
+			color: white;
+			font-size: 1.75rem;
+		}
+
+		.lp-pricing__guarantee-title {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.35rem;
+			font-weight: 700;
+			color: #2f1b0c;
+			margin: 0 0 0.4rem;
+		}
+
+		.lp-pricing__guarantee-text {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			color: #6b4b36;
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		/* Testimonials Section - Mobile */
+		.lp-testimonials {
+			padding: 3rem 0;
+			background: linear-gradient(180deg, #f8f3ef 0%, #fffaf6 100%);
+		}
+
+		.lp-testimonials__grid {
+			display: flex;
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+
+		.lp-testimonials__card {
+			background: white;
+			padding: 2rem 1.5rem;
+			border-radius: 12px;
+			border: 2px solid #e8dfd6;
+			position: relative;
+		}
+
+		.lp-testimonials__card::before {
+			content: '"';
+			position: absolute;
+			top: -12px;
+			left: 15px;
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 4rem;
+			color: rgba(184, 92, 56, 0.1);
+			line-height: 1;
+			font-weight: 700;
+		}
+
+		.lp-testimonials__stars {
+			display: flex;
+			gap: 0.2rem;
+			margin-bottom: 1.25rem;
+		}
+
+		.lp-testimonials__stars i {
+			color: #f4c430;
+			font-size: 1rem;
+		}
+
+		.lp-testimonials__quote {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			color: #2f1b0c;
+			line-height: 1.6;
+			margin: 0 0 1.5rem;
+			font-style: italic;
+		}
+
+		.lp-testimonials__author-name {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			font-weight: 700;
+			color: #2f1b0c;
+		}
+
+		.lp-testimonials__author-role {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.85rem;
+			color: #6b4b36;
+		}
+
+		/* FAQ Section - Mobile */
+		.lp-faq {
+			padding: 3rem 0;
+			background: white;
+		}
+
+		.lp-faq__grid {
+			display: flex;
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+
+		.lp-faq__item {
+			background: #fffaf6;
+			padding: 1.75rem 1.5rem;
+			border-radius: 12px;
+			border: 2px solid #e8dfd6;
+		}
+
+		.lp-faq__question {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.85rem;
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 1.25rem;
+			font-weight: 700;
+			color: #2f1b0c;
+			margin: 0 0 0.85rem;
+			line-height: 1.4;
+		}
+
+		.lp-faq__question i {
+			color: #b85c38;
+			font-size: 1.35rem;
+			flex-shrink: 0;
+			margin-top: 2px;
+		}
+
+		.lp-faq__answer {
+			font-family: 'Lato', sans-serif;
+			font-size: 0.95rem;
+			color: #6b4b36;
+			line-height: 1.6;
+			margin: 0;
+			padding-left: 2.2rem;
+		}
+
+		/* Final CTA Section - Mobile */
+		.lp-final-cta {
+			position: relative;
+			background: linear-gradient(165deg, #1a1614 0%, #2d2621 50%, #2f1b0c 100%);
+			padding: 3rem 0;
+			overflow: hidden;
+		}
+
+		.lp-final-cta__chalk-overlay {
+			position: absolute;
+			inset: 0;
+			background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+			opacity: 0.08;
+			pointer-events: none;
+		}
+
+		.lp-final-cta__content {
+			position: relative;
+			z-index: 1;
+			text-align: center;
+		}
+
+		.lp-final-cta__title {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 2rem;
+			font-weight: 700;
+			color: #faf7f4;
+			margin: 0 0 1.25rem;
+			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+		}
+
+		.lp-final-cta__subtitle {
+			font-family: 'Lato', sans-serif;
+			font-size: 1.05rem;
+			color: #e8dfd6;
+			margin: 0 0 2.5rem;
+			line-height: 1.6;
+		}
+
+		.lp-final-cta__button {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.85rem;
+			padding: 1.1rem 2.5rem;
+			background: linear-gradient(135deg, #d4af37 0%, #f4e5c2 100%);
+			color: #2f1b0c;
+			font-family: 'Lato', sans-serif;
+			font-weight: 700;
+			font-size: 1.05rem;
+			text-decoration: none;
+			border-radius: 12px;
+			box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+			margin-bottom: 2rem;
+			width: 100%;
+			max-width: 320px;
+		}
+
+		.lp-final-cta__button:active {
+			transform: scale(0.98);
+		}
+
+		.lp-final-cta__trust {
+			display: flex;
+			flex-direction: column;
+			gap: 0.85rem;
+			align-items: center;
+		}
+
+		.lp-final-cta__trust-item {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			color: #e8dfd6;
+			font-family: 'Lato', sans-serif;
+			font-size: 0.9rem;
+		}
+
+		.lp-final-cta__trust-item i {
+			color: #4a7a4a;
+			font-size: 1.1rem;
+		}
+
+		/* ============================================ */
+		/* TABLET STYLES (768px - 1023px) */
+		/* ============================================ */
+		@media (min-width: 768px) {
+			.lp-section-title {
+				font-size: 2.25rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.lp-section-subtitle {
+				font-size: 1.05rem;
+				margin-bottom: 2.5rem;
+			}
+
+			.lp-hero {
+				padding: 4rem 0 3.5rem;
+			}
+
+			.lp-hero__visual {
+				margin-bottom: 2.5rem;
+			}
+
+			.lp-hero__badge {
+				font-size: 0.95rem;
+				padding: 0.75rem 1.5rem;
+				margin-bottom: 2rem;
+			}
+
+			.lp-hero__title {
+				font-size: 3rem;
+				margin-bottom: 2rem;
+			}
+
+			.lp-hero__subtitle {
+				font-size: 1.2rem;
+				margin-bottom: 2.5rem;
+			}
+
+			.lp-hero__cta-group {
+				flex-direction: row;
+				justify-content: center;
+			}
+
+			.lp-hero__cta {
+				width: auto;
+				padding: 1rem 2.25rem;
+				font-size: 1.05rem;
+			}
+
+			.lp-hero__trust {
+				font-size: 0.95rem;
+			}
+
+			.lp-problem,
+			.lp-solution,
+			.lp-benefits,
+			.lp-pricing,
+			.lp-testimonials,
+			.lp-faq,
+			.lp-final-cta {
+				padding: 4rem 0;
+			}
+
+			.lp-problem__grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+			}
+
+			.lp-problem__card {
+				padding: 2.25rem 2rem;
+			}
+
+			.lp-solution__step {
+				flex-direction: row;
+				text-align: left;
+				padding: 2rem;
+			}
+
+			.lp-solution__step-number {
+				margin-bottom: 0;
+				margin-right: 1.5rem;
+				width: 60px;
+				height: 60px;
+				font-size: 2rem;
+			}
+
+			.lp-benefits__grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+			}
+
+			.lp-pricing__grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+			}
+
+			.lp-testimonials__grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+			}
+
+			.lp-faq__grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+			}
+
+			.lp-final-cta__title {
+				font-size: 2.75rem;
+			}
+
+			.lp-final-cta__subtitle {
+				font-size: 1.2rem;
+			}
+
+			.lp-final-cta__button {
+				width: auto;
+				padding: 1.25rem 3rem;
+				font-size: 1.15rem;
+			}
+
+			.lp-final-cta__trust {
+				flex-direction: row;
+				gap: 1.5rem;
+			}
+		}
+
+		/* ============================================ */
+		/* DESKTOP STYLES (1024px+) */
+		/* ============================================ */
+		@media (min-width: 1024px) {
+			.lp-section-title {
+				font-size: 2.75rem;
+			}
+
+			.lp-section-subtitle {
+				font-size: 1.15rem;
+				margin-bottom: 3rem;
+			}
+
+			.lp-hero {
+				padding: 5rem 0 4.5rem;
+				min-height: 85vh;
+				display: flex;
+				align-items: center;
+			}
+
+			.lp-hero__chalk-overlay {
+				opacity: 0.12;
+				mix-blend-mode: overlay;
+			}
+
+			.lp-hero__flourish {
+				display: block;
+				position: absolute;
+				width: 120px;
+				height: 120px;
+				color: rgba(212, 175, 55, 0.25);
+				pointer-events: none;
+				opacity: 0.4;
+			}
+
+			.lp-hero__flourish--tl {
+				top: 2rem;
+				left: 2rem;
+				animation: floatFlourishTL 8s ease-in-out infinite;
+			}
+
+			@keyframes floatFlourishTL {
+				0%,
+				100% {
+					transform: translate(0, 0) rotate(0deg);
+				}
+				50% {
+					transform: translate(-8px, 8px) rotate(4deg);
+				}
+			}
+
+			.lp-hero .l-container {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 4rem;
+				align-items: center;
+			}
+
+			.lp-hero__visual {
+				order: 2;
+				margin-bottom: 0;
+			}
+
+			.lp-hero__device-frame {
+				border-radius: 20px;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(212, 175, 55, 0.1), inset 0 0 0 1px rgba(212, 175, 55, 0.3);
+				animation: deviceFloat 6s ease-in-out infinite;
+			}
+
+			@keyframes deviceFloat {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-12px);
+				}
+			}
+
+			.lp-hero__device-shadow {
+				display: block;
+				position: absolute;
+				bottom: -35px;
+				left: 10%;
+				right: 10%;
+				height: 35px;
+				background: radial-gradient(ellipse, rgba(0, 0, 0, 0.35) 0%, transparent 70%);
+				filter: blur(18px);
+			}
+
+			.lp-hero__content {
+				order: 1;
+				text-align: left;
+				animation: heroSlideInLeft 1s ease-out backwards;
+			}
+
+			@keyframes heroSlideInLeft {
+				from {
+					opacity: 0;
+					transform: translateX(-30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+
+			.lp-hero__visual {
+				animation: heroSlideInRight 1s ease-out 0.2s backwards;
+			}
+
+			@keyframes heroSlideInRight {
+				from {
+					opacity: 0;
+					transform: translateX(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateX(0);
+				}
+			}
+
+			.lp-hero__badge {
+				font-size: 0.95rem;
+				padding: 0.75rem 1.5rem;
+				margin-bottom: 2rem;
+				animation: badgePulse 3s ease-in-out infinite;
+			}
+
+			@keyframes badgePulse {
+				0%,
+				100% {
+					box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+				}
+				50% {
+					box-shadow: 0 4px 30px rgba(212, 175, 55, 0.4);
+				}
+			}
+
+			.lp-hero__title {
+				font-size: 4rem;
+			}
+
+			.lp-hero__title-line {
+				animation: titleReveal 0.8s ease-out backwards;
+			}
+
+			.lp-hero__title-line:nth-child(1) {
+				animation-delay: 0.2s;
+			}
+			.lp-hero__title-line:nth-child(2) {
+				animation-delay: 0.4s;
+			}
+
+			@keyframes titleReveal {
+				from {
+					opacity: 0;
+					transform: translateY(15px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.lp-hero__subtitle {
+				font-size: 1.25rem;
+			}
+
+			.lp-hero__cta-group {
+				justify-content: flex-start;
+			}
+
+			.lp-hero__cta {
+				padding: 1.1rem 2.5rem;
+				font-size: 1.1rem;
+				border-radius: 12px;
+			}
+
+			.lp-hero__cta--primary:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 12px 36px rgba(212, 175, 55, 0.6);
+			}
+
+			.lp-hero__cta--secondary:hover {
+				transform: translateY(-2px);
+				background: rgba(244, 229, 194, 0.15);
+				border-color: rgba(212, 175, 55, 0.6);
+			}
+
+			.lp-hero__trust {
+				justify-content: flex-start;
+				font-size: 0.95rem;
+			}
+
+			.lp-problem,
+			.lp-solution,
+			.lp-benefits,
+			.lp-pricing,
+			.lp-testimonials,
+			.lp-faq,
+			.lp-final-cta {
+				padding: 5.5rem 0;
+			}
+
+			.lp-problem__grid {
+				grid-template-columns: repeat(3, 1fr);
+			}
+
+			.lp-problem__card {
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+				overflow: hidden;
+			}
+
+			.lp-problem__card::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 4px;
+				background: linear-gradient(90deg, #b85c38, #d78a69);
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
+
+			.lp-problem__card:hover {
+				transform: translateY(-8px);
+				box-shadow: 0 16px 48px rgba(47, 27, 12, 0.15);
+				border-color: #b85c38;
+			}
+
+			.lp-problem__card:hover::before {
+				opacity: 1;
+			}
+
+			.lp-problem__stat {
+				padding: 3rem 2rem;
+				border-radius: 20px;
+			}
+
+			.lp-problem__stat-number {
+				font-size: 4.5rem;
+			}
+
+			.lp-problem__stat-text {
+				font-size: 1.25rem;
+			}
+
+			.lp-solution__steps {
+				max-width: 700px;
+				margin: 0 auto 3rem;
+			}
+
+			.lp-solution__step {
+				padding: 2rem;
+				border-radius: 16px;
+				transition: all 0.3s ease;
+			}
+
+			.lp-solution__step:hover {
+				transform: translateX(8px);
+				border-color: #b85c38;
+				box-shadow: 0 8px 24px rgba(184, 92, 56, 0.15);
+			}
+
+			.lp-solution__arrow {
+				font-size: 2rem;
+				animation: arrowBounce 2s ease-in-out infinite;
+			}
+
+			@keyframes arrowBounce {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(8px);
+				}
+			}
+
+			.lp-solution__time-badge {
+				padding: 1rem 2rem;
+				font-size: 1.1rem;
+			}
+
+			.lp-benefits__grid {
+				grid-template-columns: repeat(3, 1fr);
+			}
+
+			.lp-benefits__card {
+				padding: 2.5rem 2rem;
+				border-radius: 16px;
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+
+			.lp-benefits__card::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 4px;
+				background: linear-gradient(90deg, #4a7a4a, #5a9a5a);
+				border-radius: 16px 16px 0 0;
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
+
+			.lp-benefits__card:hover {
+				transform: translateY(-8px) rotate(-1deg);
+				box-shadow: 0 16px 48px rgba(47, 27, 12, 0.15);
+				border-color: #5a9a5a;
+			}
+
+			.lp-benefits__card:hover::after {
+				opacity: 1;
+			}
+
+			.lp-pricing__grid {
+				grid-template-columns: repeat(3, 1fr);
+				gap: 2rem;
+			}
+
+			.lp-pricing__card {
+				padding: 2.5rem 2rem;
+				border-radius: 20px;
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+
+			.lp-pricing__card:hover {
+				transform: translateY(-8px);
+				box-shadow: 0 16px 48px rgba(47, 27, 12, 0.15);
+				border-color: #b85c38;
+			}
+
+			.lp-pricing__card--featured {
+				transform: scale(1.05);
+			}
+
+			.lp-pricing__card--featured:hover {
+				transform: scale(1.08) translateY(-8px);
+				box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+			}
+
+			.lp-pricing__guarantee {
+				flex-direction: row;
+				text-align: left;
+				padding: 2rem;
+				max-width: 700px;
+			}
+
+			.lp-pricing__guarantee-icon {
+				width: 64px;
+				height: 64px;
+				font-size: 2rem;
+			}
+
+			.lp-testimonials__grid {
+				grid-template-columns: repeat(3, 1fr);
+			}
+
+			.lp-testimonials__card {
+				padding: 2.5rem 2rem;
+				border-radius: 16px;
+				transition: all 0.4s ease;
+			}
+
+			.lp-testimonials__card::before {
+				font-size: 6rem;
+				top: -20px;
+				left: 20px;
+			}
+
+			.lp-testimonials__card:hover {
+				transform: translateY(-8px);
+				box-shadow: 0 16px 48px rgba(47, 27, 12, 0.15);
+				border-color: #b85c38;
+			}
+
+			.lp-faq__grid {
+				max-width: 1200px;
+			}
+
+			.lp-faq__item {
+				padding: 2rem;
+				border-radius: 16px;
+				transition: all 0.3s ease;
+			}
+
+			.lp-faq__item:hover {
+				border-color: #b85c38;
+				box-shadow: 0 8px 24px rgba(184, 92, 56, 0.1);
+			}
+
+			.lp-final-cta {
+				padding: 5.5rem 0;
+			}
+
+			.lp-final-cta__chalk-overlay {
+				opacity: 0.12;
+				mix-blend-mode: overlay;
+			}
+
+			.lp-final-cta__content {
+				max-width: 800px;
+			}
+
+			.lp-final-cta__title {
+				font-size: 3.5rem;
+			}
+
+			.lp-final-cta__button {
+				padding: 1.5rem 3.5rem;
+				font-size: 1.25rem;
+				border-radius: 16px;
+			}
+
+			.lp-final-cta__button:hover {
+				transform: translateY(-4px) scale(1.05);
+				box-shadow: 0 12px 48px rgba(212, 175, 55, 0.6);
+			}
+
+			.lp-final-cta__button svg {
+				transition: transform 0.3s ease;
+			}
+
+			.lp-final-cta__button:hover svg {
+				transform: translateX(6px);
+			}
+
+			.lp-final-cta__trust {
+				gap: 2rem;
+			}
+		}
+	</style>
 {% endblock %}

@@ -14,9 +14,30 @@
    } %}
 #}
 <nav class="c-navbar">
+    {# Decorative chalk line #}
+    <div class="c-navbar__chalk-line"></div>
+
+    {# Art Nouveau corner flourish #}
+    <svg class="c-navbar__flourish c-navbar__flourish--left" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,60 Q15,45 30,45 Q45,45 60,60" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.3"/>
+        <circle cx="30" cy="45" r="2" fill="currentColor" opacity="0.25"/>
+    </svg>
+
+    <svg class="c-navbar__flourish c-navbar__flourish--right" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60,60 Q45,45 30,45 Q15,45 0,60" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.3"/>
+        <circle cx="30" cy="45" r="2" fill="currentColor" opacity="0.25"/>
+    </svg>
+
     <div class="l-container c-navbar__inner">
         <a class="c-navbar__brand" href="{{ brand_href|default('#') }}">
-            {{ brand_label|default("L'Ardoise Magique") }}
+            <svg class="c-navbar__brand-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 3h18v18H3V3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span class="c-navbar__brand-text">{{ brand_label|default("L'Ardoise Magique") }}</span>
+            <svg class="c-navbar__brand-underline" viewBox="0 0 100 4" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,2 Q25,3 50,2 T100,2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
         </a>
 
         <div class="c-navbar__menu">
@@ -30,6 +51,9 @@
                 <a class="c-navbar__link{% if link.active|default(false) %} c-navbar__link--active{% endif %}"
                    href="{{ link.href|default('#') }}"{{ attrs|raw }}>
                     {{ link.label|default('Lien') }}
+                    {% if link.active|default(false) %}
+                        <span class="c-navbar__link-accent"></span>
+                    {% endif %}
                 </a>
             {% endfor %}
         </div>
@@ -47,8 +71,9 @@
         </div>
 
         <button class="c-navbar__toggle" aria-label="Ouvrir le menu" aria-expanded="false">
-            <i class="fa-solid fa-bars c-navbar__toggle-icon c-navbar__toggle-icon--open"></i>
-            <i class="fa-solid fa-xmark c-navbar__toggle-icon c-navbar__toggle-icon--close"></i>
+            <span class="c-navbar__toggle-bar"></span>
+            <span class="c-navbar__toggle-bar"></span>
+            <span class="c-navbar__toggle-bar"></span>
         </button>
     </div>
 </nav>

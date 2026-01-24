@@ -46,6 +46,20 @@
 
 {% block body %}
 <section class="directory-hero">
+    {# Chalk texture overlay #}
+    <div class="directory-hero__chalk"></div>
+
+    {# Art Nouveau decorative elements #}
+    <svg class="directory-hero__flourish directory-hero__flourish--tl" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 Q40,40 80,40 Q120,40 150,0" stroke="currentColor" stroke-width="2" fill="none"/>
+        <circle cx="75" cy="40" r="4" fill="currentColor" opacity="0.4"/>
+    </svg>
+
+    <svg class="directory-hero__flourish directory-hero__flourish--br" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+        <path d="M150,150 Q110,110 70,110 Q30,110 0,150" stroke="currentColor" stroke-width="2" fill="none"/>
+        <circle cx="75" cy="110" r="4" fill="currentColor" opacity="0.4"/>
+    </svg>
+
     <div class="l-container">
         <nav class="directory-breadcrumb" aria-label="Fil d'Ariane">
             <ol itemscope itemtype="https://schema.org/BreadcrumbList">
@@ -74,10 +88,23 @@
             </ol>
         </nav>
 
-        <h1 class="directory-hero__title">{{ pageTitle }}</h1>
-        <p class="directory-hero__subtitle">
-            Découvrez les menus et cartes des restaurants près de chez vous
-        </p>
+        <div class="directory-hero__content">
+            <div class="directory-hero__badge">
+                <i class="fas fa-book-open"></i>
+                <span>Visibilité Locale</span>
+            </div>
+
+            <h1 class="directory-hero__title">
+                <span class="directory-hero__title-line">{{ pageTitle }}</span>
+                <svg class="directory-hero__title-underline" viewBox="0 0 300 12" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10,6 Q80,8 150,6 T290,6" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </svg>
+            </h1>
+
+            <p class="directory-hero__subtitle">
+                Découvrez les menus et cartes des restaurants près de chez vous
+            </p>
+        </div>
     </div>
 </section>
 
@@ -85,7 +112,9 @@
     <div class="l-container">
         <div class="directory-filters__wrapper">
             <div class="directory-filters__group">
-                <label for="filter-city" class="directory-filters__label">Ville</label>
+                <label for="filter-city" class="directory-filters__label">
+                    <i class="fas fa-map-marker-alt"></i> Ville
+                </label>
                 <select id="filter-city" class="directory-filters__select" onchange="filterByCity(this.value)">
                     <option value="">Toutes les villes</option>
                     {% for city in cities %}
@@ -98,7 +127,9 @@
             </div>
 
             <div class="directory-filters__group">
-                <label for="filter-region" class="directory-filters__label">Département</label>
+                <label for="filter-region" class="directory-filters__label">
+                    <i class="fas fa-map"></i> Département
+                </label>
                 <select id="filter-region" class="directory-filters__select" onchange="filterByRegion(this.value)">
                     <option value="">Tous les départements</option>
                     {% for dept in departements %}
@@ -112,7 +143,8 @@
 
             {% if currentFilter != 'all' %}
             <a href="{{ path('app_directory_index') }}" class="directory-filters__reset">
-                <i class="fas fa-times"></i> Réinitialiser
+                <i class="fas fa-undo"></i>
+                <span>Réinitialiser</span>
             </a>
             {% endif %}
         </div>
@@ -122,27 +154,49 @@
 <section class="directory-grid l-section">
     <div class="l-container">
         {% if restaurants|length > 0 %}
-            <p class="directory-grid__count">{{ restaurants|length }} restaurant{{ restaurants|length > 1 ? 's' : '' }} trouvé{{ restaurants|length > 1 ? 's' : '' }}</p>
+            <div class="directory-grid__header">
+                <p class="directory-grid__count">
+                    <span class="directory-grid__count-number">{{ restaurants|length }}</span>
+                    restaurant{{ restaurants|length > 1 ? 's' : '' }} trouvé{{ restaurants|length > 1 ? 's' : '' }}
+                </p>
+                <div class="directory-grid__decoration">
+                    <svg viewBox="0 0 80 8" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0,4 Q20,6 40,4 T80,4" stroke="currentColor" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+            </div>
 
             <div class="directory-grid__wrapper">
                 {% for restaurant in restaurants %}
                     <article class="restaurant-card">
+                        <div class="restaurant-card__frame">
+                            <span class="restaurant-card__corner restaurant-card__corner--tl"></span>
+                            <span class="restaurant-card__corner restaurant-card__corner--tr"></span>
+                            <span class="restaurant-card__corner restaurant-card__corner--bl"></span>
+                            <span class="restaurant-card__corner restaurant-card__corner--br"></span>
+                        </div>
+
                         <div class="restaurant-card__image">
                             <div class="restaurant-card__skeleton">
                                 <i class="fas fa-utensils"></i>
                             </div>
                         </div>
+
                         <div class="restaurant-card__content">
                             <h2 class="restaurant-card__name">{{ restaurant.name }}</h2>
-                            <p class="restaurant-card__location">
+
+                            <div class="restaurant-card__location">
                                 <i class="fas fa-map-marker-alt"></i>
-                                {{ restaurant.city }}{% if restaurant.departement %}, {{ restaurant.departement }}{% endif %}
-                            </p>
+                                <span>{{ restaurant.city }}{% if restaurant.departement %}, {{ restaurant.departement }}{% endif %}</span>
+                            </div>
+
                             {% if restaurant.slug %}
                                 <a href="{{ path('app_directory_restaurant_show', {slug: restaurant.slug}) }}"
                                    class="restaurant-card__button">
-                                    Voir l'établissement
-                                    <i class="fas fa-arrow-right"></i>
+                                    <span>Voir l'établissement</span>
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
                                 </a>
                             {% endif %}
                         </div>
@@ -151,10 +205,14 @@
             </div>
         {% else %}
             <div class="directory-empty">
-                <i class="fas fa-search"></i>
-                <p>Aucun restaurant trouvé avec les critères sélectionnés.</p>
+                <div class="directory-empty__icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h2 class="directory-empty__title">Aucun restaurant trouvé</h2>
+                <p class="directory-empty__text">Aucun restaurant ne correspond aux critères sélectionnés.</p>
                 <a href="{{ path('app_directory_index') }}" class="directory-empty__link">
-                    Voir tous les restaurants
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Voir tous les restaurants</span>
                 </a>
             </div>
         {% endif %}
@@ -180,50 +238,149 @@ function filterByRegion(regionSlug) {
 </script>
 
 <style>
+/* ============================================ */
+/* DIRECTORY INDEX - CHALKBOARD ART NOUVEAU    */
+/* ============================================ */
+
 .directory-hero {
-    background: linear-gradient(135deg, #e8dfd6 0%, #d4c4b7 100%);
-    padding: 6rem 0 4rem;
-    margin-bottom: 0;
     position: relative;
+    background: linear-gradient(165deg, #1a1614 0%, #2d2621 40%, #2f1b0c 100%);
+    padding: 5rem 0 4rem;
+    overflow: hidden;
 }
 
-.directory-hero::after {
+.directory-hero::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 60%);
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.12;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+.directory-hero__chalk {
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255, 255, 255, 0.01) 3px, rgba(255, 255, 255, 0.01) 6px),
+        repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.01) 3px, rgba(255, 255, 255, 0.01) 6px);
+    opacity: 0.5;
     pointer-events: none;
 }
 
-.directory-hero__title {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    font-weight: 600;
-    color: #b85c38;
-    text-align: center;
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 4px rgba(47, 27, 12, 0.1);
+.directory-hero__flourish {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    color: #d4af37;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.directory-hero__flourish--tl {
+    top: 0;
+    left: 0;
+}
+
+.directory-hero__flourish--br {
+    bottom: 0;
+    right: 0;
+}
+
+.directory-hero__content {
     position: relative;
     z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.directory-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1.5rem;
+    background: rgba(244, 229, 194, 0.1);
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    border-radius: 40px;
+    color: #f4e5c2;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    animation: badgeFadeIn 0.8s ease-out 0.3s backwards;
+}
+
+.directory-hero__badge i {
+    color: #d4af37;
+    font-size: 1.1rem;
+}
+
+@keyframes badgeFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.directory-hero__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    color: #faf7f4;
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.2);
+    animation: titleReveal 1s ease-out 0.5s backwards;
+    position: relative;
+    display: inline-block;
+}
+
+.directory-hero__title-underline {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 300px;
+    height: 12px;
+    color: #d4af37;
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
+}
+
+@keyframes titleReveal {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .directory-hero__subtitle {
-    font-size: 1.25rem;
-    color: #6b4b36;
-    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    color: #e8dfd6;
+    line-height: 1.7;
+    margin: 2rem auto 0;
     max-width: 600px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
+    animation: subtitleFadeIn 1s ease-out 0.7s backwards;
+}
+
+@keyframes subtitleFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .directory-breadcrumb {
     padding-bottom: 2rem;
     position: relative;
     z-index: 1;
+    animation: breadcrumbSlide 0.8s ease-out 0.2s backwards;
+}
+
+@keyframes breadcrumbSlide {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 .directory-breadcrumb ol {
@@ -232,13 +389,20 @@ function filterByRegion(regionSlug) {
     list-style: none;
     padding: 0;
     margin: 0;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.directory-breadcrumb li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .directory-breadcrumb li::after {
-    content: '/';
-    margin-left: 0.5rem;
-    color: #6b4b36;
+    content: '›';
+    color: rgba(212, 175, 55, 0.6);
+    font-size: 1.2rem;
 }
 
 .directory-breadcrumb li:last-child::after {
@@ -246,22 +410,29 @@ function filterByRegion(regionSlug) {
 }
 
 .directory-breadcrumb a {
-    color: #b85c38;
+    color: #d4af37;
     text-decoration: none;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
 .directory-breadcrumb a:hover {
-    text-decoration: underline;
+    color: #f4e5c2;
 }
 
 .directory-breadcrumb span {
-    color: #2f1b0c;
+    color: #faf7f4;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
 }
 
+/* Filters Section */
 .directory-filters {
-    background: #fffaf6;
-    padding: 2rem 0;
-    border-bottom: 1px solid #d4c4b7;
+    background: linear-gradient(180deg, #2d2621 0%, #3a302a 100%);
+    padding: 2.5rem 0;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .directory-filters__wrapper {
@@ -269,91 +440,221 @@ function filterByRegion(regionSlug) {
     flex-wrap: wrap;
     gap: 1.5rem;
     align-items: flex-end;
+    justify-content: center;
 }
 
 .directory-filters__group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.65rem;
 }
 
 .directory-filters__label {
+    font-family: 'Lato', sans-serif;
     font-weight: 600;
-    color: #2f1b0c;
-    font-size: 0.875rem;
+    color: #f4e5c2;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.directory-filters__label i {
+    color: #d4af37;
 }
 
 .directory-filters__select {
-    padding: 0.75rem 1rem;
-    border: 2px solid #d4c4b7;
-    border-radius: 8px;
-    background: white;
+    padding: 0.85rem 1.25rem;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 10px;
+    background: rgba(26, 22, 20, 0.6);
+    color: #faf7f4;
+    font-family: 'Lato', sans-serif;
     font-size: 1rem;
-    min-width: 200px;
+    min-width: 220px;
     cursor: pointer;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.directory-filters__select:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+    background: rgba(26, 22, 20, 0.8);
 }
 
 .directory-filters__select:focus {
     outline: none;
-    border-color: #b85c38;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.directory-filters__select option {
+    background: #2d2621;
+    color: #faf7f4;
 }
 
 .directory-filters__reset {
-    color: #b85c38;
-    text-decoration: none;
-    font-weight: 600;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    transition: opacity 0.3s ease;
+    gap: 0.65rem;
+    padding: 0.85rem 1.5rem;
+    background: rgba(212, 175, 55, 0.12);
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    border-radius: 10px;
+    color: #d4af37;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
 }
 
 .directory-filters__reset:hover {
-    opacity: 0.8;
+    background: rgba(212, 175, 55, 0.2);
+    border-color: rgba(212, 175, 55, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Grid Section */
+.l-section {
+    padding: 5rem 0;
 }
 
 .directory-grid {
-    padding: 4rem 0;
-    background: #fff;
+    background: linear-gradient(180deg, #f8f3ef 0%, #fffaf6 100%);
+}
+
+.directory-grid__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
 }
 
 .directory-grid__count {
+    font-family: 'Lato', sans-serif;
     color: #6b4b36;
-    margin-bottom: 2rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.directory-grid__count-number {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+    color: white;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-right: 0.5rem;
+}
+
+.directory-grid__decoration {
+    width: 80px;
+    height: 8px;
+    color: #b85c38;
+    opacity: 0.6;
 }
 
 .directory-grid__wrapper {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
-    animation: fadeIn 0.6s ease-in;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2.5rem;
+    animation: gridFadeIn 0.8s ease-out;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+@keyframes gridFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Restaurant Cards */
 .restaurant-card {
+    position: relative;
     background: #fffaf6;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(47, 27, 12, 0.1);
-    border: 1px solid #d4c4b7;
-    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(47, 27, 12, 0.12);
+    border: 2px solid #d4c4b7;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .restaurant-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(47, 27, 12, 0.14);
+    transform: translateY(-12px) rotate(-1deg);
+    box-shadow: 0 16px 48px rgba(47, 27, 12, 0.18);
+    border-color: #b85c38;
+}
+
+.restaurant-card__frame {
+    position: absolute;
+    inset: -2px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.restaurant-card__corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #b85c38;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.restaurant-card:hover .restaurant-card__corner {
+    opacity: 0.6;
+}
+
+.restaurant-card__corner--tl {
+    top: 8px;
+    left: 8px;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 6px 0 0 0;
+}
+
+.restaurant-card__corner--tr {
+    top: 8px;
+    right: 8px;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 6px 0 0;
+}
+
+.restaurant-card__corner--bl {
+    bottom: 8px;
+    left: 8px;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 6px;
+}
+
+.restaurant-card__corner--br {
+    bottom: 8px;
+    right: 8px;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 6px 0;
 }
 
 .restaurant-card__image {
-    height: 180px;
-    background: linear-gradient(135deg, #f8f3ef 0%, #d4c4b7 100%);
+    height: 200px;
+    background: linear-gradient(135deg, #e8dfd6 0%, #d4c4b7 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.restaurant-card__image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(47, 27, 12, 0.1) 100%);
 }
 
 .restaurant-card__skeleton {
@@ -361,73 +662,135 @@ function filterByRegion(regionSlug) {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
-    color: rgba(184, 92, 56, 0.3);
+    font-size: 3.5rem;
+    color: rgba(184, 92, 56, 0.25);
 }
 
 .restaurant-card__content {
-    padding: 1.5rem;
+    padding: 1.75rem;
 }
 
 .restaurant-card__name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.65rem;
+    font-weight: 700;
     color: #2f1b0c;
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.75rem;
+    line-height: 1.3;
 }
 
 .restaurant-card__location {
-    color: #6b4b36;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.65rem;
+    color: #6b4b36;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.restaurant-card__location i {
+    color: #b85c38;
+    font-size: 1rem;
 }
 
 .restaurant-card__button {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    color: #b85c38;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+    color: white;
+    font-family: 'Lato', sans-serif;
     font-weight: 600;
+    font-size: 0.95rem;
     text-decoration: none;
-    transition: gap 0.3s ease;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(184, 92, 56, 0.3);
 }
 
 .restaurant-card__button:hover {
-    gap: 1rem;
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(184, 92, 56, 0.4);
 }
 
+.restaurant-card__button svg {
+    transition: transform 0.3s ease;
+}
+
+.restaurant-card__button:hover svg {
+    transform: translateX(4px);
+}
+
+/* Empty State */
 .directory-empty {
     text-align: center;
-    padding: 4rem 2rem;
-    color: #6b4b36;
+    padding: 5rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-.directory-empty i {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-    color: #b85c38;
+.directory-empty__icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e8dfd6 0%, #d4c4b7 100%);
+    border-radius: 50%;
+    box-shadow: 0 12px 32px rgba(47, 27, 12, 0.15);
+}
+
+.directory-empty__icon i {
+    font-size: 3.5rem;
+    color: rgba(184, 92, 56, 0.6);
+}
+
+.directory-empty__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2f1b0c;
+    margin: 0 0 1rem;
+}
+
+.directory-empty__text {
+    font-family: 'Lato', sans-serif;
+    color: #6b4b36;
+    font-size: 1.1rem;
+    margin: 0 0 2rem;
+    line-height: 1.6;
 }
 
 .directory-empty__link {
-    color: #b85c38;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.75rem;
+    background: linear-gradient(135deg, #b85c38 0%, #d78a69 100%);
+    color: white;
+    font-family: 'Lato', sans-serif;
     font-weight: 600;
-    margin-top: 1rem;
-    display: inline-block;
     text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(184, 92, 56, 0.3);
 }
 
 .directory-empty__link:hover {
-    text-decoration: underline;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(184, 92, 56, 0.4);
 }
 
 @media (max-width: 768px) {
+    .directory-hero {
+        padding: 4rem 0 3rem;
+    }
+
     .directory-hero__title {
-        font-size: 2.5rem;
+        font-size: clamp(2rem, 8vw, 3rem);
     }
 
     .directory-filters__wrapper {
@@ -441,6 +804,7 @@ function filterByRegion(regionSlug) {
 
     .directory-grid__wrapper {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
 }
 </style>
