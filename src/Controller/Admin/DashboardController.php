@@ -6,32 +6,52 @@ namespace App\Controller\Admin;
 
 use App\Entity\Ardoise;
 use App\Entity\Restaurant;
+use App\Entity\Subscription;
 use App\Entity\User;
+use App\Entity\PlatCategorie;
 use App\Repository\ArdoiseRepository;
+use App\Repository\CarteRepository;
+use App\Service\Subscription\FeatureAccessService;
+use App\Service\Subscription\UsageTrackerService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 
 class DashboardController extends AbstractDashboardController
 {
     public function __construct(
-        private ArdoiseRepository $ardoiseRepository
-    ) {
-    }
+        private ArdoiseRepository $ardoiseRepository,
+        private CarteRepository $carteRepository,
+        private FeatureAccessService $featureAccess,
+        private UsageTrackerService $usageTracker
+    ) {}
 
     public function configureAssets(): Assets
     {
         return Assets::new()
-        ->addJsFile('js/form.js')
-        ->addJsFile('js/template-selector.js')
-        ->addJsFile('js/collection-field.js')
-        ->addCssFile('styles/admin.css')
-        ->addCssFile('styles/template-selector.css');
-
+            ->addJsFile('js/form.js')
+            ->addJsFile('js/template-selector.js')
+            ->addJsFile('js/collection-field.js')
+            ->addJsFile('js/mobile-sidebar-close.js')
+            ->addJsFile('js/delete-confirmation.js')
+            ->addCssFile('styles/admin/components/template-selector.css')
+            ->addCssFile('styles/admin/components/dashboard-layout.css')
+            ->addCssFile('styles/admin/components/sidebar-theme.css')
+            ->addCssFile('styles/admin/components/flash-messages-fix.css')
+            ->addCssFile('styles/admin/components/header-welcome.css')
+            ->addCssFile('styles/admin/components/stat-card.css')
+            ->addCssFile('styles/admin/components/quota-card.css')
+            ->addCssFile('styles/admin/components/action-card.css')
+            ->addCssFile('styles/admin/components/recent-contents-table.css')
+            ->addCssFile('styles/admin/components/upgrade-cta.css')
+            ->addCssFile('styles/admin/components/crud-actions.css')
+            ->addCssFile('styles/admin/components/plan.css')
+            ->addCssFile('styles/admin/components/collection-menu.css')
+            ->addCssFile('styles/admin/components/form-customizations.css');
     }
 
     /**
@@ -70,7 +90,7 @@ class DashboardController extends AbstractDashboardController
      * Route personnalisee pour ROLE_USER - affiche /admin/{restaurant-slug}
      * Accessible par tous les utilisateurs authentifies
      */
-    #[Route('/admin/{restaurant}', name: 'admin')]
+    #[Route('/admin/{restaurant}', name: 'admin', requirements: ['restaurant' => '^(?!horaires$)[a-z0-9-]+$'])]
     public function restaurantDashboard(string $restaurant): Response
     {
         /** @var User $user */
@@ -104,12 +124,59 @@ class DashboardController extends AbstractDashboardController
         usort($menus, fn($a, $b) => $b->getId() <=> $a->getId());
         $publishedMenu = $this->getFirstPublishedMenu($menus);
 
+        // Récupérer les cartes de l'utilisateur (similaire aux menus)
+        $cartes = [];
+        foreach ($restaurants as $restaurant) {
+            $restaurantCartes = $this->carteRepository->findBy(
+                ['restaurant' => $restaurant],
+                ['id' => 'DESC']
+            );
+            $cartes = array_merge($cartes, $restaurantCartes);
+        }
+        // Trier toutes les cartes par ID décroissant
+        usort($cartes, fn($a, $b) => $b->getId() <=> $a->getId());
+
+        // Subscription information
+        $planCode = $user->getPlanCode();
+        $planConfig = $this->featureAccess->getCurrentPlan($user);
+
+        $quotaInfo = [
+            'daily_menus' => [
+                'used' => $this->usageTracker->getDailyMenuUsageThisMonth($user),
+                'limit' => $this->featureAccess->isUnlimited($user, 'menus_daily')
+                    ? -1
+                    : ($planConfig['features']['menus_daily']['quota'] ?? 0),
+                'period' => 'ce mois',
+            ],
+            'special_menus' => [
+                'used' => $this->usageTracker->getSpecialMenuUsageThisYear($user),
+                'limit' => $this->featureAccess->isUnlimited($user, 'menus_special')
+                    ? -1
+                    : ($planConfig['features']['menus_special']['quota'] ?? 0),
+                'period' => 'cette année',
+            ],
+            'cards' => [
+                'used' => $this->usageTracker->getCardsUsageThisYear($user),
+                'limit' => $this->featureAccess->isUnlimited($user, 'cards')
+                    ? -1
+                    : ($planConfig['features']['cards']['quota'] ?? 0),
+                'period' => 'cette année',
+            ],
+        ];
+
         return $this->render('admin/dashboard.html.twig', [
             'totalMenus' => $totalMenus,
             'menusPublies' => $menusPublies,
             'menus' => $menus,
+            'cartes' => $cartes,
             'publishedMenu' => $publishedMenu,
             'userRestaurants' => $restaurants,
+            'planCode' => $planCode,
+            'planName' => $planConfig['name'] ?? 'Gratuit',
+            'quotaInfo' => $quotaInfo,
+            'canCreateDaily' => $this->featureAccess->canAccessFeature($user, 'menus_daily'),
+            'canCreateSpecial' => $this->featureAccess->canAccessFeature($user, 'menus_special'),
+            'canCreateCarte' => $this->featureAccess->canAccessFeature($user, 'cards'),
         ]);
     }
 
@@ -117,7 +184,8 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('L\'Ardoise Magique - Gestion')
-            ->setFaviconPath('favicon.ico');
+            ->setFaviconPath('favicon.ico')
+            ->disableDarkMode(true);
     }
 
 
@@ -132,56 +200,29 @@ class DashboardController extends AbstractDashboardController
             ->setDateFormat('dd/MM/yyyy')
             ->setTimeFormat('HH:mm')
             ->setDateTimeFormat('dd/MM/yyyy HH:mm')
-            ->setTimezone('Europe/Paris');
+            ->setTimezone('Europe/Paris')
+            ->overrideTemplate('layout', 'admin/layout.html.twig');
     }
 
     public function configureMenuItems(): iterable
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $dashboardRoute = $this->isGranted('ROLE_SUPER_ADMIN')
-            ? ['routeName' => 'app_admin_dashboard']
-            : ['routeName' => 'admin', 'routeParameters' => ['restaurant' => $user->getSlug()]];
-
-        yield MenuItem::linkToRoute('Dashboard', 'fa fa-home', $dashboardRoute['routeName'], $dashboardRoute['routeParameters'] ?? []);
-
-        // Section Restaurants
-        yield MenuItem::section('Mon Etablissement');
-        yield MenuItem::linkToCrud('Mes Restaurants', 'fa fa-utensils', Restaurant::class)
-            ->setController(RestaurantCrudController::class);
-        yield MenuItem::linkToCrud('Ajouter un Restaurant', 'fa fa-plus', Restaurant::class)
-            ->setController(RestaurantCrudController::class)
-            ->setAction('new');
-
-        // Section Menus du Jour
-        yield MenuItem::section('Menus du Jour');
-        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-sun', Ardoise::class)
-            ->setController(DailyMenuCrudController::class);
-        yield MenuItem::linkToCrud('Creer un Menu', 'fa fa-plus', Ardoise::class)
-            ->setController(DailyMenuCrudController::class)
-            ->setAction('new');
-
-        // Section Menus Speciaux
-        yield MenuItem::section('Menus Speciaux');
-        yield MenuItem::linkToCrud('Tous les Menus', 'fa fa-star', Ardoise::class)
-            ->setController(SpecialMenuCrudController::class);
-        yield MenuItem::linkToCrud('Creer un Menu', 'fa fa-plus', Ardoise::class)
-            ->setController(SpecialMenuCrudController::class)
-            ->setAction('new');
-
-        // Section Utilisateurs (uniquement pour super admin)
+        // 1) Super admin : menu "global"
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            yield MenuItem::section('Administration');
-            yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', User::class)
-                ->setController(UserCrudController::class);
+            yield from $this->getSuperAdminMenuItems();
+            return;
         }
 
-        // Section Marketing Social (placeholder)
-        yield MenuItem::section('Marketing Social');
-        yield MenuItem::linkToUrl('Partage Facebook', 'fab fa-facebook', '#')
-            ->setLinkRel('nofollow');
-        yield MenuItem::linkToUrl('Partage Instagram', 'fab fa-instagram', '#')
-            ->setLinkRel('nofollow');
+        // 2) Restaurateur / admin de restaurant
+        if ($this->isGranted('ROLE_ADMIN')) {
+            yield from $this->getRestaurantAdminMenuItems();
+            return;
+        }
+
+        // 3) Fallback éventuel (autres rôles, ROLE_USER simple, etc.)
+        // À adapter selon ton besoin
+        yield MenuItem::linkToRoute('Dashboard', 'fa fa-home', 'app_admin_dashboard');
+        yield MenuItem::section('Session');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
     }
 
     /**
@@ -198,5 +239,139 @@ class DashboardController extends AbstractDashboardController
         }
 
         return null;
+    }
+
+    /**
+     * Menu pour les restaurateurs (ROLE_ADMIN)
+     */
+    private function getRestaurantAdminMenuItems(): iterable
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Dashboard spécifique du restaurateur : /admin/{restaurant-slug}
+        yield MenuItem::linkToRoute(
+            'Dashboard',
+            'fa fa-home',
+            'admin',
+            ['restaurant' => $user->getSlug()]
+        );
+
+        // Section Mon Établissement
+        yield MenuItem::section('Mon Établissement');
+        yield MenuItem::linkToCrud('Mes Restaurants', 'fa fa-hotel', Restaurant::class)
+            ->setController(RestaurantCrudController::class);
+        yield MenuItem::linkToRoute('Mon Abonnement', 'fa fa-id-card', 'app_subscription_current');
+        yield MenuItem::linkToRoute('Voir les offres', 'fa fa-gem', 'app_subscription_plans');
+
+
+        // Section Menus du Jour
+        yield MenuItem::section('Menus');
+
+        // yield MenuItem::linkToCrud('Menu du jour', 'fa fa-bowl-rice', Ardoise::class)
+        //     ->setController(DailyMenuCrudController::class);
+
+        if ($this->featureAccess->canAccessFeature($user, 'menus_daily')) {
+            $remaining = $this->featureAccess->getQuotaRemaining($user, 'menus_daily');
+            $label = $remaining === null
+                ? 'Menu du Jour'
+                : sprintf('Menu du Jour (%d restants)', $remaining);
+
+            yield MenuItem::linkToCrud($label, 'fa fa-bowl-rice', Ardoise::class)
+                ->setController(DailyMenuCrudController::class);
+        } else {
+            yield MenuItem::linkToUrl(' 🔒', 'fa fa-lock', '#')
+                ->setLinkRel('nofollow');
+        }
+
+        if ($this->featureAccess->canAccessFeature($user, 'menus_special')) {
+            yield MenuItem::linkToCrud('Menus Spéciaux', 'fa fa-birthday-cake', Ardoise::class)
+                ->setController(SpecialMenuCrudController::class);
+
+            $remaining = $this->featureAccess->getQuotaRemaining($user, 'menus_special');
+            $label = $remaining === null
+                ? 'Créer un Menu'
+                : sprintf('Créer un Menu (%d restants)', $remaining);
+
+            // yield MenuItem::linkToCrud($label, 'fa fa-plus', Ardoise::class)
+            //     ->setController(SpecialMenuCrudController::class)
+            //     ->setAction('new');
+        } else {
+            yield MenuItem::linkToRoute('Menus Spéciaux 🔒', 'fa fa-lock', 'app_subscription_plans');
+        }
+
+        // Section Cartes Restaurant
+        yield MenuItem::section('Cartes Restaurant');
+
+        if ($this->featureAccess->canAccessFeature($user, 'cards')) {
+             yield MenuItem::subMenu('Bibliothèque', 'fa fa-book')->setSubItems([
+            MenuItem::linkToCrud('Catégories', 'fa fa-utensils', PlatCategorie::class)
+                ->setController(PlatCategorieCrudController::class),
+            MenuItem::linkToCrud('Plats', 'fa fa-book', \App\Entity\PlatCatalogue::class)
+                ->setController(\App\Controller\Admin\PlatCatalogueCrudController::class),
+        ]);
+         yield MenuItem::subMenu('Edition de Carte', 'fa fa-pencil-alt')->setSubItems([
+            MenuItem::linkToCrud('Mes Cartes', 'fa fa-list', \App\Entity\Carte::class),
+            MenuItem::linkToUrl('Créer une Carte', 'fa fa-magic', $this->generateUrl('app_carte_wizard'))
+         ]);
+
+        } else {
+            yield MenuItem::linkToUrl('Cartes Restaurant 🔒', 'fa fa-lock', '#')
+                ->setLinkRel('nofollow');
+        }
+
+        // Section Marketing Social
+        yield MenuItem::section('Marketing Social');
+        yield MenuItem::linkToUrl('Partage Facebook', 'fab fa-facebook', '#')
+            ->setLinkRel('nofollow');
+        yield MenuItem::linkToUrl('Partage Instagram', 'fab fa-instagram', '#')
+            ->setLinkRel('nofollow');
+
+        // Session
+        yield MenuItem::section('Session');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
+    }
+
+    /**
+     * Menu pour les super administrateurs (ROLE_SUPER_ADMIN)
+     */
+    private function getSuperAdminMenuItems(): iterable
+    {
+        // Lien vers le dashboard principal super admin
+        yield MenuItem::linkToRoute('Dashboard', 'fa fa-home', 'app_admin_dashboard');
+
+        // Section Administration globale
+        yield MenuItem::section('Administration');
+
+        // Tous les utilisateurs
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', User::class)
+            ->setController(UserCrudController::class);
+
+        // Tous les restaurants (optionnel mais pertinent pour un super admin)
+        yield MenuItem::linkToCrud('Restaurants', 'fa fa-utensils', Restaurant::class)
+            ->setController(RestaurantCrudController::class);
+
+        // Abonnements
+        yield MenuItem::section('Abonnements');
+        yield MenuItem::linkToCrud('Subscriptions', 'fa fa-credit-card', Subscription::class)
+            ->setController(SubscriptionCrudController::class);
+
+        // Tous les menus (tous types confondus)
+        yield MenuItem::section('Menus');
+        yield MenuItem::linkToCrud('Menus du Jour', 'fa fa-sun', Ardoise::class)
+            ->setController(DailyMenuCrudController::class);
+        yield MenuItem::linkToCrud('Menus Spéciaux', 'fa fa-star', Ardoise::class)
+            ->setController(SpecialMenuCrudController::class);
+
+        // Tu peux garder ou non la partie Marketing Social pour le super admin
+        yield MenuItem::section('Marketing Social');
+        yield MenuItem::linkToUrl('Partage Facebook', 'fab fa-facebook', '#')
+            ->setLinkRel('nofollow');
+        yield MenuItem::linkToUrl('Partage Instagram', 'fab fa-instagram', '#')
+            ->setLinkRel('nofollow');
+
+        // Session
+        yield MenuItem::section('Session');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out');
     }
 }

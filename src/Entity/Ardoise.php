@@ -26,6 +26,9 @@ class Ardoise
     public const TEMPLATE_MARCHE = 'marche';
     public const TEMPLATE_RAFINE = 'rafine';
     public const TEMPLATE_TRADITIONNEL = 'traditionnel';
+    public const TEMPLATE_SCROLL = "scroll";
+    public const TEMPLATE_TIMELINE = "timeline";
+    public const TEMPLATE_FLIPCARDS = "flipcards";
 
     public const TEMPLATES = [
         self::TEMPLATE_BISTROT,
@@ -36,6 +39,9 @@ class Ardoise
         self::TEMPLATE_MARCHE,
         self::TEMPLATE_RAFINE,
         self::TEMPLATE_TRADITIONNEL,
+        self::TEMPLATE_SCROLL,
+        self::TEMPLATE_TIMELINE,
+        self::TEMPLATE_FLIPCARDS,
     ];
 
     #[ORM\Id]
@@ -61,6 +67,9 @@ class Ardoise
     #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'ardoises')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Restaurant $restaurant = null;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $createdAt = null;
 
     // ==========================================
     // CHAMPS MENU DU JOUR (type=DAILY)
@@ -137,6 +146,14 @@ class Ardoise
             $baseSlug = $slugger->slug($this->titre)->lower()->toString();
             // Ajouter un timestamp pour garantir l'unicite
             $this->slug = $baseSlug . '-' . uniqid();
+        }
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
         }
     }
 
@@ -230,6 +247,11 @@ class Ardoise
         $this->restaurant = $restaurant;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 
     /**

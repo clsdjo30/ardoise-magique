@@ -1,0 +1,300 @@
+/**
+ * Styles pour l'étape 2 du wizard de création de carte (Sections)
+ */
+
+@use "../../public/tokens.colors" as colors;
+@use "../../public/tokens.typography" as type;
+@use "../../public/tokens.spacing" as spacing;
+
+/* ========================================
+   STEP 2 - SECTIONS
+   ======================================== */
+
+.wizard-step-2 {
+    position: relative;
+}
+
+/* Message d'aide */
+.step2-help {
+    background: colors.$color-background;
+    padding: spacing.$spacing-xs spacing.$spacing-md;
+    border-radius: spacing.$radius-md;
+    margin-bottom: spacing.$spacing-lg;
+    border-left: 4px solid colors.$color-primary;
+
+    p {
+        margin: 0;
+        font-size: type.$font-size-md;
+        color: colors.$color-text;
+        line-height: type.$line-height-relaxed;
+    }
+
+    @media (max-width: 768px) {
+        padding: spacing.$spacing-sm spacing.$spacing-md;
+        margin-bottom: spacing.$spacing-lg;
+
+        p {
+            font-size: type.$font-size-sm;
+        }
+    }
+}
+
+/* Container des sections */
+.step2-sections-container {
+    margin-bottom: spacing.$spacing-xl;
+}
+
+/* Liste des sections - Grille responsive */
+.sections-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 spacing.$spacing-xl 0;
+    display: grid;
+    grid-template-columns: 1fr; /* Mobile par défaut */
+    gap: spacing.$spacing-lg;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: spacing.$spacing-xl;
+    }
+}
+
+/* Item de section */
+.section-item {
+    background: colors.$color-surface;
+    border: 2px solid colors.$color-border;
+    border-radius: spacing.$radius-md;
+    padding: spacing.$spacing-lg;
+    transition: all 0.3s ease;
+    box-shadow: colors.$shadow-soft;
+
+    &:hover {
+        border-color: colors.$color-primary-soft;
+        box-shadow: colors.$shadow-hover;
+    }
+
+    @media (max-width: 768px) {
+        padding: spacing.$spacing-md;
+    }
+}
+
+/* Header de section */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: spacing.$spacing-sm;
+    margin-bottom: spacing.$spacing-md;
+    padding-bottom: spacing.$spacing-sm;
+    border-bottom: 1px solid colors.$color-border;
+}
+
+/* Drag handle */
+.section-drag-handle {
+    cursor: grab;
+    font-size: type.$font-size-lg;
+    color: colors.$color-muted;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: colors.$color-primary;
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+/* Numéro de section */
+.section-number {
+    flex: 1;
+    font-family: type.$font-family-heading;
+    font-size: type.$font-size-md;
+    font-weight: type.$font-weight-strong;
+    color: colors.$color-text;
+    text-transform: uppercase;
+    letter-spacing: type.$letter-spacing-wider;
+
+    @media (max-width: 768px) {
+        font-size: type.$font-size-sm;
+    }
+}
+
+/* Bouton de suppression */
+.btn-delete {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(colors.$color-error, 0.1);
+    border: none;
+    color: colors.$color-error;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: type.$font-size-lg;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: colors.$color-error;
+        color: colors.$color-surface;
+        transform: scale(1.1);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+/* Champs de section */
+.section-fields {
+    .form-group,
+    .form-field {
+        margin-bottom: spacing.$spacing-md;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    label {
+        display: block;
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-sm;
+        font-weight: type.$font-weight-strong;
+        color: colors.$color-text;
+        margin-bottom: spacing.$spacing-xs;
+        text-transform: uppercase;
+        letter-spacing: type.$letter-spacing-wider;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: spacing.$spacing-sm spacing.$spacing-md;
+        font-family: type.$font-family-body;
+        font-size: type.$font-size-md;
+        color: colors.$color-text;
+        background: colors.$color-background;
+        border: 2px solid colors.$color-border;
+        border-radius: spacing.$radius-md;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+
+        @media (max-width: 768px) {
+            padding: spacing.$spacing-sm;
+            font-size: type.$font-size-sm;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: colors.$color-primary;
+            box-shadow: 0 0 0 3px rgba(colors.$color-primary, 0.1);
+            background: colors.$color-surface;
+        }
+
+        &::placeholder {
+            color: colors.$color-muted;
+            opacity: 0.7;
+        }
+    }
+
+    textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+}
+
+/* Bouton "Ajouter une section" */
+.wizard-step-2 {
+    [data-action*="collection#addItem"] {
+        width: 100%;
+        padding: var(--button-padding-y) var(--button-padding-x);
+        border-radius: spacing.$radius-button;
+        border: 1px solid transparent;
+        border-color: colors.$color-primary-soft;
+        font-family: type.$font-family-body;
+        font-weight: type.$font-weight-strong;
+        font-size: type.$font-size-md;
+        line-height: 1.1;
+        text-decoration: none;
+        color: colors.$color-text;
+        box-shadow: colors.$shadow-inset, colors.$shadow-ambient;
+        cursor: pointer;
+        transition: background-color 150ms ease, color 150ms ease,
+            border-color 150ms ease, box-shadow 150ms ease, transform 120ms ease;
+        background: colors.$color-surface;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: colors.$shadow-soft;
+            border-color: colors.$color-border;
+        }
+
+        &:active {
+            transform: translateY(0);
+            box-shadow: colors.$shadow-ambient;
+        }
+
+        @media (max-width: 768px) {
+            padding: spacing.$spacing-sm spacing.$spacing-lg;
+            font-size: type.$font-size-sm;
+        }
+    }
+}
+
+/* Messages d'erreur */
+.section-fields {
+    .invalid-feedback,
+    .form-error-message {
+        display: block;
+        margin-top: spacing.$spacing-xs;
+        padding: spacing.$spacing-xs spacing.$spacing-sm;
+        font-size: type.$font-size-sm;
+        color: colors.$color-error;
+        background: rgba(colors.$color-error, 0.05);
+        border-left: 3px solid colors.$color-error;
+        border-radius: spacing.$radius-sm;
+    }
+
+    input.is-invalid,
+    select.is-invalid,
+    textarea.is-invalid {
+        border-color: colors.$color-error;
+
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(colors.$color-error, 0.1);
+        }
+    }
+}
+
+/* Animation d'apparition pour les nouveaux items */
+@keyframes slideInSection {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-item {
+    animation: slideInSection 0.3s ease-out;
+}
+
+/* État de drag & drop */
+.section-item.sortable-ghost {
+    opacity: 0.4;
+}
+
+.section-item.sortable-chosen {
+    cursor: grabbing;
+}
+
+.section-item.sortable-drag {
+    opacity: 1;
+    box-shadow: colors.$shadow-elevated;
+    transform: rotate(2deg);
+}

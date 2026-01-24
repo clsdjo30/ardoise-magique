@@ -8,9 +8,11 @@ use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RestaurantRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Restaurant
 {
     #[ORM\Id]
@@ -45,6 +47,9 @@ class Restaurant
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $facebookPage = null;
 
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
+    private ?string $slug = null;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'restaurants')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
@@ -58,11 +63,15 @@ class Restaurant
     #[ORM\OneToMany(targetEntity: Ardoise::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $ardoises;
 
+    #[ORM\OneToMany(targetEntity: Carte::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $cartes;
+
     public function __construct()
     {
         $this->openingHours = new ArrayCollection();
         $this->exceptionalOpenings = new ArrayCollection();
         $this->ardoises = new ArrayCollection();
+        $this->cartes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +154,28 @@ class Restaurant
     {
         $this->facebookPage = $facebookPage;
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if (!$this->slug && $this->name && $this->city) {
+            $slugger = new AsciiSlugger('fr');
+            $baseSlug = $slugger->slug($this->name . ' ' . $this->city)->lower()->toString();
+            $this->slug = $baseSlug . '-' . substr(uniqid(), -6);
+        }
     }
 
     public function getOwner(): ?User
@@ -234,6 +265,33 @@ class Restaurant
         if ($this->ardoises->removeElement($ardoise)) {
             if ($ardoise->getRestaurant() === $this) {
                 $ardoise->setRestaurant(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Carte>
+     */
+    public function getCartes(): Collection
+    {
+        return $this->cartes;
+    }
+
+    public function addCarte(Carte $carte): static
+    {
+        if (!$this->cartes->contains($carte)) {
+            $this->cartes->add($carte);
+            $carte->setRestaurant($this);
+        }
+        return $this;
+    }
+
+    public function removeCarte(Carte $carte): static
+    {
+        if ($this->cartes->removeElement($carte)) {
+            if ($carte->getRestaurant() === $this) {
+                $carte->setRestaurant(null);
             }
         }
         return $this;

@@ -1,0 +1,30 @@
+{#
+    Component: Header Welcome
+    Description: Dashboard header with personalized greeting and plan badge
+
+    Parameters:
+    - userName: string - User's first name
+    - planCode: string - Plan code (FREE, STARTER, PREMIUM)
+    - planName: string - Plan display name
+#}
+
+<div class="dashboard-header-welcome">
+    <div class="welcome-content">
+        <div class="welcome-text">
+            <h1 class="welcome-title">👋 Bonjour {{ userName }} !</h1>
+            <p class="welcome-subtitle">Bienvenue sur votre tableau de bord L'Ardoise Magique</p>
+        </div>
+        <div class="welcome-badge">
+            <span class="plan-badge plan-badge--{{ planCode|lower }}">
+                {% if planCode == 'PREMIUM' %}
+                    ⭐
+                {% elseif planCode == 'STARTER' %}
+                    🚀
+                {% else %}
+                    🆓
+                {% endif %}
+                {{ planName }}
+            </span>
+        </div>
+    </div>
+</div>

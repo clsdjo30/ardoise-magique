@@ -1,0 +1,61 @@
+{{ form_start(form, {'attr': {'class': 'wizard-form'}}) }}
+
+{# Row 1: Restaurant et Nom de la carte #}
+<div class="step1-sections-container">
+	<div class="form-row">
+		<div class="form-field">
+			<label for="{{ form.restaurant.vars.id }}">
+				{{ form.restaurant.vars.label }}
+				<span class="required">*</span>
+			</label>
+			{{ form_widget(form.restaurant) }}
+			{{ form_errors(form.restaurant) }}
+		</div>
+
+		<div class="form-field">
+			<label for="{{ form.name.vars.id }}">
+				{{ form.name.vars.label }}
+				<span class="required">*</span>
+			</label>
+			{{ form_widget(form.name) }}
+			{{ form_errors(form.name) }}
+		</div>
+	</div>
+
+	{# Row 2: Date de début et Date de fin #}
+	<div class="form-row">
+		<div class="form-field">
+			<label for="{{ form.validFrom.vars.id }}">
+				{{ form.validFrom.vars.label }}
+				<span class="required">*</span>
+			</label>
+			{{ form_widget(form.validFrom) }}
+			{{ form_errors(form.validFrom) }}
+			{% if form.validFrom.vars.help %}
+				<div class="form-help">{{ form.validFrom.vars.help }}</div>
+			{% endif %}
+		</div>
+
+		<div class="form-field">
+			<label for="{{ form.validTo.vars.id }}">
+				{{ form.validTo.vars.label }}
+			</label>
+			{{ form_widget(form.validTo) }}
+			{{ form_errors(form.validTo) }}
+			{% if form.validTo.vars.help %}
+				<div class="form-help">{{ form.validTo.vars.help }}</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+{# Navigation buttons #}
+<div class="wizard-navigation">
+	<div></div>
+	{# Empty div for spacing #}
+	<button type="submit" class="btn btn-primary">
+		Suivant : Créer les sections
+	</button>
+</div>
+
+{{ form_end(form) }}

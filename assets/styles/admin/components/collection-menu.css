@@ -1,0 +1,297 @@
+/**
+ * Styles pour les collections du formulaire de menu spécial
+ */
+
+/* Cacher le legend "Composition du menu" etc. */
+.collection-custom legend.col-form-label {
+    display: none;
+}
+
+/* Cacher le badge "Empty" */
+.collection-custom .collection-empty {
+    display: none;
+}
+
+/* Container des items de collection */
+.collection-custom .ea-form-collection-items {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+/* Retirer les wrappers accordion par défaut s'ils existent */
+.collection-custom .accordion {
+    --bs-accordion-border-width: 0;
+    width: 100%;
+}
+
+.collection-custom .form-widget-compound {
+    width: 100%;
+}
+
+.collection-custom .form-widget {
+    width: 100%;
+}
+
+/* Conteneur direct des items - Layout en grille responsive */
+.collection-custom [data-empty-collection] {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr; /* Mobile: 1 colonne = 100% largeur */
+    width: 100%;
+}
+
+/* Desktop: 2 items par ligne pour les écrans moyens */
+@media (min-width: 768px) {
+    .collection-custom [data-empty-collection] {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+/* Desktop large: 3 items par ligne pour les grands écrans */
+@media (min-width: 992px) {
+    .collection-custom [data-empty-collection] {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+/* Styles des items de collection */
+.collection-custom .field-collection-item {
+    break-inside: avoid; /* Éviter la coupure en grille */
+    width: 100%;
+    min-width: 0; /* Important pour que flexbox/grid puisse réduire l'élément */
+}
+
+.collection-custom .accordion-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    background: white;
+    width: 100%;
+}
+
+.collection-custom .accordion-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #b89f8e;
+}
+
+/* Header de l'accordion */
+.collection-custom .accordion-header {
+    margin: 0;
+}
+
+.collection-custom .accordion-button {
+    padding: 0.875rem 1rem;
+    font-weight: 500;
+    color: #000000;
+    border: none;
+    background-color: #cddd9e;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    cursor: grab; /* Indique qu'on peut drag */
+}
+
+.collection-custom .accordion-button:active {
+    cursor: grabbing;
+}
+
+.collection-custom .accordion-button:not(.collapsed) {
+    background-color: #c1d38a;
+    color: #141313;
+}
+
+.collection-custom .accordion-button:focus {
+    box-shadow: none;
+    border: none;
+}
+
+/* Icône de collapse */
+.collection-custom .form-collection-item-collapse-marker {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.collection-custom .accordion-button:not(.collapsed) .form-collection-item-collapse-marker {
+    transform: rotate(90deg);
+}
+
+/* Titre de l'item dans l'accordion */
+.collection-custom .item-title {
+    flex: 1;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.collection-custom .item-title:empty::before {
+    content: "Nouvel élément";
+    color: #4d4a4a;
+    font-style: italic;
+}
+
+/* Bouton de suppression */
+.collection-custom .field-collection-delete-button {
+    padding: 0.5rem;
+    margin-left: auto;
+    color: #dc3545;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.collection-custom .field-collection-delete-button:hover {
+    opacity: 1;
+    color: #c82333;
+    background: transparent;
+}
+
+.collection-custom .field-collection-delete-button .icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Corps de l'accordion */
+.collection-custom .accordion-body {
+    padding: 1rem;
+    background: white;
+}
+
+.collection-custom .accordion-body .row {
+    margin: 0;
+}
+
+.collection-custom .accordion-body .form-group {
+    margin-bottom: 0.75rem;
+}
+
+.collection-custom .accordion-body .form-control {
+    font-size: 0.9rem;
+}
+
+/* Classes Sortable pour le drag & drop */
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+.sortable-chosen {
+    cursor: grabbing;
+}
+
+.sortable-drag {
+    opacity: 1;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: rotate(2deg);
+}
+
+/* Stylisation du bouton d'ajout */
+.collection-custom .field-collection-add-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(102, 126, 234, 0.2);
+    text-decoration: none;
+}
+
+.collection-custom .field-collection-add-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.collection-custom .field-collection-add-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+/* Icône du bouton */
+.collection-custom .field-collection-add-button .icon {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+}
+
+.collection-custom .field-collection-add-button .icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Cacher le texte par défaut "Add a new item" */
+.collection-custom .field-collection-add-button {
+    font-size: 0;
+}
+
+.collection-custom .field-collection-add-button .icon {
+    font-size: 1rem;
+}
+
+/* Ajouter le texte personnalisé pour chaque type de collection */
+.collection-entree .field-collection-add-button::after {
+    content: "Ajouter une entrée";
+    font-size: 0.95rem;
+}
+
+.collection-plat .field-collection-add-button::after {
+    content: "Ajouter un plat";
+    font-size: 0.95rem;
+}
+
+.collection-dessert .field-collection-add-button::after {
+    content: "Ajouter un dessert";
+    font-size: 0.95rem;
+}
+
+.collection-supplement .field-collection-add-button::after {
+    content: "Ajouter un supplément";
+    font-size: 0.95rem;
+}
+
+/* Cacher le texte d'aide si besoin */
+.collection-custom .form-help {
+    display: none;
+}
+
+/* Alignement du bouton et du contenu */
+.collection-custom > .form-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* Responsive - Bouton d'ajout pleine largeur sur mobile */
+@media (max-width: 767px) {
+    .collection-custom .field-collection-add-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animation d'apparition pour les nouveaux items */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.collection-custom .field-collection-item {
+    animation: slideIn 0.3s ease-out;
+}

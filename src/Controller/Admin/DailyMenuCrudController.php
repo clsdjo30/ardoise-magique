@@ -7,10 +7,13 @@ namespace App\Controller\Admin;
 use App\Entity\Ardoise;
 use App\Entity\Restaurant;
 use App\Entity\User;
+use App\Service\Subscription\FeatureAccessService;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -28,7 +31,8 @@ class DailyMenuCrudController extends AbstractCrudController
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private RequestStack $requestStack,
-        private RestaurantRepository $restaurantRepository
+        private RestaurantRepository $restaurantRepository,
+        private FeatureAccessService $featureAccess
     ) {}
 
     public static function getEntityFqcn(): string
@@ -45,85 +49,128 @@ class DailyMenuCrudController extends AbstractCrudController
             ->setPageTitle('new', 'Composer votre Menu du Jour')
             ->setPageTitle('edit', 'Modifier Menu du Jour')
             ->setDefaultSort(['id' => 'DESC'])
+            ->overrideTemplate('crud/index', 'admin/crud/menu_index.html.twig')
             ->setFormThemes([
                 'admin/form/template_choice.html.twig',
                 '@EasyAdmin/crud/form_theme.html.twig',
             ]);
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action
+                    ->setIcon('fa fa-trash')
+                    ->addCssClass('btn btn-outline-danger')
+                    ->displayAsButton()
+                    ->setHtmlAttributes(['onclick' => 'return confirm("Êtes-vous sûr de vouloir supprimer ce menu ?")']);
+            })
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action
+                    ->setLabel('Nouveau Menu du Jour')
+                    ->setCssClass('btn btn-primary action-new')
+                    ->setHtmlAttributes(['title' => 'Créer un nouveau menu du jour']);
+            })
+            ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
+                return $action
+                    ->setLabel('Enregistrer')
+                    ->setCssClass('btn btn-primary action-new')
+                    ->setHtmlAttributes(['title' => 'enregistrer']);
+            })
+            ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
+                return $action
+                    ->setLabel('Enregistrer et Créer un autre Menu')
+                    ->setCssClass('btn btn-secondary action-another')
+                    ->setHtmlAttributes(['title' => 'enregistrer']);
+            });
+    }
+
     public function configureFields(string $pageName): iterable
     {
         yield FormField::addColumn(6);
         yield FormField::addFieldset("Personnalisez l'affichage de votre menu")
-            ->setCssClass('panel-classy bg-secondary-500 p-3 mb-4 mt-4')
-            ;
+            ->setCssClass('panel-classy');
         yield TextField::new('titre', 'Nom du menu')
             ->setRequired(true)
-            ->setCssClass('placeholder-gastro mb-1')
             ->setHtmlAttribute('placeholder', 'samedi 22 Novembre');
 
         yield NumberField::new('price_pj', 'Plat du jour')
             ->setRequired(true)
             ->setNumDecimals(2)
-            ->setCssClass('placeholder-gastro')
             ->setHtmlAttribute('placeholder', 'ex: 12.50')
             ->setColumns(6);
 
         yield NumberField::new('price_epd', 'Entrée + Plat + Dessert')
-            ->setCssClass('placeholder-gastro')
+            ->setCssClass('')
             ->setRequired(true)
             ->setNumDecimals(2)
-            ->setCssClass('placeholder-gastro')
             ->setHtmlAttribute('placeholder', 'ex: 15.50')
             ->setColumns(6);
-
 
         yield NumberField::new('price_pd', 'Plat + Dessert')
             ->setRequired(true)
             ->setNumDecimals(2)
-            ->setCssClass('placeholder-gastro mb-5')
             ->setHtmlAttribute('placeholder', 'ex: 10.50')
+            ->setColumns(6);
+
+        yield BooleanField::new('status', 'Cochez pour rendre ce menu visible')
             ->setColumns(6);
 
         // 🧱 Colonne 2 : contenu du jour
         yield FormField::addColumn(6);
         yield FormField::addFieldset("Que mange-t-on de bon aujourd'hui ?")
-            ->setCssClass('panel-classy bg-success-200 p-3 mb-4 mt-4')
+            ->setCssClass('panel-classy')
             ->setIcon('fas fa-concierge-bell');
         yield TextField::new('daily_entree', 'Entrée')
             ->setRequired(true)
-            ->setCssClass('placeholder-gastro')
             ->setHtmlAttribute('placeholder', 'ex: Salade de chèvre chaud')
             ->hideOnIndex();
 
         yield TextField::new('daily_plat', 'Plat')
             ->setRequired(true)
-            ->setCssClass('placeholder-gastro')
             ->setHtmlAttribute('placeholder', 'ex: Filet de poulet à la crème et aux champignons')
             ->hideOnIndex();
 
         yield TextField::new('daily_dessert', 'Dessert')
             ->setRequired(true)
-            ->setCssClass('placeholder-gastro')
             ->setHtmlAttribute('placeholder', 'ex: Tarte aux pommes maison')
             ->hideOnIndex();
 
-        yield BooleanField::new('status', 'Cochez pour rendre ce menu visible publiquement');
+
 
         yield FormField::addColumn(12);
         yield FormField::addFieldset("Personnalisez l'affichage de votre menu")
-            ->setCssClass('panel-classy bg-sidebar-200 p-3 mb-4 mt-4e');
+            ->setCssClass('panel-classy');
+
+        // Filter templates based on user's plan
+        /** @var User $user */
+        $user = $this->getUser();
+        $allowedTemplates = $this->featureAccess->getAllowedTemplates($user);
+
+        $templateChoices = [];
+        $allTemplates = [
+            'Bistrot' => Ardoise::TEMPLATE_BISTROT,
+            'Tradition' => Ardoise::TEMPLATE_TRADITIONNEL,
+            'Brut' => Ardoise::TEMPLATE_BRUT,
+            'Classe' => Ardoise::TEMPLATE_CLASSE,
+            'Digital' => Ardoise::TEMPLATE_DIGITAL,
+            'Magazine' => Ardoise::TEMPLATE_MAGAZINE,
+            'Marché' => Ardoise::TEMPLATE_MARCHE,
+            'Raffiné' => Ardoise::TEMPLATE_RAFINE,
+            'Scroller' => Ardoise::TEMPLATE_SCROLL,
+            'Timeline' => Ardoise::TEMPLATE_TIMELINE,
+            'Flipcards' => Ardoise::TEMPLATE_FLIPCARDS,
+        ];
+
+        foreach ($allTemplates as $label => $value) {
+            if (in_array($value, $allowedTemplates, true)) {
+                $templateChoices[$label] = $value;
+            }
+        }
+
         yield ChoiceField::new('template', 'Choisissez votre template')
-            ->setChoices([
-                'Bistrot' => Ardoise::TEMPLATE_BISTROT,
-                'Tradition' => Ardoise::TEMPLATE_TRADITIONNEL,
-                'Brut' => Ardoise::TEMPLATE_BRUT,
-                'Classe' => Ardoise::TEMPLATE_CLASSE,
-                'Digital' => Ardoise::TEMPLATE_DIGITAL,
-                'Magazine' => Ardoise::TEMPLATE_MAGAZINE,
-                'Marché' => Ardoise::TEMPLATE_MARCHE,
-                'Raffiné' => Ardoise::TEMPLATE_RAFINE,
-            ])
+            ->setChoices($templateChoices)
             ->setColumns(12)
             ->setRequired(true)
             ->setFormTypeOption('expanded', true)

@@ -1,0 +1,79 @@
+<form method="post" data-controller="dish-selector" class="wizard-form wizard-step-3">
+    <div class="step3-help">
+        <p>Sélectionnez les plats à ajouter à chaque section. Cochez les variantes que vous souhaitez inclure dans votre carte.</p>
+    </div>
+
+    {% for index, section in wizardData.sections %}
+        <div class="section-dish-selector"
+             data-section-index="{{ index }}"
+             data-category-id="{{ section.categorie.id }}">
+            <div class="section-header">
+                <span class="section-badge">Section {{ index + 1 }}</span>
+                <h3>{{ section.categorie.titre }}</h3>
+            </div>
+            {% if section.description %}
+                <p class="section-description">{{ section.description }}</p>
+            {% endif %}
+
+            {# Search bar #}
+            <div class="dish-search">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Rechercher un plat dans {{ section.categorie.titre|lower }}..."
+                       data-action="input->dish-selector#search"
+                       data-section-index="{{ index }}">
+            </div>
+
+            {# Skeleton loader - visible during loading #}
+            <div class="dish-catalog-skeleton" data-dish-selector-target="skeleton-{{ index }}">
+                <div class="skeleton-item">
+                    <div class="skeleton-checkbox"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-description"></div>
+                        <div class="skeleton-variant"></div>
+                    </div>
+                </div>
+                <div class="skeleton-item">
+                    <div class="skeleton-checkbox"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-description"></div>
+                        <div class="skeleton-variant"></div>
+                    </div>
+                </div>
+                <div class="skeleton-item">
+                    <div class="skeleton-checkbox"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-variant"></div>
+                    </div>
+                </div>
+            </div>
+
+            {# Catalog with checklist - hidden until loaded #}
+            <div class="dish-catalog hidden" data-dish-selector-target="catalog-{{ index }}">
+                {# Content will be loaded by JavaScript #}
+            </div>
+
+            {# Hidden inputs for selected variants #}
+            <div class="selected-inputs" data-section-index="{{ index }}">
+                {% if wizardData.selectedVariants[index] is defined %}
+                    {% for variantId in wizardData.selectedVariants[index] %}
+                        <input type="hidden" name="selectedVariants[{{ index }}][]" value="{{ variantId }}" data-variant-id="{{ variantId }}">
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+    {# Navigation buttons #}
+    <div class="wizard-navigation">
+        <a href="{{ path('app_carte_wizard', {'step': 'step2'}) }}" class="btn btn-secondary">
+            Retour
+        </a>
+        <button type="submit" class="btn btn-primary">
+            Suivant : Aperçu
+        </button>
+    </div>
+</form>

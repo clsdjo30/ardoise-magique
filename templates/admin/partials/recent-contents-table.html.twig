@@ -1,0 +1,183 @@
+{#
+    Component: Recent Contents Table
+    Description: Table displaying recent menus and cards with links
+
+    Parameters:
+    - menus: array - Array of menu items
+#}
+
+<div class="recent-contents" id="menus-list">
+    <div class="recent-contents__header">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <h2 class="recent-contents__title">
+                <span class=" recent-contents__icon text-primary">🍽️</span>
+                Mes ardoises
+            </h2>
+        </div>
+        <div class="text-muted small mt-2">Lien public uniquement si "Publié" est actif.</div>
+    </div>
+
+    <div class="recent-contents__table-wrapper">
+        {% if menus is defined and menus|length > 0 %}
+            <table class="recent-contents__table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Titre</th>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <th>Restaurant</th>
+                        {% endif %}
+                        <th>Statut</th>
+                        <th>Lien</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in menus %}
+                        {% set rowUrl = url('app_show_menu', {
+                            restaurant: menu.owner.slug,
+                            slug: menu.slug
+                        }) %}
+                        <tr class="recent-contents__row" data-menu-id="{{ menu.id }}">
+                            {# Header mobile cliquable - visible uniquement sur mobile #}
+                            <td class="recent-contents__mobile-header" colspan="100">
+                                <button class="recent-contents__toggle" type="button" data-bs-toggle="collapse" data-bs-target="#menu-details-{{ menu.id }}" aria-expanded="false">
+                                    <span class="recent-contents__toggle-title">{{ menu.titre }}</span>
+                                    <i class="fa fa-chevron-down recent-contents__toggle-icon"></i>
+                                </button>
+                            </td>
+
+                            {# Colonnes normales pour desktop #}
+                            <td data-label="Type" class="recent-contents__desktop-cell">
+                                {% if menu.type == 'DAILY' %}
+                                    <span class="content-type-badge content-type-badge--daily">
+                                        <i class="fa fa-sun content-type-badge__icon"></i>
+                                        <span class="content-type-badge__text">Menu du jour</span>
+                                    </span>
+                                {% else %}
+                                    <span class="content-type-badge content-type-badge--special">
+                                        <i class="fa fa-star content-type-badge__icon"></i>
+                                        <span class="content-type-badge__text">Menu spécial</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td data-label="Titre" class="recent-contents__name recent-contents__desktop-cell">{{ menu.titre }}</td>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <td data-label="Restaurant" class="recent-contents__restaurant recent-contents__desktop-cell">{{ menu.restaurant.name }}</td>
+                            {% endif %}
+                            <td data-label="Statut" class="recent-contents__desktop-cell">
+                                {% if menu.status %}
+                                    <span class="status-badge status-badge--published">
+                                        <i class="fa fa-check me-1"></i>
+                                        Publié
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-badge--draft">
+                                        <i class="fa fa-moon me-1"></i>
+                                        Brouillon
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td data-label="Lien public" class="recent-contents__desktop-cell">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" value="{{ rowUrl }}" id="url-{{ menu.id }}" readonly>
+                                    <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('url-{{ menu.id }}')" title="Copier le lien" {% if not menu.status %} disabled {% endif %}>
+                                        <i class="fa fa-copy"></i>
+                                    </button>
+                                    <a href="{{ rowUrl }}" class="btn {{ menu.status ? 'btn-outline-success' : 'btn-outline-secondary disabled' }}" target="_blank" title="Voir le menu" {% if not menu.status %} aria-disabled="true" tabindex="-1" {% endif %}>
+                                        <i class="fa fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            </td>
+
+                            {# Contenu dépliable pour mobile #}
+                            <td class="recent-contents__mobile-details" colspan="100">
+                                <div class="collapse" id="menu-details-{{ menu.id }}">
+                                    <div class="recent-contents__details-content">
+                                        <div class="recent-contents__detail-item">
+                                            <span class="recent-contents__detail-label">Type</span>
+                                            {% if menu.type == 'DAILY' %}
+                                                <span class="content-type-badge content-type-badge--daily">
+                                                    <i class="fa fa-sun content-type-badge__icon"></i>
+                                                    <span class="content-type-badge__text">Menu du jour</span>
+                                                </span>
+                                            {% else %}
+                                                <span class="content-type-badge content-type-badge--special">
+                                                    <i class="fa fa-star content-type-badge__icon"></i>
+                                                    <span class="content-type-badge__text">Menu spécial</span>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                            <div class="recent-contents__detail-item">
+                                                <span class="recent-contents__detail-label">Restaurant</span>
+                                                <span class="recent-contents__restaurant">{{ menu.restaurant.name }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="recent-contents__detail-item">
+                                            <span class="recent-contents__detail-label">Statut</span>
+                                            {% if menu.status %}
+                                                <span class="status-badge status-badge--published">
+                                                    <i class="fa fa-check me-1"></i>
+                                                    Publié
+                                                </span>
+                                            {% else %}
+                                                <span class="status-badge status-badge--draft">
+                                                    <i class="fa fa-moon me-1"></i>
+                                                    Brouillon
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="recent-contents__detail-item">
+                                            <span class="recent-contents__detail-label">Lien public</span>
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" value="{{ rowUrl }}" id="url-mobile-{{ menu.id }}" readonly>
+                                                <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('url-mobile-{{ menu.id }}')" title="Copier le lien" {% if not menu.status %} disabled {% endif %}>
+                                                    <i class="fa fa-copy"></i>
+                                                </button>
+                                                <a href="{{ rowUrl }}" class="btn {{ menu.status ? 'btn-outline-success' : 'btn-outline-secondary disabled' }}" target="_blank" title="Voir le menu" {% if not menu.status %} aria-disabled="true" tabindex="-1" {% endif %}>
+                                                    <i class="fa fa-external-link-alt"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="recent-contents__empty">
+                Aucun menu pour le moment. Lancez un menu du jour ou un special pour commencer.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function copyToClipboard(elementId) {
+    const input = document.getElementById(elementId);
+    input.select();
+    input.setSelectionRange(0, 99999); // For mobile devices
+
+    navigator.clipboard.writeText(input.value).then(function() {
+        // Visual feedback
+        const button = input.nextElementSibling;
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fa fa-check"></i>';
+        button.classList.add('btn-success');
+        button.classList.remove('btn-outline-primary');
+
+        setTimeout(function() {
+            button.innerHTML = originalHTML;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-primary');
+        }, 2000);
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+</script>

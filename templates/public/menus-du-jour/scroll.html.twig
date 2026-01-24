@@ -1,0 +1,198 @@
+{% extends 'public/menus-du-jour/_base_daily.html.twig' %}
+
+{% block menu_head %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="{{ asset('styles/public/templates/scroll.css') }}">
+{% endblock %}
+
+{% block menu_content %}
+<!-- Navigation Dots -->
+<nav class="scroll-nav">
+    <a href="#intro" class="nav-dot active" data-section="0"></a>
+    <a href="#entree" class="nav-dot" data-section="1"></a>
+    <a href="#plat" class="nav-dot" data-section="2"></a>
+    <a href="#dessert" class="nav-dot" data-section="3"></a>
+    <a href="#tarifs" class="nav-dot" data-section="4"></a>
+</nav>
+
+<!-- Container avec Scroll Snap -->
+<div class="scroll-container">
+
+    <!-- SECTION 1 : Fiche Restaurant -->
+    <section id="intro" class="scroll-section intro-section">
+        <div class="intro-content">
+            <div class="restaurant-logo">
+                <i class="fas fa-utensils-alt"></i>
+            </div>
+            <h1 class="restaurant-name">{{ restaurant.name }}</h1>
+            <p class="restaurant-tagline">{{ ardoise.titre }}</p>
+            <div class="intro-divider"></div>
+            <p class="intro-description">
+                Une cuisine authentique et raffinée,
+                préparée avec passion et des produits de saison
+            </p>
+            <div class="scroll-hint">
+                <i class="fas fa-chevron-down"></i>
+                <span>Découvrez notre menu</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2 : Entrée -->
+    <section id="entree" class="scroll-section dish-section">
+        <div class="dish-content">
+            <div class="dish-category-badge">
+                <i class="fas fa-leaf"></i>
+                <span>Entrée</span>
+            </div>
+            <div class="dish-main">
+                {% if ardoise.dailyEntree %}
+                    <h2 class="dish-name">{{ ardoise.dailyEntree|nl2br }}</h2>
+                {% else %}
+                    <h2 class="dish-name">Notre entrée du jour</h2>
+                {% endif %}
+            </div>
+            <div class="dish-number">01</div>
+        </div>
+    </section>
+
+    <!-- SECTION 3 : Plat -->
+    <section id="plat" class="scroll-section dish-section">
+        <div class="dish-content">
+            <div class="dish-category-badge">
+                <i class="fas fa-drumstick-bite"></i>
+                <span>Plat Principal</span>
+            </div>
+            <div class="dish-main">
+                {% if ardoise.dailyPlat %}
+                    <h2 class="dish-name">{{ ardoise.dailyPlat|nl2br }}</h2>
+                {% else %}
+                    <h2 class="dish-name">Notre plat du jour</h2>
+                {% endif %}
+            </div>
+            <div class="dish-number">02</div>
+        </div>
+    </section>
+
+    <!-- SECTION 4 : Dessert -->
+    <section id="dessert" class="scroll-section dish-section">
+        <div class="dish-content">
+            <div class="dish-category-badge">
+                <i class="fas fa-ice-cream"></i>
+                <span>Dessert</span>
+            </div>
+            <div class="dish-main">
+                {% if ardoise.dailyDessert %}
+                    <h2 class="dish-name">{{ ardoise.dailyDessert|nl2br }}</h2>
+                {% else %}
+                    <h2 class="dish-name">Notre dessert du jour</h2>
+                {% endif %}
+            </div>
+            <div class="dish-number">03</div>
+        </div>
+    </section>
+
+    <!-- SECTION 5 : Tarifs -->
+    <section id="tarifs" class="scroll-section tarifs-section">
+        <div class="tarifs-content">
+            <h2 class="tarifs-title">Nos Formules</h2>
+
+            <div class="price-cards">
+                {% if ardoise.pricePj %}
+                <div class="price-card">
+                    <div class="price-card-header">
+                        <h3>Plat Seul</h3>
+                    </div>
+                    <div class="price-card-price">
+                        <span class="price-amount">{{ ardoise.pricePj }}</span>
+                        <span class="price-currency">€</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if ardoise.pricePd %}
+                <div class="price-card featured">
+                    <div class="price-card-header">
+                        <h3>Formule 2 Plats</h3>
+                        <p class="price-subtitle">Entrée + Plat ou Plat + Dessert</p>
+                    </div>
+                    <div class="price-card-price">
+                        <span class="price-amount">{{ ardoise.pricePd }}</span>
+                        <span class="price-currency">€</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if ardoise.priceEpd %}
+                <div class="price-card">
+                    <div class="price-card-header">
+                        <h3>Formule Complète</h3>
+                        <p class="price-subtitle">Entrée + Plat + Dessert</p>
+                    </div>
+                    <div class="price-card-price">
+                        <span class="price-amount">{{ ardoise.priceEpd }}</span>
+                        <span class="price-currency">€</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <p class="tarifs-note">
+                <i class="fas fa-info-circle"></i>
+                Tous nos plats sont préparés avec des produits frais et de saison
+            </p>
+
+            <footer class="footer">
+                <p>&copy; 2025 {{ restaurant.name }} - Tous droits réservés</p>
+            </footer>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block menu_scripts %}
+<script>
+// Navigation Dots Active State
+const sections = document.querySelectorAll('.scroll-section');
+const navDots = document.querySelectorAll('.nav-dot');
+
+const observerOptions = {
+    threshold: 0.6,
+    rootMargin: '0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const sectionId = entry.target.id;
+            navDots.forEach(dot => {
+                if (dot.getAttribute('href') === `#${sectionId}`) {
+                    navDots.forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
+                }
+            });
+        }
+    });
+}, observerOptions);
+
+sections.forEach(section => observer.observe(section));
+
+// Smooth Scroll for Navigation
+navDots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = dot.getAttribute('href');
+        document.querySelector(targetId).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Fade-in Animation on Load
+window.addEventListener('load', () => {
+    document.querySelector('.intro-section').classList.add('loaded');
+});
+</script>
+{% endblock %}

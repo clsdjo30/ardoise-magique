@@ -46,4 +46,92 @@ class RestaurantRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Trouve tous les restaurants pour l'annuaire
+     *
+     * @return Restaurant[]
+     */
+    public function findAllForDirectory(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->orderBy('r.city', 'ASC')
+            ->addOrderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Trouve les restaurants par ville
+     *
+     * @return Restaurant[]
+     */
+    public function findByCity(string $city): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('LOWER(r.city) = LOWER(:city)')
+            ->setParameter('city', $city)
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Trouve les restaurants par département
+     *
+     * @return Restaurant[]
+     */
+    public function findByDepartement(string $departement): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('LOWER(r.departement) = LOWER(:departement)')
+            ->setParameter('departement', $departement)
+            ->orderBy('r.city', 'ASC')
+            ->addOrderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Trouve un restaurant par son slug
+     */
+    public function findOneBySlug(string $slug): ?Restaurant
+    {
+        return $this->findOneBy(['slug' => $slug]);
+    }
+
+    /**
+     * Récupère toutes les villes uniques
+     *
+     * @return string[]
+     */
+    public function findAllCities(): array
+    {
+        $result = $this->createQueryBuilder('r')
+            ->select('DISTINCT r.city')
+            ->orderBy('r.city', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return array_column($result, 'city');
+    }
+
+    /**
+     * Récupère tous les départements uniques
+     *
+     * @return string[]
+     */
+    public function findAllDepartements(): array
+    {
+        $result = $this->createQueryBuilder('r')
+            ->select('DISTINCT r.departement')
+            ->where('r.departement IS NOT NULL')
+            ->andWhere('r.departement != :empty')
+            ->setParameter('empty', '')
+            ->orderBy('r.departement', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return array_column($result, 'departement');
+    }
 }

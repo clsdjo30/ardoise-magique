@@ -1,0 +1,299 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var entities \EasyCorp\Bundle\EasyAdminBundle\Collection\EntityCollection #}
+{# @var paginator \EasyCorp\Bundle\EasyAdminBundle\Orm\EntityPaginator #}
+{% set ea = ea() %}
+{% extends ea.templatePath('layout') %}
+{% trans_default_domain ea.i18n.translationDomain %}
+
+{% block body_id entities|length > 0 ? 'ea-index-' ~ entities|first.name : '' %}
+{% block body_class 'ea-index' ~ (entities|length > 0 ? ' ea-index-' ~ entities|first.name : '') %}
+
+	{% block configured_head_contents %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('styles/admin.css') }}"> <style>
+		/* Icônes colorées pour les actions */
+		i.fa-magic.update {
+			color: #28a745 !important; /* Vert */
+		}
+
+		i.fa-fire.delete {
+			color: #dc3545 !important; /* Rouge */
+		}
+
+		/* Effet au survol */
+		.btn:hover i.fa-magic.update {
+			color: #218838 !important; /* Vert plus foncé */
+		}
+
+		.btn:hover i.fa-fire.delete {
+			color: #c82333 !important; /* Rouge plus foncé */
+		}
+
+		/* Liens de tri */
+		.sort-link {
+			color: inherit;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			cursor: pointer;
+			transition: color 0.2s ease;
+		}
+
+		.sort-link:hover {
+			color: #0d6efd;
+			text-decoration: none;
+		}
+
+		.sort-link:hover i {
+			color: #0d6efd;
+		}
+
+		.sort-link i {
+			font-size: 0.875rem;
+			transition: color 0.2s ease;
+		}
+
+		.sort-link i.text-muted {
+			opacity: 0.5;
+		}
+
+		.sort-link:hover i.text-muted {
+			opacity: 1;
+		}
+
+		/* Pagination personnalisée */
+		.content-panel-footer .pagination {
+			margin: 0;
+			gap: 0.25rem;
+		}
+
+		.content-panel-footer .page-link {
+			border: 1px solid #dee2e6;
+			border-radius: 0.375rem;
+			color: #495057;
+			padding: 0.5rem 0.75rem;
+			transition: all 0.2s ease;
+		}
+
+		.content-panel-footer .page-link:hover {
+			background-color: #f8f9fa;
+			border-color: #dee2e6;
+			color: #0d6efd;
+		}
+
+		.content-panel-footer .page-item.active .page-link {
+			background-color: #0d6efd;
+			border-color: #0d6efd;
+			color: white;
+		}
+
+		.content-panel-footer .page-item.disabled .page-link {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	</style>
+{% endblock %}
+
+{% block content_title %}
+	{%- set custom_page_title = ea.crud.customPageTitle('index', null, ea.i18n.translationParameters, ea.i18n.translationDomain) -%}
+	{{- custom_page_title is null
+        ? ea.crud.defaultPageTitle('index', null, ea.i18n.translationParameters)|trans|raw
+        : custom_page_title|trans|raw -}}
+{% endblock %}
+
+{% block page_actions %}
+	{% block global_actions %}
+		{% if global_actions is defined and global_actions|length > 0 %}
+			<div class="global-actions">
+				{% for action in global_actions %}
+					{{ include(action.templatePath, {action: action}, with_context: false) }}
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endblock global_actions %}
+{% endblock page_actions %}
+
+{% block main %}
+	{# Flash messages #}
+	{% for type, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+				{{ message|raw }}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+			</div>
+		{% endfor %}
+	{% endfor %}
+
+	{# Include delete confirmation modal #}
+	{% include 'admin/partials/delete-confirmation-modal.html.twig' %}
+	<div class="recent-contents" id="plats-crud-list">
+		<div class="recent-contents__table-wrapper">
+			{% if entities|length > 0 %}
+				<table class="recent-contents__table">
+					<thead>
+						<tr>
+							<th>
+								{% set currentSort = app.request.query.all()['sort'] ?? {} %}
+								{% set nameSort = currentSort['name'] ?? null %}
+								{% set newNameSort = nameSort == 'ASC' ? 'DESC' : 'ASC' %}
+								<a href="{{ ea_url().setAction('index').set('sort[name]', newNameSort) }}" class="sort-link">
+									Nom du Plat
+									{% if nameSort %}
+										<i class="fa fa-sort-{{ nameSort == 'ASC' ? 'up' : 'down' }}"></i>
+									{% else %}
+										<i class="fa fa-sort text-muted"></i>
+									{% endif %}
+								</a>
+							</th>
+							<th>
+								{% set categorySort = currentSort['category.titre'] ?? null %}
+								{% set newCategorySort = categorySort == 'ASC' ? 'DESC' : 'ASC' %}
+								<a href="{{ ea_url().setAction('index').set('sort[category.titre]', newCategorySort) }}" class="sort-link">
+									Catégorie
+									{% if categorySort %}
+										<i class="fa fa-sort-{{ categorySort == 'ASC' ? 'up' : 'down' }}"></i>
+									{% else %}
+										<i class="fa fa-sort text-muted"></i>
+									{% endif %}
+								</a>
+							</th>
+							<th>
+								{% set createdSort = currentSort['createdAt'] ?? null %}
+								{% set newCreatedSort = createdSort == 'ASC' ? 'DESC' : 'ASC' %}
+								<a href="{{ ea_url().setAction('index').set('sort[createdAt]', newCreatedSort) }}" class="sort-link">
+									Créé le
+									{% if createdSort %}
+										<i class="fa fa-sort-{{ createdSort == 'ASC' ? 'up' : 'down' }}"></i>
+									{% else %}
+										<i class="fa fa-sort text-muted"></i>
+									{% endif %}
+								</a>
+							</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for entity in entities %}
+							{% set plat = entity.instance %}
+							<tr
+								class="recent-contents__row" data-plat-id="{{ plat.id }}">
+								{# Header mobile cliquable - visible uniquement sur mobile #}
+								<td class="recent-contents__mobile-header" colspan="100">
+									<button class="recent-contents__toggle" type="button" data-bs-toggle="collapse" data-bs-target="#plat-details-{{ plat.id }}" aria-expanded="false">
+										<span class="recent-contents__toggle-title">{{ plat.name }}</span>
+										<i class="fa fa-chevron-down recent-contents__toggle-icon"></i>
+									</button>
+								</td>
+
+								{# Colonnes normales pour desktop #}
+								<td data-label="Nom du Plat" class="recent-contents__name recent-contents__desktop-cell">{{ plat.name }}</td>
+								<td data-label="Catégorie" class="recent-contents__desktop-cell">
+									{% if plat.category %}
+										{% set colors = ['primary', 'success', 'danger', 'warning', 'info', 'dark'] %}
+										{% set colorIndex = plat.category.id % colors|length %}
+										<span class="badge bg-{{ colors[colorIndex] }} text-white">{{ plat.category.titre }}</span>
+									{% else %}
+										<span class="text-muted">-</span>
+									{% endif %}
+								</td>
+								<td data-label="Créé le" class="recent-contents__desktop-cell">
+									{{ plat.createdAt|date('d/m/Y H:i') }}
+								</td>
+								<td data-label="Actions" class="recent-contents__desktop-cell">
+									<div class="btn-group btn-group-sm">
+										{% set editAction = entity.actions.get('edit') %}
+										{% if editAction %}
+											<a href="{{ editAction.linkUrl }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier ce plat">
+												<i class="fa fa-magic update"></i>
+											</a>
+										{% endif %}
+										{% set deleteAction = entity.actions.get('delete') %}
+										{% if deleteAction %}
+											<form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
+												<input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
+												<button type="submit" class="btn btn-outline-danger" data-delete-confirm data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer ce plat">
+													<i class="fa fa-fire delete"></i>
+												</button>
+											</form>
+										{% endif %}
+									</div>
+								</td>
+
+								{# Contenu dépliable pour mobile #}
+								<td class="recent-contents__mobile-details" colspan="100">
+									<div class="collapse" id="plat-details-{{ plat.id }}">
+										<div class="recent-contents__details-content">
+											<div class="recent-contents__detail-item">
+												<span class="recent-contents__detail-label">Catégorie</span>
+												{% if plat.category %}
+													{% set colors = ['primary', 'success', 'danger', 'warning', 'info', 'dark'] %}
+													{% set colorIndex = plat.category.id % colors|length %}
+													<span class="badge bg-{{ colors[colorIndex] }} text-white">{{ plat.category.titre }}</span>
+												{% else %}
+													<span class="text-muted">-</span>
+												{% endif %}
+											</div>
+
+											<div class="recent-contents__detail-item">
+												<span class="recent-contents__detail-label">Créé le</span>
+												{{ plat.createdAt|date('d/m/Y H:i') }}
+											</div>
+
+											<div class="recent-contents__detail-item">
+												<span class="recent-contents__detail-label">Actions</span>
+												<div class="btn-group btn-group-sm">
+													{% set editAction = entity.actions.get('edit') %}
+													{% if editAction %}
+														<a href="{{ editAction.linkUrl }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier ce plat">
+															<i class="fa fa-magic update"></i>
+															Modifier
+														</a>
+													{% endif %}
+													{% set deleteAction = entity.actions.get('delete') %}
+													{% if deleteAction %}
+														<form method="POST" action="{{ deleteAction.linkUrl }}" style="display: inline;">
+															<input type="hidden" name="token" value="{{ csrf_token('ea-delete') }}">
+															<button type="submit" class="btn btn-outline-danger" data-delete-confirm data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer ce plat">
+																<i class="fa fa-fire delete"></i>
+																Supprimer
+															</button>
+														</form>
+													{% endif %}
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<div class="recent-contents__empty">
+					Aucun plat pour le moment.
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	{# Pagination #}
+	{% if entities|length > 0 %}
+		<div class="content-panel-footer without-padding without-border">
+			{{ include(ea.templatePath('crud/paginator')) }}
+		</div>
+	{% endif %}
+{% endblock main %}
+
+{% block body_javascript %}
+	{{ parent() }}
+	<script>
+		// Initialiser les tooltips Bootstrap
+document.addEventListener('DOMContentLoaded', function () {
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+});
+	</script>
+{% endblock body_javascript %}

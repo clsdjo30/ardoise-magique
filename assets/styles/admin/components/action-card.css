@@ -1,0 +1,190 @@
+/* ============================================
+   Component: Action Card (Updated)
+   ============================================ */
+
+.action-card {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 1.25rem; /* Coins plus arrondis comme sur l'image */
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+        0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    border: 1px solid #f1f5f9;
+    gap: 1.25rem;
+    position: relative;
+}
+
+/* Conteneur de l'icône (le carré vert) */
+.action-card__icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background-color: #c1d38a;
+    border-radius: 1rem;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.action-card__icon {
+    font-size: 1.75rem;
+    color: white;
+}
+
+/* Section texte */
+.action-card__text {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.action-card__title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.action-card__description {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* La petite flèche à droite */
+.action-card__arrow {
+    color: #1e293b;
+    opacity: 0.8;
+    transition: transform 0.2s ease;
+}
+
+/* ETAT HOVER (Basé sur active-action-card.png) */
+.action-card--active:hover {
+    border-color: #8da446;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(141, 164, 70, 0.2);
+}
+
+.action-card--active:hover .action-card__description,
+.action-card--active:hover .action-card__arrow {
+    color: #8da446;
+}
+
+.action-card--active:hover .action-card__icon-container {
+    box-shadow: 0 10px 20px rgba(141, 164, 70, 0.2);
+    transform: translateY(-3px);
+    background-color: #e7f3c2;
+    border: 0.2px solid #8da446;
+}
+
+.action-card--active:hover .action-card__arrow {
+    transform: translateX(4px);
+}
+
+/* État verrouillé */
+.action-card--locked {
+    background: #f8fafc;
+    cursor: not-allowed;
+    filter: grayscale(1);
+    opacity: 0.7;
+}
+
+/* ============================================
+   Responsive - Mobile
+   ============================================ */
+
+/* Tablette et mobile */
+@media (max-width: 768px) {
+    .action-card {
+        padding: 1rem;
+        gap: 1rem;
+        border-radius: 1rem;
+    }
+
+    .action-card__icon-container {
+        width: 56px;
+        height: 56px;
+        border-radius: 0.875rem;
+    }
+
+    .action-card__icon {
+        font-size: 1.5rem;
+    }
+
+    .action-card__title {
+        font-size: 0.9rem;
+        line-height: 1.3;
+    }
+
+    .action-card__description {
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+
+    .action-card__arrow {
+        width: 18px;
+        height: 18px;
+    }
+
+    .action-card__arrow svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Petits mobiles */
+@media (max-width: 480px) {
+    .action-card {
+        padding: 0.75rem;
+        gap: 0.625rem;
+    }
+
+    .action-card__icon-container {
+        width: 44px;
+        height: 44px;
+        border-radius: 0.625rem;
+    }
+
+    .action-card__icon {
+        font-size: 1.25rem;
+    }
+
+    .action-card__title {
+        font-size: 0.8125rem;
+        line-height: 1.25;
+        font-weight: 600;
+    }
+
+    .action-card__description {
+        font-size: 0.75rem;
+        line-height: 1.35;
+    }
+
+    .action-card__arrow {
+        width: 14px;
+        height: 14px;
+    }
+
+    .action-card__arrow svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Réduire l'effet de hover sur mobile pour éviter le jump trop important */
+    .action-card--active:hover {
+        transform: translateY(-2px);
+    }
+
+    .action-card--active:hover .action-card__icon-container {
+        transform: translateY(-1px);
+    }
+
+    .action-card--active:hover .action-card__arrow {
+        transform: translateX(2px);
+    }
+}

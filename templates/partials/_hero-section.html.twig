@@ -1,70 +1,117 @@
 <!-- SECTION 1 — HERO -->
 <section id="hero" class="hero">
-	<div
-		class="hero__container">
-		{# Left side - Content #}
-		<div
-			class="hero__content">
-			{# Tagline with diamonds #}
-			<div class="hero__tagline">
-				<p class="hero__tagline-text">
-					Tous vos menus méritent d’être vus en salle et sur le web.
-				</p>
-				<div class="hero__diamonds">
-					<span class="hero__diamond"></span>
-					<span class="hero__diamond"></span>
-					<span class="hero__diamond"></span>
-				</div>
+	{# Chalk texture overlay #}
+	<div class="hero__chalk-overlay"></div>
+
+	{# Art Nouveau decorative flourishes #}
+	<svg class="hero__flourish hero__flourish--top" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+		<path d="M0,50 Q50,20 100,50 T200,50" stroke="currentColor" stroke-width="2" fill="none" opacity="0.15"/>
+		<path d="M0,55 Q50,25 100,55 T200,55" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.1"/>
+	</svg>
+
+	<svg class="hero__flourish hero__flourish--bottom" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+		<path d="M0,50 Q50,80 100,50 T200,50" stroke="currentColor" stroke-width="2" fill="none" opacity="0.15"/>
+		<circle cx="100" cy="50" r="3" fill="currentColor" opacity="0.2"/>
+	</svg>
+
+	<div class="hero__container">
+		{# Asymmetric layered content #}
+		<div class="hero__content">
+			{# Handwritten accent badge #}
+			<div class="hero__badge">
+				<span class="hero__badge-text">Artisanal & Digital</span>
+				<svg class="hero__badge-underline" viewBox="0 0 120 8" xmlns="http://www.w3.org/2000/svg">
+					<path d="M2,4 Q30,6 60,3 T118,5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+				</svg>
 			</div>
 
-			{# Main title #}
+			{# Main title with handwriting reveal effect #}
 			<h1 class="hero__title">
-				L'Ardoise qui attire
-				<br>
-				aussi sur
-				<span class="hero__title-highlight">Internet</span>
+				<span class="hero__title-line hero__title-line--1">Vos menus</span>
+				<span class="hero__title-line hero__title-line--2">visibles en ligne</span>
+				<span class="hero__title-line hero__title-line--3">
+					avant l'arrivée
+					<span class="hero__title-accent">des Clients</span>
+				</span>
 			</h1>
 
-			{# Description #}
+			{# Decorative chalk divider #}
+			<div class="hero__divider">
+				<svg viewBox="0 0 100 12" xmlns="http://www.w3.org/2000/svg">
+					<path d="M5,6 L30,6 M35,6 Q45,3 55,6 T75,6 M80,6 L95,6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+					<circle cx="32" cy="6" r="2" fill="currentColor" opacity="0.4"/>
+					<circle cx="77" cy="6" r="2" fill="currentColor" opacity="0.4"/>
+				</svg>
+			</div>
+
+			{# Description with organic flow #}
 			<p class="hero__description">
-				Créez et partagez vos menus en ligne aussi facilement que vous écrivez sur votre ardoise.
-			</p>
-			<p class="hero__description">
-				Ardoise Magique prolonge votre communication locale dans le monde digital : vos menus deviennent visibles, partageables et consultables partout.
+				<span class="hero__description-highlight">Menus du jour, menus spéciaux et cartes complètes.</span>
+				<br>
+				Un lien. Un QR code. Une visibilité locale immédiate.
 			</p>
 
-			{# Call to action buttons #}
+			{# Call to action with elevated design #}
 			<div class="hero__cta-wrapper">
+				<a href="#reservation" class="hero__cta hero__cta--primary">
+					<span class="hero__cta-text">Créer mon premier menu</span>
+					<svg class="hero__cta-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
 				<a href="#reservation" class="hero__cta hero__cta--secondary">
-					Créer mon menu
+					<span class="hero__cta-text">Voir comment ça marche</span>
 				</a>
 			</div>
 		</div>
 
-		{# Right side - Visual with circular image and decorative rings #}
+		{# Layered visual composition with organic shapes #}
 		<div class="hero__visual">
-			<div
-				class="hero__image-wrapper">
-				{# Decorative rings #}
-				<div class="hero__ring hero__ring--outer"></div>
+			{# Organic blob background #}
+			<div class="hero__blob hero__blob--1"></div>
+			<div class="hero__blob hero__blob--2"></div>
 
-				{# Main image circle #}
-				<div class="hero__image-circle">
-					<img src="{{ asset('images/landing/hero-menu-du-jour-640.webp') }}" srcset="
-						                            {{ asset('images/landing/hero-menu-du-jour-540.webp') }} 540w,
-						                            {{ asset('images/landing/hero-menu-du-jour-640.webp') }} 640w,
-						                            {{ asset('images/landing/hero-menu-du-jour-760.webp') }} 760w
-						                        " sizes="(min-width: 1200px) 380px, (min-width: 768px) 320px, 90vw" alt="Assiette de plats du jour présentée sur une table de restaurant, illustrant un menu du jour attractif." width="380" height="470" loading="eager" fetchpriority="high" decoding="async" class="hero__image">
+			{# Image with artisanal frame #}
+			<div class="hero__image-wrapper">
+				<div class="hero__frame">
+					<div class="hero__frame-corner hero__frame-corner--tl"></div>
+					<div class="hero__frame-corner hero__frame-corner--tr"></div>
+					<div class="hero__frame-corner hero__frame-corner--bl"></div>
+					<div class="hero__frame-corner hero__frame-corner--br"></div>
 				</div>
 
-				<div class="hero__ring hero__ring--inner"></div>
+				<div class="hero__image-container">
+					<img src="{{ asset('images/landing/hero-menu-du-jour-640.webp') }}"
+					     srcset="{{ asset('images/landing/hero-menu-du-jour-540.webp') }} 540w,
+					             {{ asset('images/landing/hero-menu-du-jour-640.webp') }} 640w,
+					             {{ asset('images/landing/hero-menu-du-jour-760.webp') }} 760w"
+					     sizes="(min-width: 1200px) 480px, (min-width: 768px) 400px, 90vw"
+					     alt="Assiette de plats du jour présentée sur une table de restaurant, illustrant un menu du jour attractif."
+					     width="480"
+					     height="600"
+					     loading="eager"
+					     fetchpriority="high"
+					     decoding="async"
+					     class="hero__image">
+				</div>
+			</div>
+
+			{# Floating decorative elements #}
+			<div class="hero__float hero__float--1">
+				<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+					<circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+					<path d="M20,8 L20,32 M8,20 L32,20" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+				</svg>
+			</div>
+			<div class="hero__float hero__float--2">
+				<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+					<path d="M15,5 L25,25 L5,25 Z" stroke="currentColor" stroke-width="2" fill="none" opacity="0.25"/>
+				</svg>
 			</div>
 		</div>
 	</div>
 
-	{# Background decorative elements #}
+	{# Ambient food illustrations with parallax effect #}
 	<img src="{{ asset('images/landing/deco/fast-food.webp') }}" class="hero__deco hero__deco--1" alt="" role="presentation" loading="lazy" decoding="async">
-
 	<img src="{{ asset('images/landing/deco/meatloaf.webp') }}" class="hero__deco hero__deco--2" alt="" role="presentation" loading="lazy" decoding="async">
-
 </section>

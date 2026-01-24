@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Subscription;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
@@ -35,8 +36,16 @@ class RegistrationController extends AbstractController
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $user->setRoles(['ROLE_ADMIN']);
+
+            // Créer une subscription FREE par défaut
+            $subscription = new Subscription();
+            $subscription->setUser($user);
+            $subscription->setPlanCode('FREE');
+            $subscription->setStatus('active');
 
             $entityManager->persist($user);
+            $entityManager->persist($subscription);
             $entityManager->flush();
 
             // Connecter automatiquement l'utilisateur et le rediriger vers la création de restaurant

@@ -7,6 +7,7 @@ namespace App\EventSubscriber;
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -70,13 +71,16 @@ class DashboardAccessSubscriber implements EventSubscriberInterface
         // Vérifier si l'utilisateur a au moins un restaurant
         if ($user->getRestaurants()->isEmpty()) {
             // Rediriger vers la création de restaurant avec un message
-            $request->getSession()->getFlashBag()->add(
-                'info',
-                sprintf(
-                    'Bienvenue %s ! Pour accéder à votre espace de gestion, veuillez d\'abord créer votre restaurant.',
-                    $user->getFirstname()
-                )
-            );
+            $session = $request->getSession();
+            if ($session instanceof FlashBagAwareSessionInterface) {
+                $session->getFlashBag()->add(
+                    'info',
+                    sprintf(
+                        'Bienvenue %s ! Pour accéder à votre espace de gestion, veuillez d\'abord créer votre restaurant.',
+                        $user->getFirstname()
+                    )
+                );
+            }
 
             $redirectUrl = $this->urlGenerator->generate('app_onboarding_restaurant');
             $event->setResponse(new RedirectResponse($redirectUrl));

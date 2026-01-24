@@ -1,0 +1,160 @@
+{#
+    Component: Recent Cartes Table
+    Description: Table displaying recent cartes (cards) with links
+
+    Parameters:
+    - cartes: array - Array of carte items
+#}
+
+<div class="recent-contents" id="cartes-list">
+    <div class="recent-contents__header">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <h2 class="recent-contents__title">
+                <span class="recent-contents__icon text-primary">📖</span>
+                Mes cartes
+            </h2>
+        </div>
+        <div class="text-muted small mt-2">Lien public uniquement si "Publié" est actif.</div>
+    </div>
+
+    <div class="recent-contents__table-wrapper">
+        {% if cartes is defined and cartes|length > 0 %}
+            <table class="recent-contents__table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <th>Restaurant</th>
+                        {% endif %}
+                        <th>Validité</th>
+                        <th>Statut</th>
+                        <th>Lien</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for carte in cartes %}
+                        {% if carte.isPublished %}
+                            {% set rowUrl = url('app_show_carte', {
+                                restaurant: carte.restaurant.owner.slug,
+                                slug: carte.slug
+                            }) %}
+                            {% set linkLabel = 'Lien public' %}
+                        {% else %}
+                            {% set rowUrl = url('app_carte_preview', {
+                                id: carte.id
+                            }) %}
+                            {% set linkLabel = 'Prévisualiser' %}
+                        {% endif %}
+                        <tr class="recent-contents__row" data-carte-id="{{ carte.id }}">
+                            {# Header mobile cliquable - visible uniquement sur mobile #}
+                            <td class="recent-contents__mobile-header" colspan="100">
+                                <button class="recent-contents__toggle" type="button" data-bs-toggle="collapse" data-bs-target="#carte-details-{{ carte.id }}" aria-expanded="false">
+                                    <span class="recent-contents__toggle-title">{{ carte.name }}</span>
+                                    <i class="fa fa-chevron-down recent-contents__toggle-icon"></i>
+                                </button>
+                            </td>
+
+                            {# Colonnes normales pour desktop #}
+                            <td data-label="Nom" class="recent-contents__name recent-contents__desktop-cell">{{ carte.name }}</td>
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <td data-label="Restaurant" class="recent-contents__restaurant recent-contents__desktop-cell">{{ carte.restaurant.name }}</td>
+                            {% endif %}
+                            <td data-label="Validité" class="recent-contents__desktop-cell">
+                                <span class="text-muted small">
+                                    {{ carte.validFrom|date('d/m/Y') }}
+                                    {% if carte.validTo %}
+                                        - {{ carte.validTo|date('d/m/Y') }}
+                                    {% else %}
+                                        - Indéfini
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td data-label="Statut" class="recent-contents__desktop-cell">
+                                {% if carte.isPublished %}
+                                    <span class="status-badge status-badge--published">
+                                        <i class="fa fa-check me-1"></i>
+                                        Publié
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge status-badge--draft">
+                                        <i class="fa fa-moon me-1"></i>
+                                        Brouillon
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td data-label="{{ linkLabel }}" class="recent-contents__desktop-cell">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" value="{{ rowUrl }}" id="carte-url-{{ carte.id }}" readonly>
+                                    <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('carte-url-{{ carte.id }}')" title="Copier le lien">
+                                        <i class="fa fa-copy"></i>
+                                    </button>
+                                    <a href="{{ rowUrl }}" class="btn {{ carte.isPublished ? 'btn-outline-success' : 'btn-outline-warning' }}" target="_blank" title="{{ carte.isPublished ? 'Voir la carte' : 'Prévisualiser (brouillon)' }}">
+                                        <i class="fa {{ carte.isPublished ? 'fa-external-link-alt' : 'fa-eye' }}"></i>
+                                    </a>
+                                </div>
+                            </td>
+
+                            {# Contenu dépliable pour mobile #}
+                            <td class="recent-contents__mobile-details" colspan="100">
+                                <div class="collapse" id="carte-details-{{ carte.id }}">
+                                    <div class="recent-contents__details-content">
+                                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                            <div class="recent-contents__detail-item">
+                                                <span class="recent-contents__detail-label">Restaurant</span>
+                                                <span class="recent-contents__restaurant">{{ carte.restaurant.name }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="recent-contents__detail-item">
+                                            <span class="recent-contents__detail-label">Validité</span>
+                                            <span class="text-muted small">
+                                                {{ carte.validFrom|date('d/m/Y') }}
+                                                {% if carte.validTo %}
+                                                    - {{ carte.validTo|date('d/m/Y') }}
+                                                {% else %}
+                                                    - Indéfini
+                                                {% endif %}
+                                            </span>
+                                        </div>
+
+                                        <div class="recent-contents__detail-item">
+                                            <span class="recent-contents__detail-label">Statut</span>
+                                            {% if carte.isPublished %}
+                                                <span class="status-badge status-badge--published">
+                                                    <i class="fa fa-check me-1"></i>
+                                                    Publié
+                                                </span>
+                                            {% else %}
+                                                <span class="status-badge status-badge--draft">
+                                                    <i class="fa fa-moon me-1"></i>
+                                                    Brouillon
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="recent-contents__detail-item">
+                                            <span class="recent-contents__detail-label">{{ linkLabel }}</span>
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" value="{{ rowUrl }}" id="carte-url-mobile-{{ carte.id }}" readonly>
+                                                <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('carte-url-mobile-{{ carte.id }}')" title="Copier le lien">
+                                                    <i class="fa fa-copy"></i>
+                                                </button>
+                                                <a href="{{ rowUrl }}" class="btn {{ carte.isPublished ? 'btn-outline-success' : 'btn-outline-warning' }}" target="_blank" title="{{ carte.isPublished ? 'Voir la carte' : 'Prévisualiser (brouillon)' }}">
+                                                    <i class="fa {{ carte.isPublished ? 'fa-external-link-alt' : 'fa-eye' }}"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="recent-contents__empty">
+                Aucune carte pour le moment. Créez votre première carte restaurant.
+            </div>
+        {% endif %}
+    </div>
+</div>

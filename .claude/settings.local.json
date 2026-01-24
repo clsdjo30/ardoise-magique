@@ -11,7 +11,10 @@
       "Bash(npm run build:*)",
       "Bash(dir:*)",
       "Bash(findstr:*)",
-      "Bash(composer show:*)"
+      "Bash(composer show:*)",
+      "WebFetch(domain:yoandev.co)",
+      "Bash(cat:*)",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": []

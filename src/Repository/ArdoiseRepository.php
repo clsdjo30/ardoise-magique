@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Ardoise;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,55 @@ class ArdoiseRepository extends ServiceEntityRepository
         parent::__construct($registry, Ardoise::class);
     }
 
-//    /**
-//     * @return Ardoise[] Returns an array of Ardoise objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Count ardoises by user (across all their restaurants), type, and date range
+     * Used for quota tracking
+     */
+    public function countByUserTypeAndDateRange(
+        User $user,
+        string $type,
+        \DateTimeInterface $startDate,
+        \DateTimeInterface $endDate
+    ): int {
+        $qb = $this->createQueryBuilder('a');
 
-//    public function findOneBySomeField($value): ?Ardoise
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $qb->select('COUNT(a.id)')
+            ->join('a.restaurant', 'r')
+            ->where('r.owner = :user')
+            ->andWhere('a.type = :type')
+            ->andWhere('a.createdAt >= :startDate')
+            ->andWhere('a.createdAt <= :endDate')
+            ->setParameter('user', $user)
+            ->setParameter('type', $type)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Find ardoises by user, type, and date range
+     * Used for detailed usage reports
+     */
+    public function findByUserTypeAndDateRange(
+        User $user,
+        string $type,
+        \DateTimeInterface $startDate,
+        \DateTimeInterface $endDate
+    ): array {
+        $qb = $this->createQueryBuilder('a');
+
+        $qb->join('a.restaurant', 'r')
+            ->where('r.owner = :user')
+            ->andWhere('a.type = :type')
+            ->andWhere('a.createdAt >= :startDate')
+            ->andWhere('a.createdAt <= :endDate')
+            ->setParameter('user', $user)
+            ->setParameter('type', $type)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->orderBy('a.createdAt', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
 }

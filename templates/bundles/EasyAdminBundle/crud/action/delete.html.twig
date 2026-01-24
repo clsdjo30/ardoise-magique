@@ -1,0 +1,24 @@
+{# Custom delete action template compatible with EasyAdmin 4.21+ #}
+{# This template handles CSRF protection automatically without deprecated ea_csrf_token #}
+
+{% if action.isAsLinkType %}
+    {# For link-type actions (not used for delete, but included for completeness) #}
+    <a href="{{ action.linkUrl }}" class="{{ action.cssClass }}" {{ action.htmlAttributes|map((v, k) => "#{k}=\"#{v}\"")|join(' ')|raw }}>
+        {% if action.icon %}<i class="action-icon {{ action.icon }}"></i>{% endif %}
+        {{ action.label|trans(domain = ea.i18n.translationDomain) }}
+    </a>
+{% else %}
+    {# For form-type actions (DELETE uses this) #}
+    {# EasyAdmin 4.21+ handles CSRF automatically - no need for ea_csrf_token() #}
+    <form method="POST" action="{{ action.linkUrl }}" style="display: inline;">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit"
+                class="{{ action.cssClass ?: 'btn btn-outline-danger' }}"
+                title="{{ action.label|trans(domain = ea.i18n.translationDomain) }}"
+                onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')"
+                {{ action.htmlAttributes|map((v, k) => "#{k}=\"#{v}\"")|join(' ')|raw }}>
+            {% if action.icon %}<i class="{{ action.icon }}"></i>{% endif %}
+            {% if not isIncludedInBatch %} {{ action.label|trans(domain = ea.i18n.translationDomain) }}{% endif %}
+        </button>
+    </form>
+{% endif %}

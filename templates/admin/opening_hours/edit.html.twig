@@ -1,0 +1,195 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    <i class="fa fa-clock me-2"></i>
+    Horaires d'ouverture - {{ restaurant.name }}
+{% endblock %}
+
+{% block content_title %}
+    Horaires de {{ restaurant.name }}
+{% endblock %}
+
+{% block main %}
+    {# Flash messages #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                {{ message|raw }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="recent-contents opening-hours-card">
+        <div class="recent-contents__header">
+            <h3 class="recent-contents__title">
+                <i class="fa fa-calendar-alt recent-contents__icon"></i>
+                Définir les horaires de la semaine
+            </h3>
+        </div>
+        <div class="recent-contents__table-wrapper">
+            {{ form_start(form, {'attr': {'class': 'opening-hours-form'}}) }}
+
+            <div class="table-responsive">
+                <table class="recent-contents__table opening-hours-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 120px;">Jour</th>
+                            <th style="width: 80px;" class="text-center">Fermé</th>
+                            <th colspan="2" class="text-center">Service du midi</th>
+                            <th colspan="2" class="text-center">Service du soir</th>
+                        </tr>
+                        <tr class="small text-muted">
+                            <th></th>
+                            <th></th>
+                            <th class="text-center">Ouverture</th>
+                            <th class="text-center">Fermeture</th>
+                            <th class="text-center">Ouverture</th>
+                            <th class="text-center">Fermeture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for dayNum, dayName in days %}
+                            <tr class="day-row" data-day="{{ dayNum }}">
+                                <td class="fw-bold align-middle">
+                                    <span class="day-name">{{ dayName }}</span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    {{ form_widget(form['day_' ~ dayNum ~ '_closed'], {'attr': {'class': 'form-check-input day-closed-checkbox'}}) }}
+                                </td>
+                                <td class="time-cell">
+                                    {{ form_widget(form['day_' ~ dayNum ~ '_morning_opens']) }}
+                                </td>
+                                <td class="time-cell">
+                                    {{ form_widget(form['day_' ~ dayNum ~ '_morning_closes']) }}
+                                </td>
+                                <td class="time-cell">
+                                    {{ form_widget(form['day_' ~ dayNum ~ '_evening_opens']) }}
+                                </td>
+                                <td class="time-cell">
+                                    {{ form_widget(form['day_' ~ dayNum ~ '_evening_closes']) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <a href="{{ ea_url().setController('App\\Controller\\Admin\\RestaurantCrudController').setAction('index') }}" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left me-1"></i>
+                    Retour aux restaurants
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fa fa-save me-1"></i>
+                    Enregistrer les horaires
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    {# Help section #}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h6 class="mb-0">
+                <i class="fa fa-lightbulb me-2 text-warning"></i>
+                Conseils
+            </h6>
+        </div>
+        <div class="card-body">
+            <ul class="mb-0">
+                <li>Cochez "Fermé" pour les jours de fermeture</li>
+                <li>Laissez les champs vides si vous n'avez qu'un seul service (midi ou soir)</li>
+                <li>Les horaires seront affichés sur la page publique de votre restaurant</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <style>
+        .opening-hours-card {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .opening-hours-table {
+            margin-bottom: 0;
+        }
+
+        .opening-hours-table th,
+        .opening-hours-table td {
+            vertical-align: middle;
+        }
+
+        .time-cell {
+            padding: 0.5rem;
+        }
+
+        .time-cell input[type="time"] {
+            width: 100%;
+            min-width: 100px;
+        }
+
+        .day-row.closed {
+            background-color: #f8f9fa;
+        }
+
+        .day-row.closed .time-cell input {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .day-row.closed .day-name {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+
+        .day-closed-checkbox {
+            width: 1.5em;
+            height: 1.5em;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .opening-hours-table {
+                font-size: 0.85rem;
+            }
+
+            .time-cell input[type="time"] {
+                min-width: 80px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle day row styling based on closed checkbox
+            const closedCheckboxes = document.querySelectorAll('.day-closed-checkbox');
+
+            closedCheckboxes.forEach(function(checkbox) {
+                const row = checkbox.closest('tr');
+
+                // Initial state
+                if (checkbox.checked) {
+                    row.classList.add('closed');
+                }
+
+                // On change
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        row.classList.add('closed');
+                    } else {
+                        row.classList.remove('closed');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,156 @@
+/* ============================================
+   Flash Messages & Mobile Menu Fixes
+   ============================================ */
+
+/* Fix 1: Flash messages appearing behind sidebar
+   - EasyAdmin flash messages need higher z-index than sidebar (1040)
+   - Position them at the top with proper spacing
+   ============================================ */
+
+#flash-messages {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    left: auto;
+    z-index: 1100; /* Higher than sidebar (1040) and overlay (1035) */
+    max-width: 400px;
+    pointer-events: none; /* Allow clicks to pass through the container */
+}
+
+#flash-messages .alert {
+    pointer-events: auto; /* But allow clicks on the alert itself */
+    margin-bottom: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Adjust for desktop with sidebar */
+@media (min-width: 992px) {
+    #flash-messages {
+        left: calc(var(--sidebar-width, 250px) + 1rem);
+        right: 1rem;
+        max-width: calc(100% - var(--sidebar-width, 250px) - 2rem);
+    }
+}
+
+/* Fix 2: Mobile sidebar overlay blocking clicks
+   - The overlay should NOT block clicks on the sidebar
+   - Use pointer-events to allow clicks through on sidebar area
+   ============================================ */
+
+@media (max-width: 991px) {
+    /* Overlay behind sidebar but above content */
+    body.ea.ea-mobile-sidebar-visible::before {
+        z-index: 1039 !important; /* Below sidebar (1040) */
+        pointer-events: none !important; /* Don't block any clicks */
+    }
+
+    /* Ensure sidebar is above overlay and clickable */
+    body.ea .sidebar-wrapper {
+        z-index: 1040 !important; /* Above overlay (1039) */
+        pointer-events: auto !important; /* Ensure sidebar is clickable */
+    }
+
+    /* Make sure all sidebar content is clickable */
+    body.ea .sidebar-wrapper * {
+        pointer-events: auto !important;
+    }
+
+    /* Flash messages on mobile - full width at top */
+    #flash-messages {
+        top: 70px; /* Below mobile header (60px) + spacing */
+        left: 1rem;
+        right: 1rem;
+        max-width: calc(100% - 2rem);
+        z-index: 1100; /* Still above everything */
+    }
+
+    /* When sidebar is open, flash messages should be visible */
+    body.ea.ea-mobile-sidebar-visible #flash-messages {
+        z-index: 1100; /* Above sidebar and overlay */
+    }
+}
+
+/* Additional enhancement: Make overlay visible but not blocking */
+body.ea.ea-mobile-sidebar-visible::before {
+    cursor: pointer;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* ============================================
+   Fix 3: Bootstrap modal-backdrop blocking sidebar clicks
+   - The modal-backdrop is created by Bootstrap and blocks all clicks
+   - Either disable it or put it behind the sidebar
+   ============================================ */
+
+/* Fix modal-backdrop on mobile only */
+@media (max-width: 991px) {
+    .modal-backdrop {
+        z-index: 1035 !important; /* Below sidebar (1040) */
+        pointer-events: none !important; /* Don't block sidebar clicks */
+    }
+
+    /* Ensure sidebar stays above modal-backdrop */
+    body.ea .sidebar-wrapper {
+        z-index: 1050 !important; /* Above modal-backdrop */
+    }
+}
+
+/* ============================================
+   Mobile Sidebar Close Button
+   ============================================ */
+
+.mobile-sidebar-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 1.5rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: linear-gradient(175deg,#8da446 20%,  #c1d38a 100%);
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1060;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.mobile-sidebar-close:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.mobile-sidebar-close:active {
+    transform: scale(0.95);
+}
+
+/* Show only on mobile when sidebar is visible */
+@media (max-width: 991px) {
+    body.ea.ea-mobile-sidebar-visible .mobile-sidebar-close {
+        display: flex;
+    }
+
+    /* Add padding to sidebar content to avoid overlap with close button */
+    body.ea.ea-mobile-sidebar-visible .sidebar {
+        padding-top: 3.5rem;
+    }
+}

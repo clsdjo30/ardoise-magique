@@ -33,7 +33,7 @@ class CreateAdminCommand extends Command
         $this
             ->addArgument('email', InputArgument::REQUIRED, 'Email de l\'administrateur')
             ->addArgument('password', InputArgument::REQUIRED, 'Mot de passe')
-            ->addArgument('restaurant_name', InputArgument::OPTIONAL, 'Nom du restaurant', 'Admin Restaurant')
+            ->addArgument('firstname', InputArgument::OPTIONAL, 'Nom du restaurant', 'Admin Restaurant')
             ->addOption('super-admin', null, InputOption::VALUE_NONE, 'Creer un super-administrateur');
     }
 
@@ -43,7 +43,7 @@ class CreateAdminCommand extends Command
 
         $email = $input->getArgument('email');
         $password = $input->getArgument('password');
-        $restaurantName = $input->getArgument('restaurant_name');
+        $name = $input->getArgument('firstname');
         $isSuperAdmin = $input->getOption('super-admin');
 
         // Verifier si l'utilisateur existe deja
@@ -57,20 +57,14 @@ class CreateAdminCommand extends Command
         // Creer le nouvel utilisateur
         $user = new User();
         $user->setEmail($email);
-        $user->setNomRestaurant($restaurantName);
+        $user->setFirstname($name);
 
         // Hasher le mot de passe
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_SUPER_ADMIN']);
+        $io->note('Creation d\'un super-administrateur');
 
-        // Definir les roles
-        if ($isSuperAdmin) {
-            $user->setRoles(['ROLE_USER', 'ROLE_SUPER_ADMIN']);
-            $io->note('Creation d\'un super-administrateur');
-        } else {
-            $user->setRoles(['ROLE_USER']);
-            $io->note('Creation d\'un utilisateur standard');
-        }
 
         // Sauvegarder l'utilisateur
         $this->entityManager->persist($user);
@@ -79,7 +73,7 @@ class CreateAdminCommand extends Command
         $io->success([
             'Utilisateur cree avec succes !',
             sprintf('Email: %s', $email),
-            sprintf('Restaurant: %s', $restaurantName),
+            sprintf('Restaurant: %s', $name),
             sprintf('Slug: %s', $user->getSlug()),
             sprintf('Roles: %s', implode(', ', $user->getRoles())),
         ]);

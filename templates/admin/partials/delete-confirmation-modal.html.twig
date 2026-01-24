@@ -1,0 +1,165 @@
+{#
+    Component: Delete Confirmation Modal
+    Description: Modal for confirming delete actions (Vanilla JS version)
+#}
+
+{# Backdrop #}
+<div class="modal-backdrop"></div>
+
+{# Modal #}
+<div class="confirmation-modal">
+    <div class="confirmation-modal__content">
+        <div class="confirmation-modal__header">
+            <h3 class="confirmation-modal__title">
+                <i class="fa fa-exclamation-triangle text-warning me-2"></i>
+                Confirmer la suppression
+            </h3>
+            <button type="button"
+                    class="confirmation-modal__close"
+                    data-action="cancel"
+                    aria-label="Fermer">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <div class="confirmation-modal__body">
+            <p class="confirmation-modal__message">
+                Êtes-vous sûr de vouloir supprimer <strong data-item-name>cet élément</strong> ?
+            </p>
+            <p class="text-muted small mb-0">
+                <i class="fa fa-info-circle me-1"></i>
+                Cette action est irréversible.
+            </p>
+        </div>
+
+        <div class="confirmation-modal__footer">
+            <button type="button"
+                    class="btn btn-secondary"
+                    data-action="cancel">
+                <i class="fa fa-times me-1"></i>
+                Annuler
+            </button>
+            <button type="button"
+                    class="btn btn-danger"
+                    data-action="confirm">
+                <i class="fa fa-trash me-1"></i>
+                Supprimer
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Modal Backdrop */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Confirmation Modal */
+.confirmation-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    z-index: 1050;
+    width: 90%;
+    max-width: 500px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.confirmation-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.confirmation-modal__content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.confirmation-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.confirmation-modal__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+}
+
+.confirmation-modal__close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.confirmation-modal__close:hover {
+    color: #1f2937;
+}
+
+.confirmation-modal__body {
+    padding: 1.5rem;
+}
+
+.confirmation-modal__message {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.confirmation-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 576px) {
+    .confirmation-modal {
+        width: 95%;
+    }
+
+    .confirmation-modal__footer {
+        flex-direction: column-reverse;
+    }
+
+    .confirmation-modal__footer .btn {
+        width: 100%;
+    }
+}
+</style>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# SEO Meta Tags #}
+    <title>{% block meta_title %}{{ menu_title|default('Menu') }} - {{ restaurant.name }} à {{ restaurant.city }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Découvrez {{ menu_title|default('le menu') }} de {{ restaurant.name }} à {{ restaurant.city }}. {{ restaurant.address }}, {{ restaurant.zipCode }} {{ restaurant.city }}.{% endblock %}">
+
+    {# Canonical URL #}
+    <link rel="canonical" href="{{ app.request.uri }}">
+
+    {# Open Graph Tags #}
+    <meta property="og:title" content="{% block og_title %}{{ menu_title|default('Menu') }} - {{ restaurant.name }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Découvrez {{ menu_title|default('le menu') }} de {{ restaurant.name }} à {{ restaurant.city }}.{% endblock %}">
+    <meta property="og:type" content="restaurant.menu">
+    <meta property="og:url" content="{{ app.request.uri }}">
+    <meta property="og:site_name" content="L'Ardoise Magique">
+    <meta property="og:locale" content="fr_FR">
+
+    {# Twitter Cards #}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ menu_title|default('Menu') }} - {{ restaurant.name }}">
+    <meta name="twitter:description" content="Découvrez {{ menu_title|default('le menu') }} de {{ restaurant.name }} à {{ restaurant.city }}.">
+
+    {# Geo Tags for Local SEO #}
+    <meta name="geo.region" content="FR-{% if restaurant.departement %}{{ restaurant.departement[:2]|default('') }}{% endif %}">
+    <meta name="geo.placename" content="{{ restaurant.city }}">
+
+    {# Schema.org JSON-LD - Restaurant #}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "{{ restaurant.name|e('js') }}",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ restaurant.address|e('js') }}",
+            "addressLocality": "{{ restaurant.city|e('js') }}",
+            "postalCode": "{{ restaurant.zipCode|e('js') }}"
+            {% if restaurant.departement %},
+            "addressRegion": "{{ restaurant.departement|e('js') }}"
+            {% endif %},
+            "addressCountry": "FR"
+        }
+        {% if restaurant.phoneNumber %},
+        "telephone": "{{ restaurant.phoneNumber|e('js') }}"
+        {% endif %}
+        {% if restaurant.slug %},
+        "url": "{{ url('app_directory_restaurant_show', {slug: restaurant.slug}) }}"
+        {% endif %}
+    }
+    </script>
+
+    {# Schema.org JSON-LD - Menu (overridable by child templates) #}
+    {% block schema_menu %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Menu",
+        "name": "{{ menu_title|default('Menu')|e('js') }}",
+        "mainEntityOfPage": {
+            "@type": "Restaurant",
+            "name": "{{ restaurant.name|e('js') }}"
+        }
+        {% block schema_menu_extra %}{% endblock %}
+    }
+    </script>
+    {% endblock %}
+
+    {# Schema.org JSON-LD - Breadcrumbs #}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Accueil",
+                "item": "{{ url('app_landing') }}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Annuaire",
+                "item": "{{ url('app_directory_index') }}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "{{ restaurant.city }}",
+                "item": "{{ url('app_directory_city', {citySlug: restaurant.city|lower|replace({' ': '-'})}) }}"
+            },
+            {% if restaurant.slug %}
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "{{ restaurant.name }}",
+                "item": "{{ url('app_directory_restaurant_show', {slug: restaurant.slug}) }}"
+            },
+            {% endif %}
+            {
+                "@type": "ListItem",
+                "position": {% if restaurant.slug %}5{% else %}4{% endif %},
+                "name": "{{ menu_title|default('Menu') }}"
+            }
+        ]
+    }
+    </script>
+
+    {# Google Fonts #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    {# Font Awesome #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    {# Base Navigation Styles #}
+    <style>
+        :root {
+            --menu-nav-bg: #2f1b0c;
+            --menu-nav-text: #fff;
+            --menu-nav-accent: #c5a059;
+            --menu-breadcrumb-bg: #f8f3ef;
+            --menu-breadcrumb-text: #6b4b36;
+            --menu-breadcrumb-link: #b85c38;
+            --menu-footer-bg: #2f1b0c;
+            --menu-footer-text: #d4c4b7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .menu-nav {
+            background: var(--menu-nav-bg);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .menu-nav a {
+            color: var(--menu-nav-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s ease;
+        }
+
+        .menu-nav a:hover {
+            color: var(--menu-nav-accent);
+        }
+
+        .menu-nav__back {
+            font-weight: 600;
+        }
+
+        .menu-nav__links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .menu-breadcrumb {
+            background: var(--menu-breadcrumb-bg);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .menu-breadcrumb ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .menu-breadcrumb li {
+            display: flex;
+            align-items: center;
+            color: var(--menu-breadcrumb-text);
+        }
+
+        .menu-breadcrumb li:not(:last-child)::after {
+            content: '/';
+            margin-left: 0.5rem;
+            color: var(--menu-breadcrumb-text);
+            opacity: 0.5;
+        }
+
+        .menu-breadcrumb a {
+            color: var(--menu-breadcrumb-link);
+            text-decoration: none;
+        }
+
+        .menu-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .menu-footer {
+            background: var(--menu-footer-bg);
+            color: var(--menu-footer-text);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .menu-footer p {
+            margin: 0 0 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .menu-footer a {
+            color: var(--menu-nav-accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .menu-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .menu-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .menu-nav__links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .menu-breadcrumb ol {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media print {
+            .menu-nav,
+            .menu-breadcrumb,
+            .menu-footer {
+                display: none !important;
+            }
+        }
+    </style>
+
+    {% block menu_head %}{% endblock %}
+    {% block menu_styles %}{% endblock %}
+</head>
+<body>
+    {# Navigation Bar #}
+    <nav class="menu-nav">
+        {% if restaurant.slug %}
+        <a href="{{ path('app_directory_restaurant_show', {slug: restaurant.slug}) }}" class="menu-nav__back">
+            <i class="fas fa-arrow-left"></i>
+            Retour à {{ restaurant.name }}
+        </a>
+        {% else %}
+        <a href="{{ path('app_directory_index') }}" class="menu-nav__back">
+            <i class="fas fa-arrow-left"></i>
+            Retour
+        </a>
+        {% endif %}
+        <div class="menu-nav__links">
+            <a href="{{ path('app_directory_index') }}">
+                <i class="fas fa-utensils"></i>
+                Annuaire
+            </a>
+            <a href="{{ path('app_landing') }}">
+                <i class="fas fa-home"></i>
+                Accueil
+            </a>
+        </div>
+    </nav>
+
+    {# Breadcrumbs #}
+    <nav class="menu-breadcrumb" aria-label="Fil d'Ariane">
+        <ol>
+            <li>
+                <a href="{{ path('app_landing') }}">Accueil</a>
+            </li>
+            <li>
+                <a href="{{ path('app_directory_index') }}">Annuaire</a>
+            </li>
+            <li>
+                <a href="{{ path('app_directory_city', {citySlug: restaurant.city|lower|replace({' ': '-'})}) }}">{{ restaurant.city }}</a>
+            </li>
+            {% if restaurant.slug %}
+            <li>
+                <a href="{{ path('app_directory_restaurant_show', {slug: restaurant.slug}) }}">{{ restaurant.name }}</a>
+            </li>
+            {% endif %}
+            <li>{{ menu_title|default('Menu') }}</li>
+        </ol>
+    </nav>
+
+    {# Main Content - Filled by child templates #}
+    {% block menu_content %}{% endblock %}
+
+    {# Footer #}
+    <footer class="menu-footer">
+        <p>&copy; {{ "now"|date("Y") }} {{ restaurant.name }} - {{ restaurant.city }}</p>
+        {% if restaurant.slug %}
+        <a href="{{ path('app_directory_restaurant_show', {slug: restaurant.slug}) }}">
+            <i class="fas fa-book-open"></i>
+            Voir tous nos menus
+        </a>
+        {% endif %}
+    </footer>
+
+    {% block menu_scripts %}{% endblock %}
+</body>
+</html>

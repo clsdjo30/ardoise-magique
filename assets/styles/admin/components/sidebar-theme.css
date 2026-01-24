@@ -1,0 +1,124 @@
+/* ============================================
+   Sidebar Theme - Modern & Harmonized
+   ============================================ */
+
+:root {
+    --ea-sidebar-bg: #ffffff;
+    --ea-sidebar-bg-full: #e9e9e9;
+    --ea-sidebar-active-bg: linear-gradient(135deg, #c1d38a 0%, #8da446 100%);
+    --ea-accent-color: #8da446;
+    --ea-sidebar-text: #64748b;
+    --ea-sidebar-text-hover: #0f172a;
+}
+
+/* Container principal de la sidebar */
+body.ea aside.main-sidebar {
+    background-color: var(--ea-sidebar-bg) !important;
+    border-right: 1px solid #f1f5f9 !important;
+    box-shadow: none !important;
+}
+
+body.ea .sidebar {
+    background-color: var(--ea-sidebar-bg-full) !important;
+}
+
+/* Logo / Header */
+body.ea .sidebar-logo {
+    padding: 1.5rem 1.25rem !important;
+    background-color: #ffffff !important;
+}
+
+body.ea .sidebar-logo a {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 1.2rem !important;
+    letter-spacing: -0.02em;
+}
+
+/* Menu de navigation */
+body.ea .sidebar-menu {
+    padding: 0.75rem !important;
+}
+
+/* Item du menu (le lien) */
+body.ea .menu-item a {
+    border-radius: 0.75rem !important;
+    margin: 0.15rem 0 !important;
+    padding: 0.7rem 1rem !important;
+    color: var(--ea-sidebar-text) !important;
+    font-weight: 500 !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid transparent !important;
+}
+
+/* Etat Hover */
+body.ea .menu-item a:hover {
+    background-color: #f8fafc !important;
+    color: var(--ea-sidebar-text-hover) !important;
+    transform: translateX(3px);
+}
+
+/* Etat Actif (Page courante) */
+body.ea .menu-item.active a,
+body.ea .menu-item.active:hover a {
+    background: var(--ea-sidebar-active-bg) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(141, 164, 70, 0.25) !important;
+    border-color: transparent !important;
+
+}
+
+#main-menu .menu .menu-item.active .menu-icon{
+    color: #ffffff !important;
+}
+
+#main-menu .menu .menu-item.active {
+    background-color: var(--ea-sidebar-bg-full) !important;
+     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transform: translateX(3px)!important;
+}
+/* Icônes dans le menu */
+body.ea .menu-item i {
+    font-size: 1.1rem !important;
+    margin-right: 0.75rem !important;
+    opacity: 0.8;
+}
+
+body.ea .menu-item.active i {
+    opacity: 1;
+}
+
+/* En-têtes de section (ex: "ADMINISTRATION") */
+body.ea .sidebar-section-header {
+    color: #94a3b8 !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    padding: 1.5rem 1rem 0.5rem 1rem !important;
+}
+
+/* Badges dans la sidebar */
+body.ea .menu-item-badge {
+    border-radius: 2rem !important;
+    padding: 0.2rem 0.6rem !important;
+    font-weight: 700 !important;
+    font-size: 0.7rem !important;
+    background-color: #f1f5f9 !important;
+    color: #475569 !important;
+}
+
+body.ea .menu-item.active .menu-item-badge {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* Personnalisation de la scrollbar pour éviter le côté "Windows 95" */
+body.ea .sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+body.ea .sidebar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}

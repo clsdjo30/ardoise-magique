@@ -1,0 +1,29 @@
+{% extends 'carte_wizard/wizard_base.html.twig' %}
+
+{% block title %}{{ stepTitle }} - Créer une Carte{% endblock %}
+
+{% block wizard_description %}{{ stepDescription }}{% endblock %}
+
+{% block wizard_content %}
+    {# Flash messages #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}" style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; background: {% if label == 'success' %}#d1fae5{% elseif label == 'error' %}#fee2e2{% else %}#dbeafe{% endif %}; color: {% if label == 'success' %}#065f46{% elseif label == 'error' %}#991b1b{% else %}#1e40af{% endif %};">
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {# Step Content #}
+    <div class="step-content">
+        {% if currentStep == 'step1' %}
+            {% include 'carte_wizard/steps/step1.html.twig' %}
+        {% elseif currentStep == 'step2' %}
+            {% include 'carte_wizard/steps/step2.html.twig' %}
+        {% elseif currentStep == 'step3' %}
+            {% include 'carte_wizard/steps/step3.html.twig' %}
+        {% elseif currentStep == 'step4' %}
+            {% include 'carte_wizard/steps/step4.html.twig' %}
+        {% endif %}
+    </div>
+{% endblock %}

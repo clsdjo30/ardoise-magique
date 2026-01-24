@@ -1,0 +1,75 @@
+{% if field.value %}
+<div class="public-url-field">
+    <a href="{{ field.value }}"
+       target="_blank"
+       class="btn btn-sm btn-primary"
+       title="Ouvrir la carte publique dans un nouvel onglet">
+        <i class="fa fa-external-link-alt"></i> Voir
+    </a>
+    <button type="button"
+            class="btn btn-sm btn-secondary copy-url-btn"
+            data-url="{{ field.value }}"
+            title="Copier le lien">
+        <i class="fa fa-copy"></i> Copier
+    </button>
+</div>
+
+<style>
+.public-url-field {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.copy-url-btn {
+    position: relative;
+}
+
+.copy-url-btn.copied::after {
+    content: '✓ Copié !';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #10b981;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+    0%, 50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.copy-url-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const url = this.dataset.url;
+
+            // Copier dans le presse-papiers
+            navigator.clipboard.writeText(url).then(() => {
+                // Ajouter la classe pour afficher le feedback
+                this.classList.add('copied');
+
+                // Retirer la classe après 2 secondes
+                setTimeout(() => {
+                    this.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Erreur lors de la copie:', err);
+                alert('Impossible de copier le lien');
+            });
+        });
+    });
+});
+</script>
+{% else %}
+    <span class="badge badge-secondary" title="Cette carte n'est pas publiée">
+        <i class="fa fa-eye-slash"></i> Non publiée
+    </span>
+{% endif %}

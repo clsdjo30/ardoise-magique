@@ -1,0 +1,285 @@
+{% extends 'public/menus-speciaux/_base_special.html.twig' %}
+
+{% block menu_head %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block menu_styles %}
+<style>
+body {
+    background: linear-gradient(135deg, #434343 0%, #000000 100%);
+    font-family: 'Playfair Display', serif;
+    padding: 20px;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.special-menu-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: linear-gradient(to bottom, #1a1a1a 0%, #2d2d2d 100%);
+    color: #f5f5f5;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+    border: 1px solid #d4af37;
+}
+
+.menu-header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding-bottom: 40px;
+    border-bottom: 2px solid #d4af37;
+    position: relative;
+}
+
+.menu-header::after {
+    content: '&';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    color: #d4af37;
+    background: #1a1a1a;
+    padding: 0 20px;
+}
+
+.restaurant-name {
+    font-size: 3em;
+    color: #d4af37;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-weight: 700;
+}
+
+.menu-title {
+    font-size: 2.2em;
+    color: #f5f5f5;
+    font-style: italic;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.global-price {
+    font-size: 2em;
+    color: #d4af37;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 15px 30px;
+    border: 2px solid #d4af37;
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.menu-section {
+    position: relative;
+}
+
+.section-title {
+    font-size: 2.5em;
+    color: #d4af37;
+    text-align: center;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #d4af37, transparent);
+}
+
+.menu-items {
+    display: grid;
+    gap: 30px;
+}
+
+.menu-item {
+    background: rgba(255,255,255,0.03);
+    padding: 30px;
+    border-radius: 12px;
+    border-left: 4px solid #d4af37;
+    transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+    background: rgba(255,255,255,0.06);
+    transform: translateX(10px);
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.item-name {
+    font-size: 1.8em;
+    color: #f5f5f5;
+    margin: 0;
+    font-weight: 600;
+}
+
+.item-price {
+    font-size: 1.6em;
+    color: #d4af37;
+    font-weight: bold;
+}
+
+.item-description {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #cccccc;
+    margin: 0;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .special-menu-container {
+        padding: 30px 20px;
+    }
+    .restaurant-name {
+        font-size: 2em;
+        letter-spacing: 3px;
+    }
+    .menu-title {
+        font-size: 1.5em;
+    }
+    .menu-content {
+        gap: 40px;
+    }
+    .section-title {
+        font-size: 1.8em;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+    }
+    .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .item-name {
+        font-size: 1.4em;
+        margin-bottom: 10px;
+    }
+    .item-price {
+        font-size: 1.3em;
+    }
+}
+</style>
+{% endblock %}
+
+{% block menu_content %}
+<div class="special-menu-container">
+    <div class="menu-header">
+        <h1 class="restaurant-name">{{ restaurant.name }}</h1>
+        <h2 class="menu-title">{{ ardoise.titre }}</h2>
+        {% if ardoise.specialGlobalPrice %}
+        <div class="global-price">{{ ardoise.specialGlobalPrice|number_format(2, ',', ' ') }} €</div>
+        {% endif %}
+    </div>
+
+    <div class="menu-content">
+        {% if entrees is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Entrees</h3>
+            <div class="menu-items">
+                {% for entree in entrees %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ entree.name }}</h4>
+                        {% if entree.price %}
+                        <span class="item-price">{{ entree.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if entree.description %}
+                    <p class="item-description">{{ entree.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if plats is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Plats</h3>
+            <div class="menu-items">
+                {% for plat in plats %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ plat.name }}</h4>
+                        {% if plat.price %}
+                        <span class="item-price">{{ plat.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if plat.description %}
+                    <p class="item-description">{{ plat.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if desserts is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Desserts</h3>
+            <div class="menu-items">
+                {% for dessert in desserts %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ dessert.name }}</h4>
+                        {% if dessert.price %}
+                        <span class="item-price">{{ dessert.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if dessert.description %}
+                    <p class="item-description">{{ dessert.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if supplements is not empty %}
+        <div class="menu-section">
+            <h3 class="section-title">Supplements</h3>
+            <div class="menu-items">
+                {% for supplement in supplements %}
+                <div class="menu-item">
+                    <div class="item-header">
+                        <h4 class="item-name">{{ supplement.name }}</h4>
+                        {% if supplement.price %}
+                        <span class="item-price">{{ supplement.price|number_format(2, ',', ' ') }} €</span>
+                        {% endif %}
+                    </div>
+                    {% if supplement.description %}
+                    <p class="item-description">{{ supplement.description }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

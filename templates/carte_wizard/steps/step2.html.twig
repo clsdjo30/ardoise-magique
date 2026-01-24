@@ -1,0 +1,24 @@
+{% form_theme form 'form/collection_theme.html.twig' %}
+
+{{ form_start(form, {'attr': {'class': 'wizard-form wizard-step-2'}}) }}
+
+<div class="step2-help">
+    <p>Créez les sections qui composeront votre carte (Entrées, Plats, Desserts, etc.). Vous pourrez ajouter les plats à chaque section à l'étape suivante.</p>
+</div>
+
+<div class="step2-sections-container">
+    {{ form_row(form.sections) }}
+</div>
+
+{# Navigation buttons #}
+<div class="wizard-navigation">
+    <a href="{{ path('app_carte_wizard', {'step': 'step1'}) }}" class="btn btn-secondary">
+        Retour
+    </a>
+    <button type="submit" class="btn btn-primary">
+        Suivant : Sélection des plats
+    </button>
+</div>
+
+{{ form_end(form) }}
+

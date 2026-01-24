@@ -1,0 +1,72 @@
+{#
+    Component: Quota Card
+    Description: Quota tracking card with progress bar or locked state
+
+    Parameters:
+    - icon: string - Icon to display
+    - title: string - Card title
+    - isLocked: boolean - Whether the feature is locked
+    - isUnlimited: boolean - Whether the quota is unlimited
+    - used: number - Number used (if not locked/unlimited)
+    - limit: number - Quota limit (if not unlimited)
+    - period: string - Period text (e.g., "ce mois", "cette année")
+    - upgradeUrl: string - URL for upgrade button (if locked)
+    - color: string - Color theme (green, blue, yellow)
+#}
+
+<div class="quota-card quota-card--{{ color|default('green') }}">
+    <div class="quota-card__header">
+        <span class="quota-card__icon">{{ icon }}</span>
+        <h3 class="quota-card__title">{{ title }}</h3>
+    </div>
+
+    <div class="quota-card__content">
+        {% if isLocked|default(false) %}
+            {# Locked state #}
+            <div class="quota-card__locked">
+                <div class="quota-card__lock-icon">🔒</div>
+                <p class="quota-card__lock-text">Disponible avec le plan Premium</p>
+                <a href="{{ upgradeUrl }}" class="quota-card__upgrade-btn">Passer à Premium</a>
+            </div>
+        {% elseif isUnlimited|default(false) %}
+            {# Unlimited state #}
+            <div class="quota-card__unlimited">
+                <div class="quota-card__infinity">♾️</div>
+                <div class="quota-card__unlimited-text">
+                    <p class="quota-card__unlimited-label">Illimité</p>
+                    <p class="quota-card__unlimited-count">{{ used }} créés {{ period }}</p>
+                </div>
+            </div>
+        {% else %}
+            {# Limited quota state #}
+            <div class="quota-card__limited">
+                <div class="quota-card__count">
+                    <span class="quota-card__count-value">{{ used }}</span>
+                    <span class="quota-card__count-separator">/</span>
+                    <span class="quota-card__count-limit">{{ limit }}</span>
+                    <span class="quota-card__count-period">{{ period }}</span>
+                </div>
+
+                {% set percentage = limit > 0 ? ((used / limit * 100)|round) : 0 %}
+                <div class="quota-card__progress">
+                    <div class="quota-card__progress-bar
+                        {% if percentage >= 100 %}quota-card__progress-bar--danger
+                        {% elseif percentage >= 80 %}quota-card__progress-bar--warning
+                        {% else %}quota-card__progress-bar--success{% endif %}"
+                        style="width: {{ percentage }}%">
+                    </div>
+                </div>
+
+                {% if percentage >= 100 %}
+                    <div class="quota-card__alert quota-card__alert--danger">
+                        Quota atteint !
+                    </div>
+                {% elseif percentage >= 80 %}
+                    <div class="quota-card__alert quota-card__alert--warning">
+                        Bientôt à la limite
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>

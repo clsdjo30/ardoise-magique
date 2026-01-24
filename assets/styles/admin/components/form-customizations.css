@@ -1,0 +1,104 @@
+/* Classes pour les formulaires de création - à ajouter dans les setCssClass des CrudController */
+
+/* Panel de base avec style élégant */
+.ea-new-form .panel-classy,
+.ea-edit-form .panel-classy {
+    background: linear-gradient(135deg, #e9e9e9 +0%, #ffffff 100%);
+    border: 2px solid #dee2e6 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.ea-new-form .panel-classy:hover,
+.ea-edit-form .panel-classy:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+/* En-tête du fieldset */
+.form-fieldset-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.form-fieldset-title-content {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2c3e50;
+    letter-spacing: 0.3px;
+}
+
+/* Corps du fieldset */
+.form-fieldset-body {
+    padding-top: 1rem;
+}
+
+/* Labels personnalisés */
+.ea-new-form .form-control-label,
+.ea-edit-form .form-control-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Inputs personnalisés */
+.ea-new-form .form-control,
+.ea-edit-form .form-control {
+    border: 1.5px solid #ced4da;
+    border-radius: 8px;
+    padding: 0.625rem 0.875rem;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.ea-new-form .form-control:focus,
+.ea-edit-form .form-control:focus {
+    border-color: #1ea471;
+    box-shadow: 0 0 0 0.2rem rgba(93, 206, 163, 0.35);
+}
+
+/* Variantes de couleurs pour les panels */
+.panel-classy.bg-secondary-500 {
+    background: linear-gradient(135deg, #e3e6ea 0%, #f1f3f5 100%);
+    border-color: #adb5bd !important;
+}
+
+.panel-classy.bg-success-200 {
+    background: linear-gradient(135deg, #d4edda 0%, #e7f5e9 100%);
+    border-color: #28a745 !important;
+}
+
+.panel-classy.bg-sidebar-200 {
+    background: linear-gradient(135deg, #e8eaf0 0%, #f0f2f7 100%);
+    border-color: #6c757d !important;
+}
+
+/* Icônes dans les titres */
+.form-fieldset-title i {
+    margin-right: 0.5rem;
+    color: #6c757d;
+}
+
+/* Alternative : cibler le form-widget parent */
+.ea-new-form .form-widget .form-check.form-switch,
+.ea-edit-form .form-widget .form-check.form-switch {
+    margin-top: 2.7rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ea-new-form .panel-classy,
+    .ea-edit-form .panel-classy {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-fieldset-title-content {
+        font-size: 1rem;
+    }
+}

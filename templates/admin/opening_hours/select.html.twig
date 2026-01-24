@@ -1,0 +1,67 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    <i class="fa fa-clock me-2"></i>
+    Horaires d'ouverture
+{% endblock %}
+
+{% block content_title %}
+    Choisir un restaurant
+{% endblock %}
+
+{% block main %}
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="fa fa-store me-2"></i>
+                Pour quel restaurant souhaitez-vous gérer les horaires ?
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+                {% for restaurant in restaurants %}
+                    <a href="{{ path('admin_opening_hours_edit', {id: restaurant.id}) }}"
+                       class="list-group-item list-group-item-action py-3">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">
+                                    <i class="fa fa-utensils me-2 text-primary"></i>
+                                    {{ restaurant.name }}
+                                </h5>
+                                <p class="mb-0 text-muted">
+                                    <i class="fa fa-location-dot me-1"></i>
+                                    {{ restaurant.address }}, {{ restaurant.zipCode }} {{ restaurant.city }}
+                                </p>
+                            </div>
+                            <div class="text-end">
+                                {% if restaurant.openingHours|length > 0 %}
+                                    <span class="badge bg-success mb-2">
+                                        <i class="fa fa-check me-1"></i>
+                                        {{ restaurant.openingHours|length }} créneaux définis
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark mb-2">
+                                        <i class="fa fa-exclamation-triangle me-1"></i>
+                                        Horaires non définis
+                                    </span>
+                                {% endif %}
+                                <br>
+                                <span class="text-primary">
+                                    Gérer les horaires
+                                    <i class="fa fa-chevron-right ms-1"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('admin', {'restaurant': app.user.slug}) }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left me-1"></i>
+            Retour au dashboard
+        </a>
+    </div>
+{% endblock %}

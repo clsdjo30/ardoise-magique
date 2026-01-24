@@ -1,0 +1,145 @@
+<div class="preview-summary">
+    <div class="summary-stats">
+        <div class="stat-item">
+            <span class="stat-label">Nom de la carte</span>
+            <span class="stat-value">{{ wizardData.name }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Restaurant</span>
+            <span class="stat-value">{{ wizardData.restaurant.name }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Valide du</span>
+            <span class="stat-value">{{ wizardData.validFrom|date('d/m/Y') }}</span>
+        </div>
+        {% if wizardData.validTo %}
+        <div class="stat-item">
+            <span class="stat-label">Valide au</span>
+            <span class="stat-value">{{ wizardData.validTo|date('d/m/Y') }}</span>
+        </div>
+        {% endif %}
+        <div class="stat-item">
+            <span class="stat-label">Sections</span>
+            <span class="stat-value">{{ previewData.totalSections }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Plats</span>
+            <span class="stat-value">{{ previewData.totalDishes }}</span>
+        </div>
+    </div>
+</div>
+
+<form method="post" data-controller="carte-preview" data-turbo="false">
+    <div class="preview-actions">
+        <button type="button" class="btn btn-sm btn-secondary" data-action="click->carte-preview#expandAll">
+            Tout déplier
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary" data-action="click->carte-preview#collapseAll">
+            Tout replier
+        </button>
+        <span class="drag-help">💡 Utilisez les poignées ☰ pour réorganiser</span>
+    </div>
+
+    <div class="preview-content">
+        {% if previewData.sections is empty %}
+            <div class="preview-empty">
+                <p>Aucune section n'a été créée pour cette carte.</p>
+            </div>
+        {% else %}
+            <div class="sections-list" data-carte-preview-target="sectionsList">
+                {% for sectionIndex, sectionData in previewData.sections %}
+                <div class="preview-section"
+                     data-carte-preview-target="section"
+                     data-section-index="{{ sectionIndex }}">
+
+                    <!-- Section Header with Drag Handle -->
+                    <div class="section-header">
+                        <span class="section-drag-handle" title="Glisser pour réorganiser">☰</span>
+                        <div class="section-info">
+                            <h4>{{ sectionData.section.categorie.titre }}</h4>
+                            {% if sectionData.section.description %}
+                                <p class="section-description">{{ sectionData.section.description }}</p>
+                            {% endif %}
+                        </div>
+                        <span class="section-count">{{ sectionData.count }} plat(s)</span>
+                        <button type="button"
+                                class="toggle-items"
+                                data-action="click->carte-preview#toggleItems"
+                                aria-expanded="true">
+                            <span class="toggle-icon">▼</span>
+                        </button>
+                    </div>
+
+                    <!-- Hidden inputs for section -->
+                    {% if sectionData.section.id is defined and sectionData.section.id is not null %}
+                    <input type="hidden"
+                           name="sections[{{ sectionIndex }}][id]"
+                           value="{{ sectionData.section.id }}">
+                    {% endif %}
+                    <input type="hidden"
+                           class="section-position"
+                           name="sections[{{ sectionIndex }}][position]"
+                           value="{{ sectionIndex }}">
+
+                    <!-- Items Container (Collapsible) -->
+                    <div class="items-container" data-carte-preview-target="itemsList">
+                        {% if sectionData.items is empty %}
+                            <p class="items-empty">Aucun plat dans cette section</p>
+                        {% else %}
+                            {% for itemIndex, item in sectionData.items %}
+                            <div class="preview-item" data-item-index="{{ itemIndex }}">
+                                <span class="item-drag-handle" title="Glisser pour réorganiser">⋮</span>
+
+                                <div class="item-info">
+                                    <span class="item-name">{{ item.dishName }}</span>
+                                    <span class="item-variant">({{ item.variantLabel }})</span>
+                                </div>
+
+                                <span class="item-price">{{ (item.price / 100)|number_format(2, ',', ' ') }}€</span>
+
+                                <!-- Hidden inputs for this item -->
+                                <input type="hidden"
+                                       name="sections[{{ sectionIndex }}][items][{{ itemIndex }}][variantId]"
+                                       value="{{ item.variantId }}">
+                                <input type="hidden"
+                                       class="item-position"
+                                       name="sections[{{ sectionIndex }}][items][{{ itemIndex }}][position]"
+                                       value="{{ itemIndex }}">
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Publication Options -->
+    <div class="preview-form">
+        <div class="form-field">
+            <label class="checkbox-label">
+                <input type="checkbox" name="isPublished" value="1" {{ wizardData.isPublished ? 'checked' : '' }}>
+                <span>Publier immédiatement cette carte</span>
+            </label>
+            <p class="form-help">Si coché, la carte sera visible publiquement</p>
+        </div>
+
+        <div class="wizard-navigation">
+            <a href="{{ path('app_carte_wizard', {'step': 'step3'}) }}" class="btn btn-secondary">
+                {% if wizardData.carteId is not null %}
+                    ← Modifier vos plats
+                {% else %}
+                    ← Retour
+                {% endif %}
+            </a>
+            <button type="submit" class="btn btn-success">
+                {% if wizardData.carteId is not null %}
+                    ✓ Enregistrer les modifications
+                {% else %}
+                    ✓ Créer la carte
+                {% endif %}
+            </button>
+        </div>
+    </div>
+</form>

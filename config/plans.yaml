@@ -1,0 +1,160 @@
+plans:
+  FREE:
+    name: 'Gratuit'
+    price: 0
+    currency: 'EUR'
+    interval: 'month'
+    features:
+      menus_daily:
+        enabled: true
+        quota: 10
+        period: 'month'
+        label: 'Menus du jour'
+      menus_special:
+        enabled: false
+        label: 'Menus spéciaux'
+      cards:
+        enabled: false
+        label: 'Cartes'
+      directory:
+        enabled: false
+        label: 'Annuaire restaurant'
+      custom_designs:
+        enabled: false
+        label: 'Designs personnalisés'
+      premium_designs:
+        enabled: false
+        label: 'Designs premium'
+      qr_code:
+        enabled: false
+        label: 'QR Code'
+      social_share:
+        enabled: false
+        label: 'Partage social'
+      priority_support:
+        enabled: false
+        label: 'Support prioritaire'
+    allowed_templates:
+      - bistrot  # Template par défaut uniquement
+
+  STARTER:
+    name: 'Starter'
+    price: 9.90
+    currency: 'EUR'
+    interval: 'month'
+    features:
+      menus_daily:
+        enabled: true
+        quota: -1  # -1 = illimité
+        period: 'month'
+        label: 'Menus du jour'
+      menus_special:
+        enabled: true
+        quota: 10
+        period: 'year'
+        label: 'Menus spéciaux'
+      cards:
+        enabled: false
+        label: 'Cartes'
+      directory:
+        enabled: true
+        label: 'Annuaire restaurant'
+      custom_designs:
+        enabled: true
+        label: 'Designs personnalisés'
+      premium_designs:
+        enabled: false
+        label: 'Designs premium'
+      qr_code:
+        enabled: false
+        label: 'QR Code'
+      social_share:
+        enabled: false
+        label: 'Partage social'
+      priority_support:
+        enabled: false
+        label: 'Support prioritaire'
+    allowed_templates:
+      - bistrot
+      - traditionnel
+      - brut
+      - classe
+      - digital
+      - magazine
+      - marche
+      - rafine
+      - scroll
+      - timeline
+      - flipcards
+
+  PREMIUM:
+    name: 'Premium'
+    price: 19.90
+    currency: 'EUR'
+    interval: 'month'
+    features:
+      menus_daily:
+        enabled: true
+        quota: -1  # -1 = illimité
+        period: 'month'
+        label: 'Menus du jour'
+      menus_special:
+        enabled: true
+        quota: -1  # -1 = illimité
+        period: 'year'
+        label: 'Menus spéciaux'
+      cards:
+        enabled: true
+        quota: 10
+        period: 'year'
+        label: 'Cartes (future)'
+      directory:
+        enabled: true
+        label: 'Annuaire restaurant'
+      custom_designs:
+        enabled: true
+        label: 'Designs personnalisés'
+      premium_designs:
+        enabled: true
+        label: 'Designs premium'
+      qr_code:
+        enabled: true
+        label: 'QR Code'
+      social_share:
+        enabled: true
+        label: 'Partage social'
+      priority_support:
+        enabled: true
+        label: 'Support prioritaire'
+    allowed_templates:
+      - bistrot
+      - traditionnel
+      - brut
+      - classe
+      - digital
+      - magazine
+      - marche
+      - rafine
+      - scroll
+      - timeline
+      - flipcards
+      # + futurs templates premium seront ajoutés ici
+
+upgrade_messages:
+  menus_special:
+    FREE: "Les menus spéciaux sont disponibles avec le plan Starter (9,90€/mois) ou Premium (19,90€/mois)"
+    STARTER: "Passez au plan Premium (19,90€/mois) pour créer un nombre illimité de menus spéciaux"
+  premium_designs:
+    FREE: "Les designs premium sont disponibles avec le plan Premium (19,90€/mois)"
+    STARTER: "Passez au plan Premium (19,90€/mois) pour accéder aux designs premium"
+  custom_designs:
+    FREE: "La personnalisation des designs est disponible avec le plan Starter (9,90€/mois)"
+  qr_code:
+    FREE: "Le QR Code est disponible avec le plan Premium (19,90€/mois)"
+    STARTER: "Le QR Code est disponible avec le plan Premium (19,90€/mois)"
+  social_share:
+    FREE: "Le partage social est disponible avec le plan Premium (19,90€/mois)"
+    STARTER: "Le partage social est disponible avec le plan Premium (19,90€/mois)"
+  cards:
+    FREE: "Les cartes en ligne sont disponibles avec le plan Premium (19,90€/mois)"
+    STARTER: "Les cartes en ligne sont disponibles avec le plan Premium (19,90€/mois)"

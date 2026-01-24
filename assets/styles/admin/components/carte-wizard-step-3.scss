@@ -1,0 +1,496 @@
+/**
+ * Styles pour l'étape 3 du wizard de création de carte (Sélection des plats)
+ * Style inspiré de la step 2 - Mobile-first avec adaptation desktop
+ */
+
+@use "../../public/tokens.colors" as colors;
+@use "../../public/tokens.typography" as type;
+@use "../../public/tokens.spacing" as spacing;
+
+/* ========================================
+   STEP 3 - DISH SELECTION
+   ======================================== */
+
+.wizard-step-3 {
+    position: relative;
+}
+
+/* Message d'aide */
+.step3-help {
+    background: colors.$color-background;
+    padding: spacing.$spacing-xs spacing.$spacing-md;
+    border-radius: spacing.$radius-md;
+    margin-bottom: spacing.$spacing-md;
+    border-left: 4px solid colors.$color-primary;
+
+    p {
+        margin: 0;
+        font-size: type.$font-size-sm;
+        color: colors.$color-text;
+        line-height: type.$line-height-relaxed;
+    }
+
+    @media (min-width: 768px) {
+        padding: spacing.$spacing-sm spacing.$spacing-md;
+        margin-bottom: spacing.$spacing-lg;
+
+        p {
+            font-size: type.$font-size-md;
+        }
+    }
+}
+
+/* Container de sélection de plats */
+.section-dish-selector {
+    background: colors.$color-surface;
+    border: 2px solid colors.$color-border;
+    border-radius: spacing.$radius-md;
+    padding: spacing.$spacing-md;
+    margin-bottom: spacing.$spacing-md;
+    transition: all 0.3s ease;
+    box-shadow: colors.$shadow-soft;
+
+    &:hover {
+        border-color: colors.$color-primary-soft;
+        box-shadow: colors.$shadow-hover;
+    }
+
+    @media (min-width: 768px) {
+        padding: spacing.$spacing-lg;
+        margin-bottom: spacing.$spacing-lg;
+    }
+}
+
+/* Header de section */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: spacing.$spacing-xs;
+    margin-bottom: spacing.$spacing-sm;
+    padding-bottom: spacing.$spacing-xs;
+    border-bottom: 2px solid colors.$color-border;
+
+    h3 {
+        margin: 0;
+        font-family: type.$font-family-heading;
+        font-size: type.$font-size-md;
+        font-weight: type.$font-weight-strong;
+        color: colors.$color-text;
+    }
+
+    @media (min-width: 768px) {
+        gap: spacing.$spacing-sm;
+        margin-bottom: spacing.$spacing-md;
+        padding-bottom: spacing.$spacing-sm;
+
+        h3 {
+            font-size: type.$font-size-lg;
+        }
+    }
+}
+
+/* Badge de section */
+.section-badge {
+    display: inline-block;
+    padding: spacing.$spacing-xxs spacing.$spacing-xs;
+    background: colors.$color-primary-soft;
+    color: colors.$color-primary;
+    font-family: type.$font-family-heading;
+    font-size: type.$font-size-xxs;
+    font-weight: type.$font-weight-strong;
+    text-transform: uppercase;
+    letter-spacing: type.$letter-spacing-wider;
+    border-radius: spacing.$radius-sm;
+
+    @media (min-width: 768px) {
+        padding: spacing.$spacing-xs spacing.$spacing-sm;
+        font-size: type.$font-size-xs;
+    }
+}
+
+/* Description de section */
+.section-description {
+    margin: spacing.$spacing-xs 0 spacing.$spacing-sm 0;
+    font-size: type.$font-size-xs;
+    color: colors.$color-muted;
+    line-height: type.$line-height-relaxed;
+
+    @media (min-width: 768px) {
+        margin: spacing.$spacing-sm 0 spacing.$spacing-md 0;
+        font-size: type.$font-size-sm;
+    }
+}
+
+/* Barre de recherche */
+.dish-search {
+    margin-bottom: spacing.$spacing-sm;
+
+    input {
+        width: 100%;
+        padding: spacing.$spacing-xs spacing.$spacing-sm;
+        font-family: type.$font-family-body;
+        font-size: type.$font-size-sm;
+        color: colors.$color-text;
+        background: colors.$color-background;
+        border: 2px solid colors.$color-border;
+        border-radius: spacing.$radius-md;
+        transition: all 0.3s ease;
+
+        @media (min-width: 768px) {
+            padding: spacing.$spacing-sm spacing.$spacing-md;
+            font-size: type.$font-size-md;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: colors.$color-primary;
+            box-shadow: 0 0 0 3px rgba(colors.$color-primary, 0.1);
+            background: colors.$color-surface;
+        }
+
+        &::placeholder {
+            color: colors.$color-muted;
+            opacity: 0.7;
+        }
+    }
+}
+
+/* ========================================
+   SKELETON LOADER
+   ======================================== */
+
+.dish-catalog-skeleton {
+    display: block;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.skeleton-item {
+    display: flex;
+    gap: spacing.$spacing-sm;
+    padding: spacing.$spacing-sm;
+    background: colors.$color-background;
+    border-radius: spacing.$radius-md;
+    margin-bottom: spacing.$spacing-xs;
+
+    @media (min-width: 768px) {
+        gap: spacing.$spacing-md;
+        padding: spacing.$spacing-sm spacing.$spacing-md;
+        margin-bottom: spacing.$spacing-sm;
+    }
+}
+
+.skeleton-checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: spacing.$radius-sm;
+    background: linear-gradient(90deg,
+        rgba(colors.$color-border, 0.3) 25%,
+        rgba(colors.$color-border, 0.5) 50%,
+        rgba(colors.$color-border, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    flex-shrink: 0;
+
+    @media (min-width: 768px) {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.skeleton-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: spacing.$spacing-xxs;
+}
+
+.skeleton-title {
+    width: 60%;
+    height: 14px;
+    border-radius: spacing.$radius-sm;
+    background: linear-gradient(90deg,
+        rgba(colors.$color-border, 0.3) 25%,
+        rgba(colors.$color-border, 0.5) 50%,
+        rgba(colors.$color-border, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+
+    @media (min-width: 768px) {
+        width: 50%;
+        height: 16px;
+    }
+}
+
+.skeleton-description {
+    width: 85%;
+    height: 12px;
+    border-radius: spacing.$radius-sm;
+    background: linear-gradient(90deg,
+        rgba(colors.$color-border, 0.3) 25%,
+        rgba(colors.$color-border, 0.5) 50%,
+        rgba(colors.$color-border, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    animation-delay: 0.1s;
+
+    @media (min-width: 768px) {
+        width: 80%;
+        height: 14px;
+    }
+}
+
+.skeleton-variant {
+    width: 35%;
+    height: 12px;
+    border-radius: spacing.$radius-sm;
+    background: linear-gradient(90deg,
+        rgba(colors.$color-border, 0.3) 25%,
+        rgba(colors.$color-border, 0.5) 50%,
+        rgba(colors.$color-border, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    animation-delay: 0.2s;
+
+    @media (min-width: 768px) {
+        width: 30%;
+        height: 14px;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   DISH CATALOG
+   ======================================== */
+
+.dish-catalog {
+    animation: fadeIn 0.3s ease-in;
+
+    @media (min-width: 768px) {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: spacing.$spacing-sm;
+    }
+}
+
+/* Carte de plat */
+.dish-card {
+    background: colors.$color-background;
+    border-radius: spacing.$radius-md;
+    padding: spacing.$spacing-sm;
+    margin-bottom: spacing.$spacing-xs;
+
+    @media (min-width: 768px) {
+        padding: spacing.$spacing-sm spacing.$spacing-md;
+        margin-bottom: spacing.$spacing-sm;
+    }
+}
+
+.dish-card-name {
+    font-family: type.$font-family-heading;
+    font-size: type.$font-size-sm;
+    font-weight: type.$font-weight-strong;
+    color: colors.$color-text;
+    margin-bottom: spacing.$spacing-xxs;
+
+    @media (min-width: 768px) {
+        font-size: type.$font-size-md;
+        margin-bottom: spacing.$spacing-xs;
+    }
+}
+
+.dish-card-description {
+    font-size: type.$font-size-xs;
+    color: colors.$color-muted;
+    margin-bottom: spacing.$spacing-xs;
+    line-height: type.$line-height-relaxed;
+
+    @media (min-width: 768px) {
+        font-size: type.$font-size-sm;
+        margin-bottom: spacing.$spacing-sm;
+    }
+}
+
+/* Variantes avec checkboxes */
+.dish-card-variants {
+    display: flex;
+    flex-direction: column;
+    gap: spacing.$spacing-xxs;
+
+    @media (min-width: 768px) {
+        gap: spacing.$spacing-xs;
+    }
+}
+
+.variant-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: spacing.$spacing-xs;
+    padding: spacing.$spacing-xs;
+    border-radius: spacing.$radius-sm;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(colors.$color-primary, 0.05);
+    }
+
+    @media (min-width: 768px) {
+        gap: spacing.$spacing-sm;
+        padding: spacing.$spacing-xs spacing.$spacing-sm;
+    }
+}
+
+.variant-checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid colors.$color-border;
+    border-radius: spacing.$radius-sm;
+    background: colors.$color-surface;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    position: relative;
+
+    @media (min-width: 768px) {
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover {
+        border-color: colors.$color-primary;
+    }
+
+    &:checked {
+        background: colors.$color-primary;
+        border-color: colors.$color-primary;
+
+        &::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: colors.$color-surface;
+            font-size: 12px;
+            font-weight: bold;
+
+            @media (min-width: 768px) {
+                font-size: 14px;
+            }
+        }
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(colors.$color-primary, 0.1);
+    }
+}
+
+.variant-label {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: spacing.$spacing-xs;
+    cursor: pointer;
+    user-select: none;
+    min-width: 0; // Permet au flex de se contracter correctement
+
+    @media (min-width: 768px) {
+        gap: spacing.$spacing-sm;
+    }
+}
+
+.variant-name {
+    font-size: type.$font-size-xs;
+    color: colors.$color-text;
+    font-weight: type.$font-weight-medium;
+    flex: 1;
+    min-width: 0; // Permet la troncature si nécessaire
+
+    @media (min-width: 768px) {
+        font-size: type.$font-size-sm;
+    }
+}
+
+.variant-price {
+    font-size: type.$font-size-xs;
+    color: colors.$color-primary;
+    font-weight: type.$font-weight-strong;
+    white-space: nowrap; // Empêche le prix de passer à la ligne
+    flex-shrink: 0; // Empêche le prix de se rétrécir
+
+    @media (min-width: 768px) {
+        font-size: type.$font-size-sm;
+    }
+}
+
+/* État vide */
+.empty-state {
+    text-align: center;
+    padding: spacing.$spacing-lg;
+    color: colors.$color-muted;
+    font-size: type.$font-size-sm;
+
+    @media (min-width: 768px) {
+        padding: spacing.$spacing-xl;
+        font-size: type.$font-size-md;
+    }
+}
+
+/* Hidden inputs container */
+.selected-inputs {
+    display: none;
+}
+
+/* Helper class for hiding elements */
+.hidden {
+    display: none !important;
+}
+
+/* ========================================
+   ADAPTATIONS DESKTOP
+   ======================================== */
+
+@media (min-width: 768px) {
+    /* Améliorer l'espacement sur desktop sans trop espacer */
+    .dish-catalog {
+        padding: 0;
+    }
+
+    /* Meilleure organisation des variantes sur desktop */
+    .dish-card-variants {
+        max-width: 100%;
+    }
+}

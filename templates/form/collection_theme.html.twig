@@ -1,0 +1,38 @@
+{% block collection_widget %}
+    {% set prototype_html %}
+        <li class="section-item" data-collection-target="item">
+            <div class="section-header">
+                <span class="section-drag-handle">☰</span>
+                <span class="section-number">Section __section__</span>
+                <button type="button" class="btn-delete" data-action="click->collection#removeItem" title="Supprimer">
+                    ✕
+                </button>
+            </div>
+            <div class="section-fields">
+                {{ form_widget(form.vars.prototype)|raw }}
+            </div>
+        </li>
+    {% endset %}
+
+    <div data-controller="collection" data-collection-prototype="{{ prototype_html|e('html_attr') }}">
+        <ul class="sections-list" data-collection-target="list">
+            {% for child in form %}
+                <li class="section-item" data-collection-target="item">
+                    <div class="section-header">
+                        <span class="section-drag-handle">☰</span>
+                        <span class="section-number">Section {{ loop.index }}</span>
+                        <button type="button" class="btn-delete" data-action="click->collection#removeItem" title="Supprimer">
+                            ✕
+                        </button>
+                    </div>
+                    <div class="section-fields">
+                        {{ form_widget(child) }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn btn-secondary" data-action="click->collection#addItem">
+            + Ajouter une section
+        </button>
+    </div>
+{% endblock %}
